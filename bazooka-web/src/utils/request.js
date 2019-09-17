@@ -40,9 +40,9 @@ const errorHandler = error => {
 /**
  * 配置request请求时的默认参数
  */
-// const SERVER_HOME = '.';
+const SERVER_HOME = '.';
 // const SERVER_HOME = 'http://10.0.90.14:6060';
-const SERVER_HOME = 'http://192.168.1.147:6060';
+// const SERVER_HOME = 'http://192.168.1.147:6060';
 
 const request = extend({
   errorHandler,
