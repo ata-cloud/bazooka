@@ -55,15 +55,15 @@ class ProjectDetail extends React.Component {
         appList: []
       }
     })
-  }
-  //项目信息
-  onFetchInfo = async (projectId) => {
+  }  //项目信息
+  onFetchInfo = (projectId) => {
     const { dispatch } = this.props;
     dispatch({
       type: 'project/proInfo',
       payload: { projectId }
     })
   }
+
   onTabChange = (key) => {
     const { keys } = this.state;
     this.setState({

@@ -90,12 +90,17 @@ class CommomItem extends React.Component {
         </Col>
         {children}
         <Col md={12} sm={24}>
-          <FormItem label="服务描述" help="服务的简单描述，不超过100字">
+          <FormItem label="服务描述" help="服务的简单描述，不超过500字">
             {getFieldDecorator('description', {
               rules: [
                 {
-                  pattern: /^[\S ]{0,500}$/,
-                  message: '最多500个字符'
+                  validator(rule, value, callback){
+                    if(value.length > 500) {
+                      callback('最多500个字符')
+                    }else {
+                      callback()
+                    }
+                  }
                 }
               ]
             })(<TextArea placeholder="请输入描述" rows={4} />)}
