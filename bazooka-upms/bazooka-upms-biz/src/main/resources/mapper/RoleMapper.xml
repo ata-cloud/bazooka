@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.atayun.bazooka.upms.biz.dal.dao.RoleMapper">
+
+    <select id="getPage" parameterType="net.atayun.bazooka.upms.api.dto.req.RoleQueryReqDTO"
+            resultType="net.atayun.bazooka.upms.biz.dal.entity.Role">
+        select
+        id,
+        role_name roleName,
+        remark remark,
+        create_author createAuthor,
+        update_author updateAuthor,
+        create_time createTime,
+        update_time updateTime
+        from upms_role
+        <where>
+            <if test="roleId != null">
+                id = #{roleId,jdbcType=BIGINT}
+            </if>
+            <if test="roleName != null">
+                <bind name="queryCondition" value="'%' + _parameter.getRoleName() + '%'"/>
+                and role_name like #{queryCondition,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+</mapper>

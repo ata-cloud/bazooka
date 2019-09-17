@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.atayun.bazooka.upms.biz.dal.dao.PermissionMapper">
+
+    <select id="getPage" parameterType="net.atayun.bazooka.upms.api.dto.req.PermissionQueryReqDTO"
+            resultType="net.atayun.bazooka.upms.biz.dal.entity.Permission">
+        select
+        id,
+        code,
+        permission_name permissionName,
+        url,
+        type,
+        icon,
+        remark,
+        parent_id parentId,
+        rank,
+        iframe_url iframeUrl,
+        iframe_json iframeJson,
+        create_author createAuthor,
+        create_time createTime
+        from upms_permission
+        <where>
+            <if test="permissionId != null">
+                id = #{permissionId,jdbcType=BIGINT}
+            </if>
+            <if test="permissionName != null">
+                <bind name="queryCondition" value="'%' + _parameter.getPermissionName() + '%'"/>
+                and permission_name like #{queryCondition,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="countByUrl" parameterType="string" resultType="java.lang.Integer">
+        select count(1) from upms_permission where url = #{url,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getPermissionByUserIdParentIdPermissionType" resultType="net.atayun.bazooka.upms.biz.dal.entity.Permission">
+        select
+          up.id              id,
+          up.permission_name permissionName,
+          up.url             url,
+          up.icon            icon
+        from upms_user uu
+          inner join upms_user_role uur on uu.id = uur.user_id
+          inner join upms_role ur on uur.role_id = ur.id
+          inner join upms_role_permission urp on ur.id = urp.role_id
+          inner join upms_permission up on urp.permission_id = up.id
+        where uu.id = #{userId,jdbcType=BIGINT}
+        and up.parent_id = #{parentId,jdbcType=BIGINT}
+        and up.type = #{permissionType,jdbcType=BIGINT}
+        group by up.id, up.permission_name, up.url, up.icon, up.parent_id
+        order by up.parent_id, up.rank
+    </select>
+
+    <select id="getPermissionIdByRoleId" parameterType="long" resultType="java.lang.String">
+        select
+          up.id
+        from upms_permission up
+        inner join upms_role_permission urp on up.id = urp.permission_id
+        inner join upms_role ur on urp.role_id = ur.id
+        where ur.id = #{roleId,jdbcType=BIGINT}
+    </select>
+
+    <select id="getPermissionByParentId" parameterType="long" resultType="net.atayun.bazooka.upms.biz.dal.entity.Permission">
+        select
+          id              id,
+          permission_name permissionName,
+          url             url,
+          icon            icon
+        from upms_permission
+        where parent_id = #{parentId,jdbcType=BIGINT}
+        order by id
+    </select>
+</mapper>

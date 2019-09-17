@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.atayun.bazooka.upms.biz.dal.dao.UserMapper">
+
+    <select id="getPage" parameterType="net.atayun.bazooka.upms.api.dto.req.UserQueryReqDTO"
+            resultType="net.atayun.bazooka.upms.biz.dal.entity.User">
+        select
+        u.id id,
+        u.username,
+        u.real_name realName,
+        u.sex,
+        u.phone,
+        u.email,
+        u.status,
+        u.remark,
+        u.create_author createAuthor,
+        u.update_author updateAuthor,
+        u.create_time createTime,
+        u.update_time updateTime
+        from upms_user u
+        <where>
+            <if test="userId != null">
+                u.id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="condition != null">
+                <bind name="queryCondition" value="'%' + _parameter.getCondition() + '%'"/>
+                and
+                (
+                u.username like #{queryCondition,jdbcType=VARCHAR}
+                or u.real_name like #{queryCondition,jdbcType=VARCHAR}
+                or u.phone like #{queryCondition,jdbcType=VARCHAR}
+                or u.email like #{queryCondition,jdbcType=VARCHAR}
+                )
+            </if>
+            <if test="status != null">
+                and u.status = #{status,jdbcType=VARCHAR}
+            </if>
+            <if test="userIds != null and userIds.size() > 0">
+                and u.id in
+                <foreach collection="userIds" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="getRoleNameByUserId" parameterType="long" resultType="java.lang.String">
+        select ur.role_name
+        from upms_user uu
+        inner join upms_user_role uur on uu.id = uur.user_id
+        inner join upms_role ur on  uur.role_id = ur.id
+        where uu.id = #{userId,jdbcType=BIGINT}
+    </select>
+
+    <select id="getPermissionNameByUserId" parameterType="long" resultType="java.lang.String">
+        select up.permission_name
+        from upms_user uu
+          inner join upms_user_role uur on uu.id = uur.user_id
+          inner join upms_role ur on uur.role_id = ur.id
+          inner join upms_role_permission urp on ur.id = urp.role_id
+          inner join upms_permission up on urp.permission_id = up.id
+        where uu.id = #{userId,jdbcType=BIGINT}
+        group by up.permission_name
+    </select>
+
+    <select id="getPermissionUrlByUserId" parameterType="long" resultType="java.lang.String">
+        select up.url
+        from upms_user uu
+          inner join upms_user_role uur on uu.id = uur.user_id
+          inner join upms_role ur on uur.role_id = ur.id
+          inner join upms_role_permission urp on ur.id = urp.role_id
+          inner join upms_permission up on urp.permission_id = up.id
+        where uu.id = #{userId,jdbcType=BIGINT}
+        group by up.url
+    </select>
+
+    <select id="countByUserIdUrl" resultType="java.lang.Integer">
+        select count(1)
+        from upms_user uu
+          inner join upms_user_role uur on uu.id = uur.user_id
+          inner join upms_role ur on uur.role_id = ur.id
+          inner join upms_role_permission urp on ur.id = urp.role_id
+          inner join upms_permission up on urp.permission_id = up.id
+        where uu.id = #{userId,jdbcType=BIGINT} and up.url = #{url,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getByUserNameOrEmail" resultType="net.atayun.bazooka.upms.biz.dal.entity.User">
+        select
+        u.id id,
+        u.username,
+        u.real_name realName,
+        u.sex,
+        u.phone,
+        u.email,
+        u.status,
+        u.remark,
+        u.create_author createAuthor,
+        u.update_author updateAuthor,
+        u.create_time createTime,
+        u.update_time updateTime
+        from upms_user u
+        where u.username = #{username} or u.email = #{email}
+    </select>
+</mapper>

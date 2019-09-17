@@ -1,0 +1,341 @@
+.antAdvancedSearchForm :global .ant-form-item {
+  display: flex;
+  align-items: center;
+}
+.antAdvancedSearchForm :global .ant-form-item-control-wrapper {
+  flex: 1;
+}
+.inputWidth {
+  width: 80%;
+}
+.textR {
+  text-align: right;
+}
+.textC {
+  text-align: center;
+}
+.marginT {
+  margin-top: 20px;
+}
+.marginL {
+  margin-left: 50px;
+}
+.marginL10 {
+  margin-left: 10px;
+}
+.marginR {
+  margin-right: 10px;
+}
+.marginR30 {
+  margin-right: 30px;
+}
+.marginB {
+  margin-bottom: 25px;
+}
+:global table .ant-table-thead > tr > th,
+:global .ant-table-tbody > tr > td {
+  text-align: center;
+}
+.commomForm {
+  margin: 0 auto;
+  width: 600px;
+}
+.subBox {
+  text-align: center;
+}
+@media screen and (max-width: 750px) {
+  .commomForm {
+    margin: 0 auto;
+    width: 90%;
+  }
+}
+.textOver {
+  max-width: 150px;
+}
+.textFont22 {
+  font-size: 22px;
+}
+.textFont16 {
+  font-size: 16px;
+}
+.flexCenter {
+  display: flex;
+  align-items: center;
+}
+.itemFirst {
+  min-width: 40px;
+  height: 40px;
+  border-radius: 40px;
+  margin-right: 16px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  font-family: "苹方", Helvetica;
+  line-height: 40px;
+}
+.listItem {
+  width: 100%;
+  min-height: 200px;
+  position: relative;
+}
+.moreOprea {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+}
+.itemDesc {
+  margin-top: 20px;
+  height: 60px;
+  color: #999;
+}
+.itemDesc .itemDescSpan {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+.appName {
+  color: #333;
+  font-size: 16px;
+}
+.flex {
+  display: flex;
+}
+.clusterItem {
+  flex: 1;
+  text-align: center;
+}
+.clusterItem .midHeight {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.textSuccess {
+  color: #259b24;
+}
+.textError {
+  color: #f5222d;
+}
+.flex1 {
+  flex: 1;
+}
+.iconAllScreen {
+  flex: 1;
+  text-align: right;
+}
+.iconAllScreen .iconAll {
+  color: #666;
+  cursor: pointer;
+  margin-right: 30px;
+}
+.processLR {
+  margin: 0 20px;
+}
+.leftBlock {
+  width: 35px;
+}
+.rightBlock {
+  min-width: 170px;
+}
+.width60 {
+  width: 60px;
+  margin-left: 10px;
+}
+.width100 {
+  width: 100px;
+}
+.paddingL {
+  padding-left: 10px;
+}
+.basicInfoItem {
+  width: 100px;
+}
+.gridtitleBg {
+  background-color: #f5f5f5;
+}
+.gridItem {
+  min-width: 200px;
+  min-height: 70px;
+  text-align: center;
+  float: initial;
+  width: 100%;
+}
+.serviceDetailBox :global .ant-tabs-nav {
+  width: 100%;
+}
+.serviceDetailBox :global .ant-tabs-nav .ant-tabs-tab:last-child {
+  position: absolute;
+  right: 0;
+}
+.serviceDetailBox2 :global .ant-tabs-ink-bar.ant-tabs-ink-bar-animated {
+  transform: translate3d(calc(1200px - 100px), 0px, 0px) !important;
+}
+.setScroll {
+  max-height: 500px;
+  overflow-y: auto;
+}
+.iconColor {
+  color: #1890ff;
+}
+.successColor {
+  color: #52c41a;
+}
+.errorColor {
+  color: #f5222d;
+}
+.waringColor {
+  color: #edb233;
+}
+.disabledColor {
+  color: #999;
+}
+.textBlack {
+  color: #333;
+}
+.copyBg {
+  background-color: #000;
+  padding: 10px;
+}
+.copyBg .colorWhite {
+  color: #fff;
+}
+.copyBg :global .ant-typography-copy {
+  color: #fff;
+  font-size: 18px;
+}
+.show {
+  display: block;
+}
+.hidden {
+  display: none;
+}
+.noWarp {
+  white-space: nowrap;
+}
+.modalScroll {
+  height: 60vh;
+  overflow-y: auto;
+}
+.modalScrollHas {
+  height: 60vh;
+  overflow: auto;
+}
+.modalAll {
+  height: 100%;
+}
+.modalAll :global .ant-modal-content {
+  height: 100%;
+}
+.modalAll :global .ant-modal-body {
+  background-color: #fff;
+}
+.height100 {
+  height: calc(100vh - 105px);
+}
+.boxBlockScroll {
+  overflow-y: auto;
+  max-height: 20vh;
+}
+.tableTag {
+  border-right: 1px solid #ececec;
+  border-bottom: 1px solid #ececec;
+}
+.tableTag .tableBox th,
+.tableTag .tableBox tr,
+.tableTag .tableBox td {
+  display: block;
+}
+.tableTag .tableBox th,
+.tableTag .tableBox td {
+  border-left: 1px solid #ececec;
+  border-top: 1px solid #ececec;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.successCircle {
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+  background-color: #52c41a;
+  margin-left: 50%;
+  transform: translate(-50%, 0);
+}
+.errorCircle {
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+  background-color: #f5222d;
+  margin-left: 50%;
+  transform: translate(-50%, 0);
+}
+.disabledCircle {
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+  background-color: #999;
+  margin-left: 50%;
+  transform: translate(-50%, 0);
+}
+.waringCircle {
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+  background-color: #edb233;
+  margin-left: 50%;
+  transform: translate(-50%, 0);
+}
+.hollowCircle {
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+  background-color: #fff;
+  margin-left: 50%;
+  transform: translate(-50%, 0);
+  border: 1px solid #999;
+}
+.preWarp {
+  white-space: pre-wrap;
+}
+.textOverflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.descriptionsTtem :global .ant-descriptions-item {
+  display: flex;
+}
+.spin {
+  width: 100%;
+  text-align: center;
+  margin: 30px 0;
+}
+.boxBlock {
+  background-color: #333;
+  color: #fff;
+  width: 90%;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 15px auto;
+}
+.appKindIcon {
+  width: 18px;
+  height: 18px;
+  margin-right: 5px;
+  vertical-align: bottom;
+}
+.widthTitleLeft {
+  width: 130px;
+  text-align: right;
+  color: #000;
+}
+@media (max-width: 1199px) {
+  .serviceDetailBox2 :global .ant-tabs-ink-bar.ant-tabs-ink-bar-animated {
+    transform: translate3d(calc(100vw - 110px), 0px, 0px) !important;
+  }
+  .marginTopMobile {
+    margin-top: 20px;
+  }
+}

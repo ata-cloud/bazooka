@@ -1,0 +1,53 @@
+target/
+.classpath
+.project
+.settings/
+.svn/
+classes/
+lib/
+.externalToolBuilders/
+*.iml
+.idea/
+.ssd
+.compiled/
+bin/
+build/
+prd/
+.rebel.xml
+
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+**/node_modules
+# roadhog-api-doc ignore
+/src/utils/request-temp.js
+_roadhog-api-doc
+
+# production
+/.vscode
+
+# misc
+.DS_Store
+npm-debug.log*
+yarn-error.log
+
+/coverage
+yarn.lock
+package-lock.json
+*bak
+.vscode
+
+# visual studio code
+.history
+*.log
+functions/*
+.temp/**
+
+# umi
+.umi
+.umi-production
+
+# screenshot
+screenshot
+.firebase

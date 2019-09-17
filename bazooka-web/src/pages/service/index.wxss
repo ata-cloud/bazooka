@@ -1,0 +1,46 @@
+.basicItemH {
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.basicItemHOnly {
+  min-height: 150px;
+}
+.timeLineLeft {
+  width: 150px;
+  text-align: right;
+  padding: 0 10px 0 0;
+  margin-top: -20px;
+}
+.serviceTimeLine {
+  width: 100%;
+  margin-top: 40px;
+}
+.serviceTimeLine :global .ant-timeline-item-content {
+  top: 0;
+  transform: translate(0, -50%);
+}
+.serviceTimeLine .timeRight {
+  width: 100%;
+  padding: 10px 20px;
+  border: 1px solid #e8e8e8;
+  border-radius: 2px;
+}
+.serviceTimeLine .timtLineItem {
+  width: 100%;
+  padding-bottom: 60px;
+}
+.textSource {
+  color: #101010;
+  font-size: 16px;
+}
+.textStatus {
+  font-size: 24px;
+}
+.subTitle {
+  font-size: 12px;
+  color: #999;
+  margin-left: 10px;
+}

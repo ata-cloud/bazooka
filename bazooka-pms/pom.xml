@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>bazooka-pms</artifactId>
+
+    <modules>
+        <module>bazooka-pms-api</module>
+        <module>bazooka-pms-biz</module>
+    </modules>
+    <packaging>pom</packaging>
+
+    <name>bazooka-pms</name>
+    <description>pms</description>
+
+    <parent>
+        <groupId>net.atayun.bazooka</groupId>
+        <artifactId>bazooka</artifactId>
+        <version>1.0.0.RELEASE</version>
+    </parent>
+
+
+
+</project>

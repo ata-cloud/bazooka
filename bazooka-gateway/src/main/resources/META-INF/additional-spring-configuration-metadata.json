@@ -1,0 +1,22 @@
+{
+  "properties": [
+    {
+      "name": "pms.domain.search.endpoint",
+      "type": "java.lang.String",
+      "sourceType": "net.atayun.bazooka.pms.biz.modules.domain.properties.DomainSearchProperties",
+      "description": "域名查询服务地址."
+    },
+    {
+      "name": "pms.domain.search.token",
+      "type": "java.lang.String",
+      "sourceType": "net.atayun.bazooka.pms.biz.modules.domain.properties.DomainSearchProperties",
+      "description": "域名查询服务的访问令牌."
+    },
+    {
+      "name": "pms.domain.search.mlbList",
+      "type": "java.util.List<java.lang.String>",
+      "sourceType": "net.atayun.bazooka.pms.biz.modules.domain.properties.DomainSearchProperties",
+      "description": "Marathon LB 的主机列表."
+    }
+  ]
+}

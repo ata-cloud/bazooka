@@ -1,0 +1,55 @@
+/*
+ *    Copyright 2018-2019 the original author or authors.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package net.atayun.bazooka.pms.api.dto;
+
+import com.youyu.common.dto.BaseDto;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+import java.time.LocalDateTime;
+
+
+/**
+ *  代码生成器
+ *
+ * @author 技术平台
+ * @date 2019-07-26
+ */
+@Data
+@ApiModel
+public class PmsGitlabUserDto extends BaseDto<Long>{
+
+    @ApiModelProperty(value = "用户 id")
+    private Integer userId;
+
+    @ApiModelProperty(value = "gitlab 用户 id")
+    private Integer gitlabUserId;
+
+    @ApiModelProperty(value = "")
+    private String createAuthor;
+
+    @ApiModelProperty(value = "")
+    private LocalDateTime createTime;
+
+    @ApiModelProperty(value = "")
+    private String updateAuthor;
+
+    @ApiModelProperty(value = "")
+    private LocalDateTime updateTime;
+
+}
+

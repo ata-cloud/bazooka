@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.atayun.bazooka.pms.biz.dal.dao.PmsUserProjectRelationMapper">
+
+<update id="updateRelation">
+    update pms_user_project_relation
+    set role_type=#{roleType}
+    where project_id=#{projectId} and user_id=#{userId}
+</update>
+<select id="queryUserEnvInfo" resultType="long">
+    select distinct (env_id)
+from pms_project_env_relation en
+       inner join
+     (select distinct(project_id)
+      from pms_user_project_relation pupr
+             inner join (select id from pms_project_info where is_deleted = 0) as pin on
+        pupr.project_id = pin.id
+      where user_id = #{userId}
+     ) as pi on en.project_id = pi.project_id
+</select>
+</mapper>

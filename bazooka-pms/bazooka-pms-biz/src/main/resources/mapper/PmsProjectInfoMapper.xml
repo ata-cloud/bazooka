@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.atayun.bazooka.pms.biz.dal.dao.PmsProjectInfoMapper">
+    <select id="countProjectInfo" resultType="integer">
+        select count(*)
+        from pms_project_info
+        where (project_name=#{projectName} or project_code=#{projectCode})
+        <if test="projectId !=0">
+            and id!=#{projectId}
+        </if>
+    </select>
+
+    <select id="queryProjectCount" resultType="net.atayun.bazooka.pms.api.dto.ProjectCountDto">
+       select id as projectId,project_code,project_name,description,ifnull(userCount,0) as userCount,ifnull(envCount,0) as envCount,
+    ifnull(appCount,0) as appCount
+       from pms_project_info ppi left join (
+         select count(*) as envCount,project_id
+         from pms_project_env_relation
+         group by project_id) as pper on ppi.id=pper.project_id left join (
+         select count(distinct user_id) as userCount,project_id
+         from pms_user_project_relation
+         group by project_id) as pu on ppi.id=pu.project_id left join (
+           select count(*) as appCount,project_id
+           from pms_app_info pa
+           where pa.is_deleted=0
+           group by project_id
+         ) as app on app.project_id=ppi.id
+         where  ppi.is_deleted =0
+         <if test="keyWord !=null">
+         and (ppi.project_name like concat('%',#{keyWord},'%') or ppi.project_code like concat('%',#{keyWord},'%'))
+         </if>
+         ;
+    </select>
+    <select id="queryProjectListForAdmin" resultType="net.atayun.bazooka.pms.api.dto.PmsProjectInfoDto">
+       select pi.*
+       from pms_project_info pi inner join pms_user_project_relation pr on pi.id=pr.project_id
+       where pr.user_id=#{userId} and pr.role_type='USER_PROJECT_MASTER' and pi.is_deleted=0
+    </select>
+
+</mapper>

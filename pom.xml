@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>net.atayun.bazooka</groupId>
+    <artifactId>bazooka</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.0.RELEASE</version>
+
+    <parent>
+        <groupId>com.yofish.platform</groupId>
+        <artifactId>sword-parent</artifactId>
+        <version>1.2.0.RELEASE</version>
+    </parent>
+    <modules>
+        <module>bazooka-gateway</module>
+        <module>bazooka-pms</module>
+        <module>bazooka-common</module>
+        <module>bazooka-upms</module>
+        <module>bazooka-deploy</module>
+        <module>bazooka-rms</module>
+    </modules>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <marathon-client.version>0.6.3-SNAPSHOT</marathon-client.version>
+        <jenkins-client.version>0.3.8</jenkins-client.version>
+        <gitlab-api.version>4.1.0</gitlab-api.version>
+        <netty.version>4.1.24.Final</netty.version>
+    </properties>
+    <dependencyManagement>
+        <dependencies>
+            <!--bazooka相关-->
+            <dependency>
+                <groupId>net.atayun.bazooka</groupId>
+                <artifactId>bazooka-pms-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.atayun.bazooka</groupId>
+                <artifactId>bazooka-pms-biz</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.atayun.bazooka</groupId>
+                <artifactId>bazooka-deploy-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.atayun.bazooka</groupId>
+                <artifactId>bazooka-deploy-biz</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.atayun.bazooka</groupId>
+                <artifactId>bazooka-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.atayun.bazooka</groupId>
+                <artifactId>bazooka-upms-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.atayun.bazooka</groupId>
+                <artifactId>bazooka-upms-biz</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.atayun.bazooka</groupId>
+                <artifactId>bazooka-rms-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.atayun.bazooka</groupId>
+                <artifactId>bazooka-rms-biz</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <!--bazooka相关结束-->
+
+
+            <dependency>
+                <groupId>com.youyu.mesosphere</groupId>
+                <artifactId>marathon-client</artifactId>
+                <version>${marathon-client.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.offbytwo.jenkins</groupId>
+                <artifactId>jenkins-client</artifactId>
+                <version>${jenkins-client.version}</version>
+            </dependency>
+
+            <!-- netty configuration -->
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+
+            <!--可能不需要的-->
+            <dependency>
+                <groupId>org.jsoup</groupId>
+                <artifactId>jsoup</artifactId>
+                <version>1.11.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.gitlab</groupId>
+                <artifactId>java-gitlab-api</artifactId>
+                <version>${gitlab-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>1.2.29</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jgit</groupId>
+                <artifactId>org.eclipse.jgit</artifactId>
+                <version>5.4.2.201908231537-r</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.jenkins-ci.main/jenkins-core -->
+            <dependency>
+                <groupId>org.jenkins-ci.main</groupId>
+                <artifactId>jenkins-core</artifactId>
+                <version>1.651.3</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <name>Nexus Release Repository</name>
+            <url>http://192.168.1.54:8081/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>Nexus Snapshot Repository</name>
+            <url>http://192.168.1.54:8081/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+</project>
