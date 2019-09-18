@@ -56,4 +56,4 @@ Bazooka的核心是发布调度引擎，包括了各个独立开发的插件，�
 
 QQ交流：
 
-<img src="./img/qq.png"  height="302" width="220">
+<img src="docs/img/qq.png"  height="302" width="220">
