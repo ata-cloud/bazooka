@@ -4,13 +4,13 @@
 
 <h1>阿塔云 Bazooka - 自动化开发运维平台</h1>
 
-![logo](./img/logo160x160.png)
+![logo](docs/img/logo160x160.png)
 
 Bazooka自动化开发运维平台，在[Docker](https://www.docker.com/)，[Mesos](http://mesos.apache.org/)，[Kubernetes](https://kubernetes.io/)，[Jenkins](https://jenkins.io)，[Gitlab](https://about.gitlab.com/)等开源技术的基础上，以应用和计算资源为中心，实现本地和云端的各类计算资源的一致性，帮助企业应对敏捷开发、自动化构建部署、微服务治理、多租户管理、容器和镜像仓库管理、容器监控和日志等业务场景。
 
 # 核心功能
 
-![功能架构](./img/Bazooka_functional_architecture2.png)
+![功能架构](docs/img/Bazooka_functional_architecture2.png)
 
 - [**资源**](./function_source.md) - 通过Mesos集群、Kubernetes集群或者独立节点的方式，管理物理机、虚拟机、云主机等各类计算资源
 - [**环境**](./function_environment.md) - 用户根据开发场景划分，例如“测试环境”、“预发布环境”、“生产环境”等。环境通过资源切分，为各个项目中的服务提供透明、无感知的计算资源调度
