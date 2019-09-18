@@ -84,7 +84,7 @@ const uglifyJSOptions =
 export default {
   // add for transfer to umi
   plugins,
-  outputPath: '../ops-gateway/src/main/resources/static',
+  outputPath: '../bazooka-gateway/src/main/resources/static',
   history: 'hash',
   define: {
     ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION:

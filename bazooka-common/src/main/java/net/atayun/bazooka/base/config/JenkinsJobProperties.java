@@ -27,7 +27,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "ata.ops.base.jenkins.job")
+@ConfigurationProperties(prefix = "ata.bazooka.base.jenkins.job")
 public class JenkinsJobProperties {
 
 

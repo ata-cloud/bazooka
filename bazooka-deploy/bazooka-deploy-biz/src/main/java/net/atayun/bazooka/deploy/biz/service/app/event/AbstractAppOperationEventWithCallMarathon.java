@@ -15,8 +15,13 @@
  */
 package net.atayun.bazooka.deploy.biz.service.app.event;
 
+import com.youyu.common.exception.BizException;
+import mesosphere.client.common.ModelUtils;
+import mesosphere.marathon.client.Marathon;
+import mesosphere.marathon.client.MarathonClient;
+import mesosphere.marathon.client.model.v2.App;
+import mesosphere.marathon.client.model.v2.Result;
 import net.atayun.bazooka.base.constant.CommonConstants;
-import net.atayun.bazooka.base.dcos.DcosServerBean;
 import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
 import net.atayun.bazooka.deploy.api.param.AppOperationEventParam;
 import net.atayun.bazooka.deploy.biz.constants.MarathonAppConfigConstants;
@@ -30,11 +35,6 @@ import net.atayun.bazooka.rms.api.api.EnvApi;
 import net.atayun.bazooka.rms.api.dto.ClusterConfigDto;
 import net.atayun.bazooka.rms.api.dto.EnvDto;
 import net.atayun.bazooka.rms.api.dto.EnvResourceDto;
-import com.youyu.common.exception.BizException;
-import mesosphere.client.common.ModelUtils;
-import mesosphere.dcos.client.DCOS;
-import mesosphere.marathon.client.model.v2.App;
-import mesosphere.marathon.client.model.v2.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.NotNull;
@@ -52,9 +52,6 @@ public abstract class AbstractAppOperationEventWithCallMarathon extends Abstract
 
     @Autowired
     private AppOperationEventMarathonService appOperationEventMarathonService;
-
-    @Autowired
-    private DcosServerBean dcosServerBean;
 
     @Autowired
     private EnvApi envApi;
@@ -90,8 +87,8 @@ public abstract class AbstractAppOperationEventWithCallMarathon extends Abstract
         EnvDto envDto = envApi.get(envId)
                 .ifNotSuccessThrowException()
                 .getData();
-        DCOS instance = dcosServerBean.getInstance(CommonConstants.PROTOCOL + clusterConfig.getDcosEndpoint());
-        Result result = instance.updateApp("/" + envDto.getCode() + appInfo.getDcosServiceId(), app, true);
+        Marathon marathon = MarathonClient.getInstance(CommonConstants.PROTOCOL + clusterConfig.getDcosEndpoint() + CommonConstants.MARATHON_PORT);
+        Result result = marathon.updateApp("/" + envDto.getCode() + appInfo.getDcosServiceId(), app, true);
         AppOperationEventMarathonEntity newMarathonEntity = new AppOperationEventMarathonEntity();
         newMarathonEntity.setMarathonConfig(app.toString());
         newMarathonEntity.setEventId(eventId);

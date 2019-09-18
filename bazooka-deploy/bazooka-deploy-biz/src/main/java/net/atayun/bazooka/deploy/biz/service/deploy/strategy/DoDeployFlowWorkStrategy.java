@@ -15,9 +15,11 @@
  */
 package net.atayun.bazooka.deploy.biz.service.deploy.strategy;
 
+import mesosphere.marathon.client.Marathon;
+import mesosphere.marathon.client.MarathonClient;
+import mesosphere.marathon.client.model.v2.*;
 import net.atayun.bazooka.base.annotation.StrategyNum;
 import net.atayun.bazooka.base.constant.CommonConstants;
-import net.atayun.bazooka.base.dcos.DcosServerBean;
 import net.atayun.bazooka.base.enums.deploy.AppOperationEventLogTypeEnum;
 import net.atayun.bazooka.deploy.biz.constants.MarathonAppConfigConstants;
 import net.atayun.bazooka.deploy.biz.dal.entity.app.AppOperationEventMarathonEntity;
@@ -35,8 +37,6 @@ import net.atayun.bazooka.pms.api.param.VolumeMount;
 import net.atayun.bazooka.rms.api.api.EnvApi;
 import net.atayun.bazooka.rms.api.dto.ClusterConfigDto;
 import net.atayun.bazooka.rms.api.dto.EnvDto;
-import mesosphere.dcos.client.DCOS;
-import mesosphere.marathon.client.model.v2.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -56,9 +56,6 @@ import java.util.stream.Collectors;
         number = DeployFlowEnum.FLOW_DO_DEPLOY,
         describe = "部署步骤")
 public class DoDeployFlowWorkStrategy extends AbstractDeployFlowWorkStrategy {
-
-    @Autowired
-    private DcosServerBean dcosServerBean;
 
     @Autowired
     private EnvApi envApi;
@@ -94,12 +91,12 @@ public class DoDeployFlowWorkStrategy extends AbstractDeployFlowWorkStrategy {
             logConcat.concat("DC/OS Service Id: " + dcosServiceId);
             App app = getMarathonApp(workDetailPojo, appDeployConfig, clusterConfig, deployFlowId, dcosServiceId);
 
-            String dcosEndpoint = CommonConstants.PROTOCOL + clusterConfig.getDcosEndpoint();
+            String dcosEndpoint = CommonConstants.PROTOCOL + clusterConfig.getDcosEndpoint() + CommonConstants.MARATHON_PORT;
             logConcat.concat("DC/OS Endpoint: " + dcosEndpoint);
             logConcat.concat("服务配置:");
             logConcat.concat(app.toString());
-            DCOS dcos = dcosServerBean.getInstance(dcosEndpoint);
-            Result dcosResult = dcos.updateApp(dcosServiceId, app, true);
+            Marathon marathon = MarathonClient.getInstance(dcosEndpoint);
+            Result dcosResult = marathon.updateApp(dcosServiceId, app, true);
 
             String deploymentId = dcosResult.getDeploymentId();
             String deploymentVersion = dcosResult.getVersion();
