@@ -219,7 +219,7 @@ class ProjectInfo extends React.Component {
           </div>
           <div className={styles.flexCenter}>
             <p className={styles.basicInfoItem}>项目描述：</p>
-            <p className={styles.flex1}>{proInfo.description}</p>
+            <p className={`${styles.flex1} ${styles.proDesc}`} title={proInfo.description}>{proInfo.description}</p>
           </div>
         </div>
       </Card>
