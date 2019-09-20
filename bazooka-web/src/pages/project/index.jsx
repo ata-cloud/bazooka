@@ -315,7 +315,7 @@ class Project extends React.Component {
                       </Col>
                     </Row>
                     <div className={styles.itemDesc}>
-                      <span className={styles.itemDescSpan} style={{ WebkitBoxOrient: 'vertical' }}>{item.description}</span>
+                      <span className={styles.itemDescSpan}>{item.description}</span>
                     </div>
                   </div>
 

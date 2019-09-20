@@ -97,8 +97,11 @@
   .itemDescSpan {
     overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 3; 
+    /* autoprefixer: off */
     -webkit-box-orient: vertical;
+    /* autoprefixer: on */
+    word-break: break-all;
   }
 
 }
@@ -168,6 +171,7 @@
   -webkit-box-orient: vertical;
   /* autoprefixer: on */
   overflow: hidden;
+  word-break: break-all;
 }
 .gridtitleBg {
   background-color: #f5f5f5

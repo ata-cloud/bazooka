@@ -355,36 +355,39 @@ class Detail extends React.Component {
     const { appRunStatus, envWithPro } = this.props;
     return (
       <div className={`${styles.serviceDetailBox} ${key == "4" ? styles.serviceDetailBox2 : ""}`}>
-        <PageHeaderWrapper title={appRunStatus.appName} content={this.renderTitle()} tabList={tabList} tabActiveKey={key} onTabChange={this.onTabChange}>
-          <Spin spinning={currentEnv ? false : true} className={`${styles.spin}`} />
-          {
-            currentEnv &&
-            <Fragment>
-              {
-                key === '1' &&
-                <ServiceBasic data={{ envId: currentEnv, projectId, appId }} />
-              }
-              {
-                key === '2' &&
-                <ServiceBuild data={{ envId: currentEnv, projectId, appId }} />
-              }
-              {
-                key === '3' &&
-                <ServiceWorkInfo data={{ envId: currentEnv, projectId, appId }} />
-              }
-              {
-                key === '4' &&
-                <ServiceSetting data={{ envId: currentEnv, projectId, appId }} />
-              }
-            </Fragment>
-          }
-          {
-            showMirror && <MirrorM visible={showMirror} onClose={this.onClose} data={{ envId: currentEnv, projectId, appId }} />
-          }
-          {
-            showStartModal && this.renderStartModal()
-          }
-        </PageHeaderWrapper>
+        {
+          appRunStatus.appId &&
+          <PageHeaderWrapper title={appRunStatus.appName} content={this.renderTitle()} tabList={tabList} tabActiveKey={key} onTabChange={this.onTabChange}>
+            <Spin spinning={currentEnv ? false : true} className={`${styles.spin}`} />
+            {
+              currentEnv &&
+              <Fragment>
+                {
+                  key === '1' &&
+                  <ServiceBasic data={{ envId: currentEnv, projectId, appId }} />
+                }
+                {
+                  key === '2' &&
+                  <ServiceBuild data={{ envId: currentEnv, projectId, appId }} />
+                }
+                {
+                  key === '3' &&
+                  <ServiceWorkInfo data={{ envId: currentEnv, projectId, appId }} />
+                }
+                {
+                  key === '4' &&
+                  <ServiceSetting data={{ envId: currentEnv, projectId, appId }} />
+                }
+              </Fragment>
+            }
+            {
+              showMirror && <MirrorM visible={showMirror} onClose={this.onClose} data={{ envId: currentEnv, projectId, appId }} />
+            }
+            {
+              showStartModal && this.renderStartModal()
+            }
+          </PageHeaderWrapper>
+        }
       </div>
 
     );

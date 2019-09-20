@@ -92,7 +92,10 @@
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  /* autoprefixer: off */
   -webkit-box-orient: vertical;
+  /* autoprefixer: on */
+  word-break: break-all;
 }
 .appName {
   color: #333;
@@ -158,6 +161,7 @@
   -webkit-box-orient: vertical;
   /* autoprefixer: on */
   overflow: hidden;
+  word-break: break-all;
 }
 .gridtitleBg {
   background-color: #f5f5f5;

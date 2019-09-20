@@ -87,7 +87,7 @@ class ProjectInfo extends React.Component {
       this.onGetEnvIds(proEnvSoruce);
     }
   }
- 
+
   //项目资源
   onFetchSouce = async () => {
     const { projectId, proInfo, dispatch } = this.props;
@@ -178,14 +178,14 @@ class ProjectInfo extends React.Component {
       this.onFetchSouce();
     }
   }
-    //项目信息
-    onFetchInfo = () => {
-      const { dispatch, projectId } = this.props;
-      dispatch({
-        type: 'project/proInfo',
-        payload: { projectId }
-      })
-    }
+  //项目信息
+  onFetchInfo = () => {
+    const { dispatch, projectId } = this.props;
+    dispatch({
+      type: 'project/proInfo',
+      payload: { projectId }
+    })
+  }
   onGranularityChange = (e) => {
     this.setState({
       granularity: e.target.value
@@ -339,10 +339,10 @@ class ProjectInfo extends React.Component {
                     initialValue: proInfo.description,
                     rules: [
                       {
-                        validator(rule, value, callback){
-                          if(value.length > 500) {
+                        validator(rule, value, callback) {
+                          if (value.length > 500) {
                             callback('最多500个字符')
-                          }else {
+                          } else {
                             callback()
                           }
                         }

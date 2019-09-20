@@ -90,7 +90,7 @@ class ProjectDetail extends React.Component {
     return (
       <Fragment>
         {
-          projectId &&
+          proInfo.id &&
           <PageHeaderWrapper title={proInfo.projectName} content={
             <Fragment>
               {
