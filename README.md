@@ -10,7 +10,7 @@ Bazooka自动化开发运维平台，在[Docker](https://www.docker.com/)，[Mes
 
 # 核心功能
 
-![功能架构](docs/img/Bazooka_functional_architecture2.png)
+![功能架构](docs/img/Bazooka_functional_architecture.png)
 
 - [**资源**](./function_source.md) - 通过Mesos集群、Kubernetes集群或者独立节点的方式，管理物理机、虚拟机、云主机等各类计算资源
 - [**环境**](./function_environment.md) - 用户根据开发场景划分，例如“测试环境”、“预发布环境”、“生产环境”等。环境通过资源切分，为各个项目中的服务提供透明、无感知的计算资源调度
