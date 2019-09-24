@@ -15,6 +15,9 @@
  */
 package net.atayun.bazooka.deploy.biz.service.deploy.impl;
 
+import com.youyu.common.exception.BizException;
+import com.youyu.common.service.AbstractService;
+import com.youyu.common.utils.YyBeanUtils;
 import net.atayun.bazooka.base.enums.deploy.DeployModeEnum;
 import net.atayun.bazooka.deploy.biz.dal.dao.deploy.DeployMapper;
 import net.atayun.bazooka.deploy.biz.dal.entity.deploy.DeployCountsEntity;
@@ -37,9 +40,6 @@ import net.atayun.bazooka.deploy.biz.service.flow.DeployFlowService;
 import net.atayun.bazooka.pms.api.dto.AppDeployConfigDto;
 import net.atayun.bazooka.pms.api.dto.AppInfoDto;
 import net.atayun.bazooka.pms.api.feign.AppApi;
-import com.youyu.common.exception.BizException;
-import com.youyu.common.service.AbstractService;
-import com.youyu.common.utils.YyBeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -123,7 +123,7 @@ public class DeployServiceImpl
 
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
-            public void afterCommit() {
+            public void afterCompletion(int status) {
                 DispatchFlowEventPojo eventPojo = new DispatchFlowEventPojo(deployId, 0);
                 applicationContext.publishEvent(new DispatchFlowEvent(DispatchFlowSourceEnum.DEPLOY_ACTION, eventPojo));
             }
