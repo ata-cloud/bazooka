@@ -66,8 +66,11 @@ class System extends React.Component {
       this.onFetchCredentialsList()
     }
   }
-  onToHref = (url) => {
-    let href = toHref(url);
+  onToHref = (item) => {
+    let href = toHref(item.url);
+    if(item.name == "MLB") {
+      href = toHref(item.url)+":9090/haproxy?stats"
+    }
     window.open(href)
   }
   renderCredentialsList() {
@@ -194,7 +197,11 @@ class System extends React.Component {
                     item.status && CLUSTER_STATUS[item.status] &&
                     <p className={styles[CLUSTER_STATUS[item.status].style]} style={{ marginLeft: 0, minWidth: 10 }}></p>
                   }
-                  <p><a onClick={() => { this.onToHref(item.url) }}>{item.name}</a></p>
+                  {
+                    (item.name == '镜像库' || item.name == "AtaCloud")? 
+                    <p>{item.name}</p>:
+                    <p><a onClick={() => { this.onToHref(item) }}>{item.name}</a></p>
+                  }
                   <p> （</p>
                   <p className={styles.textOverflow}>版本：{item.version}</p>
                   <p>）</p>
