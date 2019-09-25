@@ -11,6 +11,18 @@ Bazooka 从本质上解决的问题如下：<br/>
 
 ---------------
 
+# 领域模型设计
+#### [领域模型图](./GetStarted.md)
+![logo](./img/Bazooka_domain.png)
+
+
+#### [流程图](./GetStarted.md)
+![logo](./img/Bazooka_domain.png)
+
+#### [发布状态机](./GetStarted.md)
+![logo](./img/Bazooka_domain.png)
+
+
 # 功能模块
 #### [系统信息](./GetStarted.md)
 > 系统基础信息、组件状态和凭据管理
