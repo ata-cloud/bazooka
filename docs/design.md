@@ -42,25 +42,6 @@ Bazooka 从本质上解决的问题如下：<br/>
 #### [服务管理](./app_manage.md)
 > 一个服务对应一个完整的生命周期，拥有代码管理、编译、打包、容器镜像、测试、发布、部署、运维、监控等完整的功能
 
-# 使用手册
-#### [分配环境](./GetStarted.md)
-#### [新建项目](./GetStarted.md)
-#### [新建服务](./app_create.md)
-#### [新建服务发布配置](./app_deploy_config_create.md)
-#### [服务发布](./app_deploy.md)
-#### [服务镜像管理](./app_docker_image_management.md)
-
-# 安装
-
-#### [本地集群安装](./install_local_cluster.md)
-#### [本地单机安装](./GetStarted.md)
-
-# 运维手册
-##### Docker 镜像库
-> 自动清理镜像，每个应用每个环境默认保留最近10个tag。每天凌晨3点，系统自动运行清理任务。
-
-# 进阶场景
-> 推送镜像到指定的镜像库
 
 # 常见问题
 
