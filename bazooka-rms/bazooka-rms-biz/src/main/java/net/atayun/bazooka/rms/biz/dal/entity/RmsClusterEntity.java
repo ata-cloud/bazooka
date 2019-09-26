@@ -90,4 +90,5 @@ public class RmsClusterEntity extends JdbcMysqlEntity<Long> {
     public Long getClusterId() {
         return getId();
     }
+
 }

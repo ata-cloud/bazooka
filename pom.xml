@@ -21,6 +21,8 @@
         <module>bazooka-upms</module>
         <module>bazooka-deploy</module>
         <module>bazooka-rms</module>
+        <module>bazoo-kadeploy2</module>
+        <module>bazooka-deploy2</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
