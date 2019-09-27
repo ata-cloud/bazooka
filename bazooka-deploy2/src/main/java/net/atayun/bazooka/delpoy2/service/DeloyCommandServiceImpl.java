@@ -25,7 +25,7 @@ public class DeloyCommandServiceImpl {
         Long clusterId = appEnvDeployConfig.getClusterId();
 
         DeployCommand deployCommand = getDeployCommand(deployCommandReqDto);
-        deployCommand.callDeploy();
+        deployCommand.callDeploying();
         deployCommandMapper.insert(deployCommand);
         DeployBridge deployBridge = StrategyNumBean.getBeanInstance(DeployBridge.class, clusterId.toString());
         // App的服务已锁定，  1新建发布， 并且锁定deploy

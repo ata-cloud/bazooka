@@ -21,7 +21,6 @@ import org.springframework.context.event.EventListener;
 public class DispatchFlowListener {
     @Autowired
     ApplicationEventPublisher eventPublisher;
-    private static final Integer First_Flow = 1;
     @Autowired
     private DeployFlowMapper deployFlowMapper;
     @Autowired

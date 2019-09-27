@@ -14,7 +14,7 @@ public class DeployCommand extends BaseEntity<Long> {
 
     private Long appEnvDeployConfigId;
 
-    public void callDeploy() {
+    public void callDeploying() {
 
     }
 }
