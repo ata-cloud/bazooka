@@ -1,12 +1,12 @@
-package net.atayun.bazooka.delpoy2.strategy;
+package net.atayun.bazooka.delpoy2.component.strategy.flow;
 
 import net.atayun.bazooka.delpoy2.dal.entity.DeployCommand;
 
 /**
  * @Author: xiongchengwei
- * @Date: 2019/9/25 下午1:53
+ * @Date: 2019/9/25 下午1:50
  */
-public class DeployActionStrategy4BuildDockImage implements DeployActionStrategy {
+public class DeployFlowStrategy4SetUp implements DeployFlowStrategy {
     @Override
     public void action(DeployCommand deployCommand) {
 

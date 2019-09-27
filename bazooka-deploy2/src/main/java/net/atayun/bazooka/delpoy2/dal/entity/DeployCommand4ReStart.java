@@ -1,8 +1,6 @@
 package net.atayun.bazooka.delpoy2.dal.entity;
 
-import net.atayun.bazooka.delpoy2.dal.entity.DeployCommand;
-import net.atayun.bazooka.delpoy2.dto.DeployCommandReqDto;
-import net.atayun.bazooka.delpoy2.strategy.DeployCommandStrategy;
+import net.atayun.bazooka.delpoy2.component.bridge.deploy.DeployBridge;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -12,14 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class DeployCommand4ReStart extends DeployCommand {
 
     @Autowired
-    private DeployCommandStrategy deployCommandStrategy;
+    private DeployBridge deployBridge;
 
-    public DeployCommand4ReStart(DeployCommandReqDto deployCommandReqDto) {
-        super(deployCommandReqDto);
-    }
-
-    @Override
-    public void execute() {
-
-    }
 }

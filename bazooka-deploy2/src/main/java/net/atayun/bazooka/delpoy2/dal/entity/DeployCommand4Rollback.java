@@ -8,7 +8,4 @@ import net.atayun.bazooka.delpoy2.dto.DeployCommandReqDto;
  * @Date: 2019/9/25 上午10:26
  */
 public class DeployCommand4Rollback extends DeployCommand {
-    public DeployCommand4Rollback(DeployCommandReqDto deployCommandReqDto) {
-        super(deployCommandReqDto);
-    }
 }

@@ -88,6 +88,10 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.atayun.bazooka</groupId>
+            <artifactId>bazooka-deploy-biz</artifactId>
+        </dependency>
     </dependencies>
 
 

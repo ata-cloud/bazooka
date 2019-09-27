@@ -42,4 +42,16 @@ public class DeployFlowEntity extends JdbcMysqlEntity<Long> {
 
     @Column(name = "flow_status")
     private BasicStatusEnum flowStatus;
+
+    public DeployFlowEntity callDeploy() {
+        return this;
+    }
+
+    public DeployFlowEntity callSucc() {
+        return this;
+    }
+
+    public DeployFlowEntity callFail() {
+        return this;
+    }
 }

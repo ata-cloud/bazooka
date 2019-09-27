@@ -23,4 +23,5 @@ import com.youyu.common.mapper.YyMapper;
  * @date 2019-07-11
  */
 public interface DeployFlowMapper extends YyMapper<DeployFlowEntity> {
+    void updateFlowStatus(DeployFlowEntity currentDeployFlow);
 }
