@@ -28,7 +28,7 @@ Bazooka自动化开发运维平台，在[Docker](https://www.docker.com/)，[Mes
 
 # 开始使用Bazooka
 
-开始使用Bazooka之前，请阅读[使用文档](./user_guide.md)
+开始使用Bazooka之前，请阅读[使用文档](https://wqtester.github.io/ata-cloudwhitepaper)
 
 您也可以参考以下使用演示视频
 
