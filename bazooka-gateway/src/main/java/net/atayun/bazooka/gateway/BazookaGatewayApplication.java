@@ -37,10 +37,10 @@ import tk.mybatis.spring.annotation.MapperScan;
         "net.atayun.bazooka.upms.biz.**.dao",
         "net.atayun.bazooka.deploy.biz.dal.dao"
 })
-public class OpsGatewayApplication {
+public class BazookaGatewayApplication {
 
     public static void main(String[] args) {
-        OpsSpringApplication opsSpringApplication = new OpsSpringApplication(OpsGatewayApplication.class);
+        OpsSpringApplication opsSpringApplication = new OpsSpringApplication(BazookaGatewayApplication.class);
         opsSpringApplication.run(args);
     }
 

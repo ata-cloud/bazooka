@@ -25,7 +25,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "ata.ops.deploy.log")
+@ConfigurationProperties(prefix = "ata.bazooka.deploy.log")
 public class DeployLogProperties {
 
     private String rootPath;

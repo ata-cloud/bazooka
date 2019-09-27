@@ -43,7 +43,7 @@ class ServiceItem extends React.Component {
 
           </div>
           <div className={styles.itemDesc}>
-            <span className={styles.itemDescSpan} style={{ WebkitBoxOrient: 'vertical' }}>{item.description}</span>
+            <span className={styles.itemDescSpan}>{item.description}</span>
           </div>
         </div>
         <div className={styles.moreOprea}>

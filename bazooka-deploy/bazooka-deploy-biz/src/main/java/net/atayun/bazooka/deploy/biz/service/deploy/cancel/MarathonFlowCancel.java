@@ -15,8 +15,9 @@
  */
 package net.atayun.bazooka.deploy.biz.service.deploy.cancel;
 
+import mesosphere.marathon.client.Marathon;
+import mesosphere.marathon.client.MarathonClient;
 import net.atayun.bazooka.base.constant.CommonConstants;
-import net.atayun.bazooka.base.dcos.DcosServerBean;
 import net.atayun.bazooka.deploy.biz.dal.entity.deploy.DeployEntity;
 import net.atayun.bazooka.deploy.biz.dal.entity.flow.DeployFlowEntity;
 import net.atayun.bazooka.deploy.biz.dal.entity.flow.DeployFlowMarathonEntity;
@@ -24,7 +25,6 @@ import net.atayun.bazooka.deploy.biz.service.deploy.DeployService;
 import net.atayun.bazooka.deploy.biz.service.flow.DeployFlowMarathonService;
 import net.atayun.bazooka.rms.api.api.EnvApi;
 import net.atayun.bazooka.rms.api.dto.ClusterConfigDto;
-import mesosphere.dcos.client.DCOS;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -47,8 +47,8 @@ public class MarathonFlowCancel implements FlowCancel {
         ClusterConfigDto clusterConfig = getBean(EnvApi.class).getEnvConfiguration(deployEntity.getEnvId())
                 .ifNotSuccessThrowException()
                 .getData();
-        String dcosEndpoint = CommonConstants.PROTOCOL + clusterConfig.getDcosEndpoint();
-        DCOS dcos = getBean(DcosServerBean.class).getInstance(dcosEndpoint);
-        dcos.cancelDeployment(entity.getMarathonDeploymentId());
+        String dcosEndpoint = CommonConstants.PROTOCOL + clusterConfig.getDcosEndpoint() + CommonConstants.MARATHON_PORT;
+        Marathon instance = MarathonClient.getInstance(dcosEndpoint);
+        instance.cancelDeployment(entity.getMarathonDeploymentId());
     }
 }

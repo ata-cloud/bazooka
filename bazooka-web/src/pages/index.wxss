@@ -75,7 +75,7 @@
 }
 .listItem {
   width: 100%;
-  min-height: 200px;
+  min-height: 180px;
   position: relative;
 }
 .moreOprea {
@@ -92,7 +92,10 @@
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  /* autoprefixer: off */
   -webkit-box-orient: vertical;
+  /* autoprefixer: on */
+  word-break: break-all;
 }
 .appName {
   color: #333;
@@ -149,7 +152,16 @@
   padding-left: 10px;
 }
 .basicInfoItem {
-  width: 100px;
+  min-width: 100px;
+}
+.proDesc {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  /* autoprefixer: off */
+  -webkit-box-orient: vertical;
+  /* autoprefixer: on */
+  overflow: hidden;
+  word-break: break-all;
 }
 .gridtitleBg {
   background-color: #f5f5f5;

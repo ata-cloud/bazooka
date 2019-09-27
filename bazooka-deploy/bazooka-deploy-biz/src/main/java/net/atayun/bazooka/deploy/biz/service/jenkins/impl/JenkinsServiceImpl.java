@@ -16,6 +16,8 @@
 package net.atayun.bazooka.deploy.biz.service.jenkins.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.youyu.common.enums.IsDeleted;
+import com.youyu.common.exception.BizException;
 import net.atayun.bazooka.base.enums.deploy.AppOperationEventLogTypeEnum;
 import net.atayun.bazooka.base.jenkins.JenkinsServerHelper;
 import net.atayun.bazooka.deploy.biz.constants.JenkinsCallbackConstants;
@@ -49,8 +51,6 @@ import net.atayun.bazooka.rms.api.api.EnvApi;
 import net.atayun.bazooka.rms.api.dto.ClusterConfigDto;
 import net.atayun.bazooka.rms.api.dto.RmsDockerImageDto;
 import net.atayun.bazooka.rms.api.enums.DockerImageSource;
-import com.youyu.common.enums.IsDeleted;
-import com.youyu.common.exception.BizException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -146,7 +146,7 @@ public class JenkinsServiceImpl implements JenkinsService, AppStatusOpt, EventSt
             BasicStatusEnum finalStatus = status;
             TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
                 @Override
-                public void afterCommit() {
+                public void afterCompletion(int status) {
                     DispatchFlowEventPojo eventPojo = new DispatchFlowEventPojo(deployId, flowNumber, finalStatus);
                     applicationContext.publishEvent(new DispatchFlowEvent(DispatchFlowSourceEnum.JENKINS_CALLBACK, eventPojo));
                 }
@@ -277,7 +277,7 @@ public class JenkinsServiceImpl implements JenkinsService, AppStatusOpt, EventSt
         Integer flowNumber = deployFlowEntity.getFlowNumber();
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
-            public void afterCommit() {
+            public void afterCompletion(int status) {
                 DispatchFlowEventPojo eventPojo = new DispatchFlowEventPojo(deployId, flowNumber, BasicStatusEnum.FAILURE);
                 applicationContext.publishEvent(new DispatchFlowEvent(DispatchFlowSourceEnum.JENKINS_CALLBACK, eventPojo));
             }

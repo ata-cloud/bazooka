@@ -77,14 +77,8 @@
             <artifactId>jenkins-client</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.youyu.mesosphere</groupId>
+            <groupId>com.mesosphere</groupId>
             <artifactId>marathon-client</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>slf4j-simple</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>

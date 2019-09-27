@@ -479,11 +479,17 @@ class ClusterDetail extends React.Component {
   render() {
     const { detail } = this.state;
     return (
-      <PageHeaderWrapper title={detail.name}>
-        {this.renderBasic()}
-        {this.renderUseInfo()}
-        {this.renderNode()}
-      </PageHeaderWrapper>
+      <Fragment>
+        {
+          detail.clusterId &&
+          <PageHeaderWrapper title={detail.name}>
+            {this.renderBasic()}
+            {this.renderUseInfo()}
+            {this.renderNode()}
+          </PageHeaderWrapper>
+        }
+      </Fragment>
+
     );
   }
 }

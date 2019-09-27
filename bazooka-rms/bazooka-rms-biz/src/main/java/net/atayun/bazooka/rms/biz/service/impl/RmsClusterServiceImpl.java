@@ -15,7 +15,17 @@
  */
 package net.atayun.bazooka.rms.biz.service.impl;
 
+import com.youyu.common.api.PageData;
+import com.youyu.common.exception.BizException;
+import com.youyu.common.service.AbstractService;
+import com.youyu.common.utils.YyAssert;
+import lombok.extern.slf4j.Slf4j;
+import mesosphere.marathon.client.model.v2.Task;
 import net.atayun.bazooka.base.dcos.DcosServerBean;
+import net.atayun.bazooka.base.dcos.api.DcosApi;
+import net.atayun.bazooka.base.dcos.api.model.GetLogInfoResponse;
+import net.atayun.bazooka.base.dcos.api.model.GetSlaveStateResponse;
+import net.atayun.bazooka.base.dcos.dto.*;
 import net.atayun.bazooka.rms.api.dto.*;
 import net.atayun.bazooka.rms.api.dto.req.ClusterDetailReqDto;
 import net.atayun.bazooka.rms.api.dto.req.ClusterDockerInstanceLogReqDto;
@@ -32,16 +42,6 @@ import net.atayun.bazooka.rms.biz.dal.entity.RmsClusterEntity;
 import net.atayun.bazooka.rms.biz.service.EnvService;
 import net.atayun.bazooka.rms.biz.service.RmsClusterConfigService;
 import net.atayun.bazooka.rms.biz.service.RmsClusterService;
-import com.youyu.common.api.PageData;
-import com.youyu.common.exception.BizException;
-import com.youyu.common.service.AbstractService;
-import com.youyu.common.utils.YyAssert;
-import lombok.extern.slf4j.Slf4j;
-import mesosphere.dcos.client.DCOS;
-import mesosphere.dcos.client.model.GetLogInfoResponse;
-import mesosphere.dcos.client.model.GetSlaveStateResponse;
-import mesosphere.marathon.client.model.v2.Task;
-import net.atayun.bazooka.base.dcos.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 import org.springframework.stereotype.Service;
@@ -57,6 +57,15 @@ import java.util.stream.Collectors;
 
 import static com.alibaba.fastjson.JSON.parseArray;
 import static com.alibaba.fastjson.JSON.parseObject;
+import static java.lang.Long.parseLong;
+import static java.lang.Math.min;
+import static java.lang.String.valueOf;
+import static java.lang.System.currentTimeMillis;
+import static java.math.BigDecimal.ZERO;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static java.util.concurrent.TimeUnit.HOURS;
+import static java.util.stream.Collectors.toList;
 import static net.atayun.bazooka.base.bean.StrategyNumBean.getBeanInstance;
 import static net.atayun.bazooka.base.constant.CommonConstants.PROTOCOL;
 import static net.atayun.bazooka.base.utils.EnumUtil.getEnum;
@@ -69,15 +78,6 @@ import static net.atayun.bazooka.rms.api.enums.LogTypeEnum.STDOUT;
 import static net.atayun.bazooka.rms.api.enums.RmsResultCode.GET_INSTANCE_LOG_EXCEPTION;
 import static net.atayun.bazooka.rms.biz.enums.ClusterConfigTypeEnum.*;
 import static net.atayun.bazooka.rms.biz.enums.ClusterStatusEnum.NORMAL;
-import static java.lang.Long.parseLong;
-import static java.lang.Math.min;
-import static java.lang.String.valueOf;
-import static java.lang.System.currentTimeMillis;
-import static java.math.BigDecimal.ZERO;
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
-import static java.util.concurrent.TimeUnit.HOURS;
-import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace;
 import static org.apache.commons.lang3.StringUtils.*;
 import static org.springframework.util.CollectionUtils.isEmpty;
@@ -219,7 +219,7 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
         String slaveId = clusterDockerInstanceLogReqDto.getSlaveId();
         ClusterConfigDto clusterConfig = rmsClusterConfigService.getClusterConfig(clusterDockerInstanceLogReqDto.getClusterId());
         try {
-            DCOS dcos = dcosServerBean.getInstance(PROTOCOL + clusterConfig.getDcosEndpoint());
+            DcosApi dcos = dcosServerBean.getInstance(PROTOCOL + clusterConfig.getDcosEndpoint());
             Integer offset = clusterDockerInstanceLogReqDto.getOffset();
             Integer maxLogOffset = getInstanceLogOffset(clusterDockerInstanceLogReqDto, clusterConfig);
             if (nonNull(offset) && offset >= maxLogOffset) {
@@ -333,7 +333,7 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
      * @param clusterDockerInstanceLogReqDto
      * @return
      */
-    private String getDockerInstanceLogPath(DCOS dcos, String slaveId, ClusterDockerInstanceLogReqDto clusterDockerInstanceLogReqDto) {
+    private String getDockerInstanceLogPath(DcosApi dcos, String slaveId, ClusterDockerInstanceLogReqDto clusterDockerInstanceLogReqDto) {
         String path = eq(STDOUT.getCode(), clusterDockerInstanceLogReqDto.getLogType()) ? STDOUT.getPath() : STDERR.getPath();
         Collection<Task> tasks = dcos.getTasks().getTasks();
         if (isEmpty(tasks)) {

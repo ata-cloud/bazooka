@@ -1,4 +1,4 @@
-[English](./index_en.md) | [官网](https://atayun.net)  | [社区](xxxxx) · [论坛](xxxxx) | [设计文档](./design.md) | [使用文档](./user_guide.md) | [安装文档](install.md) | [版本更新](./releases.md)
+[English](./index_en.md) | [官网](https://atayun.net)  | [社区](xxxxx) · [论坛](xxxxx) | [设计文档](docs/design.md) | [使用文档](./user_guide.md) | [安装文档](install.md) | [版本更新](./releases.md)
 
 开源社区欢迎您的参与！如果有任何反馈，您[可以通过这些方式联系我们](xxxxx)<br/><br/>
 
@@ -15,7 +15,7 @@ Bazooka自动化开发运维平台，在[Docker](https://www.docker.com/)，[Mes
 - [**资源**](./function_source.md) - 通过Mesos集群、Kubernetes集群或者独立节点的方式，管理物理机、虚拟机、云主机等各类计算资源
 - [**环境**](./function_environment.md) - 用户根据开发场景划分，例如“测试环境”、“预发布环境”、“生产环境”等。环境通过资源切分，为各个项目中的服务提供透明、无感知的计算资源调度
 - [**项目**](./function_project.md) - 按照业务划分的逻辑分组，由一组关联的服务、用户组成，通过项目关联的环境向各个服务提供标准的计算资源
-- [**服务**](./function_service.md) - 一个服务对应一个完整的生命周期，拥有代码管理、编译、打包、容器镜像、测试、发布、部署、运维、监控等完整的功能
+- [**服务**](docs/app_manage.md) - 一个服务对应一个完整的生命周期，拥有代码管理、编译、打包、容器镜像、测试、发布、部署、运维、监控等完整的功能
 - [**服务发布流水线**](./function_deploy.md) - 通过发布调度引擎和各类标准插件提供可编辑的服务流水线，自动调度以完成服务的资源检查、审批、代码拉取、质量扫描、代码编译、镜像构建、容器部署、健康检查、通知等完整流程
 - [**系统信息**](./function_system.md) - 系统基础信息、组件状态和凭据管理
 - [**用户管理**](./function_user.md) - 系统用户管理，角色分配

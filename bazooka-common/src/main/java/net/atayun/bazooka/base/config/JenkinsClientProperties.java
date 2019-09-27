@@ -25,7 +25,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "ata.ops.base.jenkins.client")
+@ConfigurationProperties(prefix = "ata.bazooka.base.jenkins.client")
 public class JenkinsClientProperties {
 
     private String serverPath;

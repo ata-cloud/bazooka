@@ -11,7 +11,7 @@
 
     <artifactId>bazooka-gateway</artifactId>
     <properties>
-        <start-class>net.atayun.bazooka.gateway.bazookaGatewayApplication</start-class>
+        <start-class>net.atayun.bazooka.gateway.BazookaGatewayApplication</start-class>
     </properties>
 <dependencies>
     <dependency>

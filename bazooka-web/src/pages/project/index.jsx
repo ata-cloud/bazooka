@@ -218,8 +218,13 @@ class Project extends React.Component {
             {getFieldDecorator('description', {
               rules:[
                 {
-                  pattern: /^[\S ]{0,500}$/,
-                  message: '最多500个字符'
+                  validator(rule, value, callback){
+                    if(value.length > 500) {
+                      callback('最多500个字符')
+                    }else {
+                      callback()
+                    }
+                  }
                 }
               ]
             })(<TextArea placeholder="请输入项目描述" rows={4} />)}
@@ -310,7 +315,7 @@ class Project extends React.Component {
                       </Col>
                     </Row>
                     <div className={styles.itemDesc}>
-                      <span className={styles.itemDescSpan} style={{ WebkitBoxOrient: 'vertical' }}>{item.description}</span>
+                      <span className={styles.itemDescSpan}>{item.description}</span>
                     </div>
                   </div>
 

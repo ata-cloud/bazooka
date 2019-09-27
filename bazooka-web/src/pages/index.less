@@ -82,7 +82,7 @@
 }
 .listItem {
   width: 100%;
-  min-height: 200px;
+  min-height: 180px;
   position: relative;
 }
 .moreOprea {
@@ -97,8 +97,11 @@
   .itemDescSpan {
     overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 3; 
+    /* autoprefixer: off */
     -webkit-box-orient: vertical;
+    /* autoprefixer: on */
+    word-break: break-all;
   }
 
 }
@@ -159,7 +162,16 @@
 }
 //环境
 .basicInfoItem {
-  width: 100px;
+  min-width: 100px;
+}
+.proDesc {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  /* autoprefixer: off */
+  -webkit-box-orient: vertical;
+  /* autoprefixer: on */
+  overflow: hidden;
+  word-break: break-all;
 }
 .gridtitleBg {
   background-color: #f5f5f5

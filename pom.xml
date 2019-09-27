@@ -26,7 +26,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <marathon-client.version>0.6.3-SNAPSHOT</marathon-client.version>
+        <marathon-client.version>0.6.2</marathon-client.version>
         <jenkins-client.version>0.3.8</jenkins-client.version>
         <gitlab-api.version>4.1.0</gitlab-api.version>
         <netty.version>4.1.24.Final</netty.version>
@@ -83,7 +83,7 @@
 
 
             <dependency>
-                <groupId>com.youyu.mesosphere</groupId>
+                <groupId>com.mesosphere</groupId>
                 <artifactId>marathon-client</artifactId>
                 <version>${marathon-client.version}</version>
             </dependency>

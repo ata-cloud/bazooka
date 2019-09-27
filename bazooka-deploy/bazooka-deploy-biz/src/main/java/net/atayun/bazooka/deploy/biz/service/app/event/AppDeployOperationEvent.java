@@ -16,7 +16,9 @@
 package net.atayun.bazooka.deploy.biz.service.app.event;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import net.atayun.bazooka.base.annotation.StrategyNum;
+import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
 import net.atayun.bazooka.base.enums.status.FinishStatusEnum;
 import net.atayun.bazooka.deploy.api.param.AppOperationEventParam;
 import net.atayun.bazooka.deploy.biz.dal.entity.deploy.DeployEntity;
@@ -30,8 +32,6 @@ import net.atayun.bazooka.deploy.biz.service.deploy.event.DispatchFlowEventPojo;
 import net.atayun.bazooka.deploy.biz.service.flow.DeployFlowService;
 import net.atayun.bazooka.pms.api.dto.AppDeployConfigDto;
 import net.atayun.bazooka.pms.api.feign.AppApi;
-import lombok.extern.slf4j.Slf4j;
-import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -109,7 +109,7 @@ public class AppDeployOperationEvent extends AbstractAppOperationEvent implement
         BasicStatusEnum flowStatus = status == FinishStatusEnum.SUCCESS ? BasicStatusEnum.SUCCESS : BasicStatusEnum.FAILURE;
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
-            public void afterCommit() {
+            public void afterCompletion(int status) {
                 DispatchFlowEventPojo eventPojo = new DispatchFlowEventPojo(deployId, flowNumber, flowStatus);
                 applicationContext.publishEvent(new DispatchFlowEvent(DispatchFlowSourceEnum.MARATHON_EVENT, eventPojo));
             }

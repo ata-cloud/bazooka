@@ -87,7 +87,7 @@ class ProjectInfo extends React.Component {
       this.onGetEnvIds(proEnvSoruce);
     }
   }
- 
+
   //项目资源
   onFetchSouce = async () => {
     const { projectId, proInfo, dispatch } = this.props;
@@ -178,6 +178,14 @@ class ProjectInfo extends React.Component {
       this.onFetchSouce();
     }
   }
+  //项目信息
+  onFetchInfo = () => {
+    const { dispatch, projectId } = this.props;
+    dispatch({
+      type: 'project/proInfo',
+      payload: { projectId }
+    })
+  }
   onGranularityChange = (e) => {
     this.setState({
       granularity: e.target.value
@@ -211,7 +219,7 @@ class ProjectInfo extends React.Component {
           </div>
           <div className={styles.flexCenter}>
             <p className={styles.basicInfoItem}>项目描述：</p>
-            <p className={styles.flex1}>{proInfo.description}</p>
+            <p className={`${styles.flex1} ${styles.proDesc}`} title={proInfo.description}>{proInfo.description}</p>
           </div>
         </div>
       </Card>
@@ -329,9 +337,17 @@ class ProjectInfo extends React.Component {
                 <FormItem label="描述">
                   {getFieldDecorator('description', {
                     initialValue: proInfo.description,
-                    // rules: [
-                    //   { required: true, message: "请输入项目描述" }
-                    // ]
+                    rules: [
+                      {
+                        validator(rule, value, callback) {
+                          if (value.length > 500) {
+                            callback('最多500个字符')
+                          } else {
+                            callback()
+                          }
+                        }
+                      }
+                    ]
                   })(<TextArea placeholder="请输入项目描述" rows={4} />)}
                 </FormItem>
               </Fragment>

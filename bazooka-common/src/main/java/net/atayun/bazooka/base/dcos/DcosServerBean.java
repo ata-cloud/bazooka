@@ -19,6 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import mesosphere.dcos.client.DCOS;
 import mesosphere.dcos.client.DCOSClient;
 import mesosphere.dcos.client.model.DCOSAuthCredentials;
+import net.atayun.bazooka.base.dcos.api.DcosApi;
+import net.atayun.bazooka.base.dcos.api.DcosApiClient;
 
 /**
  * @author pqq
@@ -56,9 +58,11 @@ public class DcosServerBean {
      * @param endpoint
      * @return
      */
-    public DCOS getInstance(String endpoint) {
-        return DCOSClient.getInstance(endpoint);
+    public DcosApi getInstance(String endpoint) {
+        return DcosApiClient.getInstance(endpoint);
     }
+
+
 
     /**
      * 获取DCOS实例
