@@ -30,7 +30,7 @@ Bazooka自动化开发运维平台，在[Docker](https://www.docker.com/)，[Mes
 
 开始使用Bazooka之前，请阅读[使用文档](./user_guide.md)
 
-您也可以参考使用演示视频
+您也可以参考以下使用演示视频
 
 [1.登陆系统.mp4](https://download-cos.yofish.com/bazooka-ops/%E9%98%BF%E5%A1%94%E4%BA%91-Bazooka%E4%BD%BF%E7%94%A8%E6%BC%94%E7%A4%BA/1.%20%E7%99%BB%E9%99%86%E7%B3%BB%E7%BB%9F%E7%94%A8%E6%88%B7.mp4)
 
