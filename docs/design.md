@@ -13,7 +13,7 @@ Bazooka 从本质上解决的问题如下：<br/>
 
 # 领域模型设计
 #### [领域模型图]
-![logo](./img/Bazooka_domain.png)
+![logo](./img/Bazooka_Domain.png)
 
 
 #### [发布流程图]
