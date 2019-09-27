@@ -1,4 +1,4 @@
-![logo](./img/Bazooka-design.png)
+![logo](./img/Bazooka-Design.png)
 
 Bazooka 从本质上解决的问题如下：<br/>
 1（权限管理）：谁，在企业中是什么角色，有哪些功能权限 <br/>
