@@ -32,7 +32,7 @@ Bazooka自动化开发运维平台，在[Docker](https://www.docker.com/)，[Mes
 
 您也可以参考以下使用演示视频
 
-[1.登陆系统.mp4](https://download-cos.yofish.com/bazooka-ops/%E9%98%BF%E5%A1%94%E4%BA%91-Bazooka%E4%BD%BF%E7%94%A8%E6%BC%94%E7%A4%BA/1.%20%E7%99%BB%E9%99%86%E7%B3%BB%E7%BB%9F%E7%94%A8%E6%88%B7.mp4) | [2.资源.mp4](https://download-cos.yofish.com/bazooka-ops/%E9%98%BF%E5%A1%94%E4%BA%91-Bazooka%E4%BD%BF%E7%94%A8%E6%BC%94%E7%A4%BA/2.%20%E8%B5%84%E6%BA%90.mp4) | [3.环境.mp4](https://download-cos.yofish.com/bazooka-ops/%E9%98%BF%E5%A1%94%E4%BA%91-Bazooka%E4%BD%BF%E7%94%A8%E6%BC%94%E7%A4%BA/3.%20%E7%8E%AF%E5%A2%83.mp4) | [4.项目.mp4](https://download-cos.yofish.com/bazooka-ops/%E9%98%BF%E5%A1%94%E4%BA%91-Bazooka%E4%BD%BF%E7%94%A8%E6%BC%94%E7%A4%BA/4.%20%E9%A1%B9%E7%9B%AE.mp4)
+[1.登陆、系统和权限.mp4](https://download-cos.yofish.com/bazooka-ops/%E9%98%BF%E5%A1%94%E4%BA%91-Bazooka%E4%BD%BF%E7%94%A8%E6%BC%94%E7%A4%BA/1.%20%E7%99%BB%E9%99%86%E7%B3%BB%E7%BB%9F%E7%94%A8%E6%88%B7.mp4) | [2.资源.mp4](https://download-cos.yofish.com/bazooka-ops/%E9%98%BF%E5%A1%94%E4%BA%91-Bazooka%E4%BD%BF%E7%94%A8%E6%BC%94%E7%A4%BA/2.%20%E8%B5%84%E6%BA%90.mp4) | [3.环境.mp4](https://download-cos.yofish.com/bazooka-ops/%E9%98%BF%E5%A1%94%E4%BA%91-Bazooka%E4%BD%BF%E7%94%A8%E6%BC%94%E7%A4%BA/3.%20%E7%8E%AF%E5%A2%83.mp4) | [4.项目.mp4](https://download-cos.yofish.com/bazooka-ops/%E9%98%BF%E5%A1%94%E4%BA%91-Bazooka%E4%BD%BF%E7%94%A8%E6%BC%94%E7%A4%BA/4.%20%E9%A1%B9%E7%9B%AE.mp4)
 
 [5.服务.mp4](https://download-cos.yofish.com/bazooka-ops/%E9%98%BF%E5%A1%94%E4%BA%91-Bazooka%E4%BD%BF%E7%94%A8%E6%BC%94%E7%A4%BA/5.%20%E6%9C%8D%E5%8A%A1.mp4) | [6.服务发布配置和服务发布.mp4](https://download-cos.yofish.com/bazooka-ops/%E9%98%BF%E5%A1%94%E4%BA%91-Bazooka%E4%BD%BF%E7%94%A8%E6%BC%94%E7%A4%BA/6.%20%E6%9C%8D%E5%8A%A1%E5%8F%91%E5%B8%83%E9%85%8D%E7%BD%AE%E5%92%8C%E6%9C%8D%E5%8A%A1%E5%8F%91%E5%B8%83.mp4) | [7.服务管理和容器管理.mp4](https://download-cos.yofish.com/bazooka-ops/%E9%98%BF%E5%A1%94%E4%BA%91-Bazooka%E4%BD%BF%E7%94%A8%E6%BC%94%E7%A4%BA/7.%20%E6%9C%8D%E5%8A%A1%E7%AE%A1%E7%90%86%E5%92%8C%E5%AE%B9%E5%99%A8%E7%AE%A1%E7%90%86.mp4)
 
@@ -44,7 +44,7 @@ Bazooka的核心是发布调度引擎，包括了各个独立开发的插件，�
 
 # 开源地址
 
-[https://github.com/ata-cloud/ata-cloud-service](https://github.com/ata-cloud/ata-cloud-service)
+[https://github.com/ata-cloud/bazooka](https://github.com/ata-cloud/bazooka)
 
 # 版权说明
 
@@ -58,7 +58,7 @@ Bazooka的核心是发布调度引擎，包括了各个独立开发的插件，�
 
 若您安装使用时有任何建议问题、反馈或发现的 Bug，欢迎在 [GitHub Issue](xxxxx) 提交 Issue。
 
-邮件交流：tangkui@yofish.com
+邮件交流：893145247@qq/com
 
 QQ交流：
 
