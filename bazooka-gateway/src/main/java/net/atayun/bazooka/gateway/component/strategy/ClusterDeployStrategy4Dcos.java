@@ -123,8 +123,7 @@ public class ClusterDeployStrategy4Dcos extends ClusterDeployStrategy {
                                 Map<String, MarathonCallbackHandler> handlerMap = SpringContextBean.getBeansOfType(MarathonCallbackHandler.class, false, false);
                                 handlerMap.forEach((name, handler) -> {
                                     if (handler.support(event)) {
-                                        Result result = handler.handle(clusterId, data);
-                                        log.info("集群id:[{}]对应调用发布模块响应结果:[{}], handler:[{}]", clusterId, toJSONString(result), name);
+                                        handler.handle(clusterId, data);
                                     }
                                 });
                             }

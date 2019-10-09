@@ -5,6 +5,7 @@ import com.youyu.common.api.Result;
 import net.atayun.bazooka.base.dcos.dto.MarathonEventTaskDto;
 import net.atayun.bazooka.deploy.api.AppOperationEventApi;
 import net.atayun.bazooka.deploy.api.param.MarathonTaskFailureCallbackParam;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -21,7 +22,8 @@ public class MarathonTaskCallbackHandler implements MarathonCallbackHandler {
 
     private static final String FAIL = "TASK_FAILED;";
 
-    private static final Long TIMEOUT = 10L;
+    @Value("${marathon.task.retry.timeout:10}")
+    private Long timeout;
 
     @Override
     public boolean support(String event) {
@@ -38,7 +40,7 @@ public class MarathonTaskCallbackHandler implements MarathonCallbackHandler {
         //version和timestamp的格式:2019-01-01T00:00:00.000Z
         Instant start = Instant.parse(marathonEventTaskDto.getVersion());
         Instant now = Instant.parse(marathonEventTaskDto.getTimestamp());
-        if (start.plus(TIMEOUT, ChronoUnit.MINUTES).isAfter(now)) {
+        if (start.plus(timeout, ChronoUnit.MINUTES).isAfter(now)) {
             return Result.ok();
         }
         return getBean(AppOperationEventApi.class).marathonTaskFailureCallback(getMarathonTaskFailureCallbackParam(clusterId, marathonEventTaskDto));
