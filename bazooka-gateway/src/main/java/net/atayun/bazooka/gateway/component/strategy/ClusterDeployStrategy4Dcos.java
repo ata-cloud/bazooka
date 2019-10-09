@@ -16,13 +16,11 @@
 package net.atayun.bazooka.gateway.component.strategy;
 
 
-import net.atayun.bazooka.base.annotation.StrategyNum;
-import net.atayun.bazooka.base.dcos.dto.MarathonEventDeployDto;
-import net.atayun.bazooka.deploy.api.AppOperationEventApi;
-import net.atayun.bazooka.deploy.api.param.MarathonCallbackParam;
-import net.atayun.bazooka.rms.api.dto.rsp.ClusterMarathonConfigRspDto;
 import com.youyu.common.api.Result;
 import lombok.extern.slf4j.Slf4j;
+import net.atayun.bazooka.base.annotation.StrategyNum;
+import net.atayun.bazooka.base.bean.SpringContextBean;
+import net.atayun.bazooka.rms.api.dto.rsp.ClusterMarathonConfigRspDto;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.fluent.Request;
@@ -33,18 +31,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Map;
 
-import static com.alibaba.fastjson.JSON.parseObject;
 import static com.alibaba.fastjson.JSON.toJSONString;
-import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
-import static net.atayun.bazooka.base.constant.CommonConstants.PROTOCOL;
-import static net.atayun.bazooka.base.enums.status.FinishStatusEnum.FAILURE;
-import static net.atayun.bazooka.base.enums.status.FinishStatusEnum.SUCCESS;
-import static net.atayun.bazooka.base.utils.StringUtil.eq;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.nonNull;
 import static java.util.concurrent.CompletableFuture.runAsync;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static net.atayun.bazooka.base.constant.CommonConstants.PROTOCOL;
 import static org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace;
 import static org.apache.commons.lang3.StringUtils.*;
 import static org.apache.http.client.fluent.Request.Get;
@@ -71,11 +65,13 @@ public class ClusterDeployStrategy4Dcos extends ClusterDeployStrategy {
     /**
      * 事件url地址后缀
      */
-    private static final String EVENT_SUFFIX = ":8080/v2/events?event_type=deployment_success&event_type=deployment_failed";
+    private static final String EVENT_SUFFIX = ":8080/v2/events?event_type=deployment_success&event_type=deployment_failed&event_type=status_update_event";
     /**
      * 发布成功事件类型
      */
-    private static final String EVENT_TYPE_SUCCESS = "deployment_success";
+    public static final String EVENT_TYPE_SUCCESS = "deployment_success";
+    public static final String EVENT_TYPE_FAILED = "deployment_failed";
+    public static final String EVENT_TYPE_STATUS_UPDATE_EVENT = "status_update_event";
 
     @Override
     public void monitorDeployEvent(ClusterMarathonConfigRspDto clusterMarathonConfig) {
@@ -121,31 +117,21 @@ public class ClusterDeployStrategy4Dcos extends ClusterDeployStrategy {
                                 if (!startsWith(line, EVENT_PREFIX)) {
                                     continue;
                                 }
+                                String event = substring(line, EVENT_PREFIX.length());
                                 line = bufferedReader.readLine();
                                 String data = substring(line, DATA_PREFIX.length());
-                                MarathonEventDeployDto marathonEventDeploy = parseObject(data, MarathonEventDeployDto.class);
-                                Result deployResult = getBean(AppOperationEventApi.class).marathonCallback(getMarathonCallbackParam(marathonEventDeploy));
-                                log.info("集群id:[{}]对应调用发布模块响应结果:[{}]", clusterId, toJSONString(deployResult));
+                                Map<String, MarathonCallbackHandler> handlerMap = SpringContextBean.getBeansOfType(MarathonCallbackHandler.class, false, false);
+                                handlerMap.forEach((name, handler) -> {
+                                    if (handler.support(event)) {
+                                        Result result = handler.handle(clusterId, data);
+                                        log.info("集群id:[{}]对应调用发布模块响应结果:[{}], handler:[{}]", clusterId, toJSONString(result), name);
+                                    }
+                                });
                             }
                         } catch (Exception ex) {
                             log.error("处理集群id:[{}]发布响应事件异常信息:[{}]", clusterId, getFullStackTrace(ex));
                         }
                         return "";
-                    }
-
-                    /**
-                     * 获取MarathonCallbackParam对象
-                     *
-                     * @param marathonEventDeploy
-                     * @return
-                     */
-                    private MarathonCallbackParam getMarathonCallbackParam(MarathonEventDeployDto marathonEventDeploy) {
-                        MarathonCallbackParam marathonCallbackParam = new MarathonCallbackParam();
-
-                        marathonCallbackParam.setMarathonDeploymentId(marathonEventDeploy.getId());
-                        marathonCallbackParam.setMarathonDeploymentVersion(marathonEventDeploy.getPlan().getVersion());
-                        marathonCallbackParam.setFinishStatus(eq(marathonEventDeploy.getEventType(), EVENT_TYPE_SUCCESS) ? SUCCESS : FAILURE);
-                        return marathonCallbackParam;
                     }
                 });
             }

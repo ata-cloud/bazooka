@@ -101,7 +101,7 @@ public class DoDeployFlowWorkStrategy extends AbstractDeployFlowWorkStrategy {
             String deploymentId = dcosResult.getDeploymentId();
             String deploymentVersion = dcosResult.getVersion();
             String marathonConfig = app.toString();
-            saveEventMarathonInfo(workDetailPojo, deploymentId, deploymentVersion, marathonConfig);
+            saveEventMarathonInfo(workDetailPojo, dcosServiceId, deploymentId, deploymentVersion, marathonConfig);
             saveDeployFlowMarathonInfo(deployFlowId, dcosServiceId, deploymentId, deploymentVersion, marathonConfig);
             return true;
         } catch (Throwable throwable) {
@@ -128,9 +128,10 @@ public class DoDeployFlowWorkStrategy extends AbstractDeployFlowWorkStrategy {
         deployFlowMarathonService.insertEntity(deployFlowMarathonEntity);
     }
 
-    private void saveEventMarathonInfo(WorkDetailPojo workDetailPojo, String deploymentId, String deploymentVersion, String marathonConfig) {
+    private void saveEventMarathonInfo(WorkDetailPojo workDetailPojo, String dcosServiceId, String deploymentId, String deploymentVersion, String marathonConfig) {
         AppOperationEventMarathonEntity appOperationEventMarathonEntity = new AppOperationEventMarathonEntity();
         appOperationEventMarathonEntity.setEventId(workDetailPojo.getDeployEntity().getEventId());
+        appOperationEventMarathonEntity.setMarathonServiceId(dcosServiceId);
         appOperationEventMarathonEntity.setMarathonDeploymentId(deploymentId);
         appOperationEventMarathonEntity.setMarathonDeploymentVersion(deploymentVersion);
         appOperationEventMarathonEntity.setMarathonConfig(marathonConfig);

@@ -18,6 +18,7 @@ package net.atayun.bazooka.deploy.biz.service.app;
 import net.atayun.bazooka.base.enums.status.FinishStatusEnum;
 import net.atayun.bazooka.deploy.api.dto.AppRunningEventDto;
 import net.atayun.bazooka.deploy.api.param.AppOperationEventParam;
+import net.atayun.bazooka.deploy.api.param.MarathonTaskFailureCallbackParam;
 import net.atayun.bazooka.deploy.biz.dal.entity.app.AppOperationEventEntity;
 import net.atayun.bazooka.deploy.biz.dal.entity.app.EventWithMarathonEntity;
 import net.atayun.bazooka.deploy.biz.dto.app.AppEventOperateWithStatusDto;
@@ -115,4 +116,6 @@ public interface AppOperationEventService {
     List<AppOperationEventEntity> selectByStatus(AppOperationEventStatusEnum status);
 
     List<AppRunningEventDto> getAppRunningEvent(Long appId);
+
+    void marathonTaskFailureCallback(MarathonTaskFailureCallbackParam marathonTaskFailureCallbackParam);
 }

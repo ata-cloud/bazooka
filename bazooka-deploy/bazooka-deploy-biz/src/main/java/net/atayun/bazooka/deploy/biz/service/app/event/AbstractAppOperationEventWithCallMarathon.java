@@ -88,10 +88,12 @@ public abstract class AbstractAppOperationEventWithCallMarathon extends Abstract
                 .ifNotSuccessThrowException()
                 .getData();
         Marathon marathon = MarathonClient.getInstance(CommonConstants.PROTOCOL + clusterConfig.getDcosEndpoint() + CommonConstants.MARATHON_PORT);
-        Result result = marathon.updateApp("/" + envDto.getCode() + appInfo.getDcosServiceId(), app, true);
+        String serviceId = "/" + envDto.getCode() + appInfo.getDcosServiceId();
+        Result result = marathon.updateApp(serviceId, app, true);
         AppOperationEventMarathonEntity newMarathonEntity = new AppOperationEventMarathonEntity();
         newMarathonEntity.setMarathonConfig(app.toString());
         newMarathonEntity.setEventId(eventId);
+        newMarathonEntity.setMarathonServiceId(serviceId);
         newMarathonEntity.setMarathonDeploymentId(result.getDeploymentId());
         newMarathonEntity.setMarathonDeploymentVersion(result.getVersion());
         appOperationEventMarathonService.insertEntity(newMarathonEntity);

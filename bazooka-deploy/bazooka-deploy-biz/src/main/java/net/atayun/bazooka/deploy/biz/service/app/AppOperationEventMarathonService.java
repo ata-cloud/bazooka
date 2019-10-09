@@ -41,6 +41,15 @@ public interface AppOperationEventMarathonService {
     AppOperationEventMarathonEntity selectByMarathonInfo(String marathonDeploymentId, String marathonDeploymentVersion);
 
     /**
+     * selectByServiceIdAndVersion
+     *
+     * @param marathonServiceId         marathonServiceId
+     * @param marathonDeploymentVersion marathonDeploymentVersion
+     * @return AppOperationEventMarathonEntity
+     */
+    AppOperationEventMarathonEntity selectByServiceIdAndVersion(String marathonServiceId, String marathonDeploymentVersion);
+
+    /**
      * 通过eventId查询
      *
      * @param eventId eventId

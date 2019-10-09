@@ -18,6 +18,9 @@ package net.atayun.bazooka.base.bean;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.lang.Nullable;
+
+import java.util.Map;
 
 /**
  * @author pqq
@@ -48,6 +51,10 @@ public class SpringContextBean implements ApplicationContextAware {
      */
     public static Object getBean(String name) {
         return applicationContext.getBean(name);
+    }
+
+    public static <T> Map<String, T> getBeansOfType(@Nullable Class<T> type, boolean includeNonSingletons, boolean allowEagerInit) {
+       return applicationContext.getBeansOfType(type, includeNonSingletons, allowEagerInit);
     }
 
     @Override

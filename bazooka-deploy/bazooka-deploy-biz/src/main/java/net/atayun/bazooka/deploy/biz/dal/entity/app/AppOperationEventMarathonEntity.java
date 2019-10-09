@@ -32,6 +32,8 @@ public class AppOperationEventMarathonEntity extends JdbcMysqlEntity<Long> {
 
     private Long eventId;
 
+    private String marathonServiceId;
+
     private String marathonDeploymentId;
 
     private String marathonDeploymentVersion;
