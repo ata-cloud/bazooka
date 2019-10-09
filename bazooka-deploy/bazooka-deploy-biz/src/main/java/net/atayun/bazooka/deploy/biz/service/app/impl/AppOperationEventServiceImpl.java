@@ -444,10 +444,18 @@ public class AppOperationEventServiceImpl
         if (!absent) {
             return;
         }
-        log.warn("task失败: serviceId: [{}], message: [{}]", marathonServiceId, marathonTaskFailureCallbackParam.getMessage());
         try {
             Long eventId = appOperationEventMarathonEntity.getEventId();
             AppOperationEventEntity appOperationEventEntity = getMapper().selectByPrimaryKey(eventId);
+            AppOperationEventLog eventLog = getBean(AppOperationEventLog.class);
+            AppOperationEnum event = appOperationEventEntity.getEvent();
+            String content = "当前操作失败:\n" + marathonTaskFailureCallbackParam.getMessage();
+            if (event == AppOperationEnum.DEPLOY) {
+                eventLog.save(eventId, AppOperationEventLogTypeEnum.APP_DEPLOY_FLOW_HEALTH_CHECK, 2, content);
+            } else {
+                eventLog.save(eventId, event.getLogType(), content);
+            }
+            log.warn("MarathonTask失败: serviceId: [{}], message: [{}]", marathonServiceId, content);
             String marathonDeploymentId = appOperationEventMarathonEntity.getMarathonDeploymentId();
             ClusterConfigDto clusterConfig = getBean(EnvApi.class).getEnvConfiguration(appOperationEventEntity.getEnvId())
                     .ifNotSuccessThrowException()
@@ -455,6 +463,7 @@ public class AppOperationEventServiceImpl
             String dcosEndpoint = CommonConstants.PROTOCOL + clusterConfig.getDcosEndpoint() + CommonConstants.MARATHON_PORT;
             Marathon instance = MarathonClient.getInstance(dcosEndpoint);
             instance.cancelDeployment(marathonDeploymentId);
+            log.warn("取消MarathonDeployment: serviceId: [{}], deploymentId: [{}]", marathonServiceId, marathonDeploymentId);
         } catch (Throwable t) {
             log.warn("marathonTaskFailureCallback", t);
         } finally {
