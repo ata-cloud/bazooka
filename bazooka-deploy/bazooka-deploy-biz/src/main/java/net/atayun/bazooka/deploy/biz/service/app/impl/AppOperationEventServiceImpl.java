@@ -73,10 +73,8 @@ import tk.mybatis.mapper.entity.Example;
 
 import javax.validation.constraints.NotNull;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
-import static java.lang.String.join;
 import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
 import static net.atayun.bazooka.deploy.biz.constants.DeployResultCodeConstants.APP_DEPLOY_MARATHON_CALLBACK_ERR_CODE;
 import static net.atayun.bazooka.deploy.biz.constants.DeployResultCodeConstants.APP_IS_DEPLOYING_ERR_CODE;
@@ -114,8 +112,6 @@ public class AppOperationEventServiceImpl
 
     @Autowired
     private DeployService deployService;
-
-    private static final CopyOnWriteArrayList<String> TASK_FAILURE_ID = new CopyOnWriteArrayList<>();
 
     /**
      * 事件操作
@@ -440,16 +436,11 @@ public class AppOperationEventServiceImpl
         if (appOperationEventMarathonEntity == null) {
             return;
         }
-        String key = join("_", marathonServiceId, marathonTaskFailureCallbackParam.getClusterId().toString());
-        boolean absent = TASK_FAILURE_ID.addIfAbsent(key);
-        if (!absent) {
-            return;
-        }
-        try {
-            Long eventId = appOperationEventMarathonEntity.getEventId();
-            AppOperationEventEntity eventEntity = getMapper().selectByPrimaryKey(eventId);
+        Long eventId = appOperationEventMarathonEntity.getEventId();
+        AppOperationEventEntity appOperationEventEntity = getMapper().selectByPrimaryKey(eventId);
+        if (appOperationEventEntity.getStatus() == AppOperationEventStatusEnum.PROCESS) {
             AppOperationEventLog eventLog = getBean(AppOperationEventLog.class);
-            AppOperationEnum event = getMapper().selectByPrimaryKey(eventId).getEvent();
+            AppOperationEnum event = appOperationEventEntity.getEvent();
             String content = "当前操作失败:\n" + marathonTaskFailureCallbackParam.getMessage();
             if (event == AppOperationEnum.DEPLOY) {
                 eventLog.save(eventId, AppOperationEventLogTypeEnum.APP_DEPLOY_FLOW_HEALTH_CHECK, 2, content);
@@ -457,26 +448,21 @@ public class AppOperationEventServiceImpl
                 eventLog.save(eventId, event.getLogType(), content);
             }
             log.warn("MarathonTask失败: serviceId: [{}], message: [{}]", marathonServiceId, content);
-            Long envId = eventEntity.getEnvId();
-            ClusterConfigDto clusterConf = getBean(EnvApi.class).getEnvConfiguration(envId).ifNotSuccessThrowException().getData();
-            String dcosUrl = CommonConstants.PROTOCOL + clusterConf.getDcosEndpoint() + CommonConstants.MARATHON_PORT;
-            Marathon instance = MarathonClient.getInstance(dcosUrl);
-            List<Deployment> deployments = instance.getDeployments();
-            deployments.stream()
-                    .filter(deployment -> deployment.getAffectedApps().stream()
-                            .anyMatch(app -> Objects.equals(marathonTaskFailureCallbackParam.getMarathonServiceId(), app)))
-                    .forEach(deployment -> {
-                        try {
-                            instance.cancelDeployment(deployment.getId());
-                        } catch (Throwable throwable) {
-                            log.warn("cancel deployment error: [" + deployment.toString() + "]", throwable);
-                        }
-                    });
-        } catch (Throwable t) {
-            log.warn("marathonTaskFailureCallback", t);
-        } finally {
-            TASK_FAILURE_ID.remove(key);
         }
+        ClusterConfigDto clusterConf = getBean(EnvApi.class).getEnvConfiguration(appOperationEventEntity.getEnvId()).ifNotSuccessThrowException().getData();
+        String dcosUrl = CommonConstants.PROTOCOL + clusterConf.getDcosEndpoint() + CommonConstants.MARATHON_PORT;
+        Marathon instance = MarathonClient.getInstance(dcosUrl);
+        List<Deployment> deployments = instance.getDeployments();
+        deployments.stream()
+                .filter(deployment -> deployment.getAffectedApps().stream()
+                        .anyMatch(app -> Objects.equals(marathonTaskFailureCallbackParam.getMarathonServiceId(), app)))
+                .forEach(deployment -> {
+                    try {
+                        instance.cancelDeployment(deployment.getId());
+                    } catch (Throwable throwable) {
+                        log.warn("cancel deployment error: [" + deployment.toString() + "]", throwable);
+                    }
+                });
     }
 
     private AppOperationEventEntity getRollbackEntity(Long appId, Long envId) {
