@@ -26,6 +26,7 @@ import mesosphere.client.common.ModelUtils;
 import mesosphere.marathon.client.Marathon;
 import mesosphere.marathon.client.MarathonClient;
 import mesosphere.marathon.client.model.v2.App;
+import mesosphere.marathon.client.model.v2.Deployment;
 import net.atayun.bazooka.base.bean.StrategyNumBean;
 import net.atayun.bazooka.base.constant.CommonConstants;
 import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
@@ -446,9 +447,9 @@ public class AppOperationEventServiceImpl
         }
         try {
             Long eventId = appOperationEventMarathonEntity.getEventId();
-            AppOperationEventEntity appOperationEventEntity = getMapper().selectByPrimaryKey(eventId);
+            AppOperationEventEntity eventEntity = getMapper().selectByPrimaryKey(eventId);
             AppOperationEventLog eventLog = getBean(AppOperationEventLog.class);
-            AppOperationEnum event = appOperationEventEntity.getEvent();
+            AppOperationEnum event = getMapper().selectByPrimaryKey(eventId).getEvent();
             String content = "当前操作失败:\n" + marathonTaskFailureCallbackParam.getMessage();
             if (event == AppOperationEnum.DEPLOY) {
                 eventLog.save(eventId, AppOperationEventLogTypeEnum.APP_DEPLOY_FLOW_HEALTH_CHECK, 2, content);
@@ -456,14 +457,21 @@ public class AppOperationEventServiceImpl
                 eventLog.save(eventId, event.getLogType(), content);
             }
             log.warn("MarathonTask失败: serviceId: [{}], message: [{}]", marathonServiceId, content);
-            String marathonDeploymentId = appOperationEventMarathonEntity.getMarathonDeploymentId();
-            ClusterConfigDto clusterConfig = getBean(EnvApi.class).getEnvConfiguration(appOperationEventEntity.getEnvId())
-                    .ifNotSuccessThrowException()
-                    .getData();
-            String dcosEndpoint = CommonConstants.PROTOCOL + clusterConfig.getDcosEndpoint() + CommonConstants.MARATHON_PORT;
-            Marathon instance = MarathonClient.getInstance(dcosEndpoint);
-            instance.cancelDeployment(marathonDeploymentId);
-            log.warn("取消MarathonDeployment: serviceId: [{}], deploymentId: [{}]", marathonServiceId, marathonDeploymentId);
+            Long envId = eventEntity.getEnvId();
+            ClusterConfigDto clusterConf = getBean(EnvApi.class).getEnvConfiguration(envId).ifNotSuccessThrowException().getData();
+            String dcosUrl = CommonConstants.PROTOCOL + clusterConf.getDcosEndpoint() + CommonConstants.MARATHON_PORT;
+            Marathon instance = MarathonClient.getInstance(dcosUrl);
+            List<Deployment> deployments = instance.getDeployments();
+            deployments.stream()
+                    .filter(deployment -> deployment.getAffectedApps().stream()
+                            .anyMatch(app -> Objects.equals(marathonTaskFailureCallbackParam.getMarathonServiceId(), app)))
+                    .forEach(deployment -> {
+                        try {
+                            instance.cancelDeployment(deployment.getId());
+                        } catch (Throwable throwable) {
+                            log.warn("cancel deployment error: [" + deployment.toString() + "]", throwable);
+                        }
+                    });
         } catch (Throwable t) {
             log.warn("marathonTaskFailureCallback", t);
         } finally {
