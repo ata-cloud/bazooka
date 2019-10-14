@@ -15,16 +15,16 @@
  */
 package net.atayun.bazooka.gateway.controller;
 
-import net.atayun.bazooka.base.config.GitLabProperties;
-import net.atayun.bazooka.base.page.PageQuery;
+import net.atayun.bazooka.combase.GitLabProperties;
+import net.atayun.bazooka.combase.page.PageQuery;
 import net.atayun.bazooka.gateway.service.rms.OpsEnvService;
 import net.atayun.bazooka.gateway.vo.Pms.ProjectDetailResponse;
 import net.atayun.bazooka.gateway.vo.rms.EnvVo;
 import net.atayun.bazooka.pms.api.ProjectApi;
-import net.atayun.bazooka.pms.api.dto.EnvDto;
+import net.atayun.bazooka.pms.api.EnvDto;
 import net.atayun.bazooka.pms.api.vo.DevUserResponse;
 import net.atayun.bazooka.pms.api.vo.ProjectResponse;
-import net.atayun.bazooka.rms.api.param.EnvQueryReq;
+import net.atayun.bazooka.pms.api.param.EnvQueryReq;
 import net.atayun.bazooka.upms.api.dto.req.UserAddReqDTO;
 import net.atayun.bazooka.upms.api.dto.req.UserQueryReqDTO;
 import net.atayun.bazooka.upms.api.dto.rsp.UserDetailRspDTO;

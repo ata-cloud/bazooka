@@ -15,11 +15,11 @@
  */
 package net.atayun.bazooka.deploy.biz.service.app.event;
 
-import net.atayun.bazooka.base.annotation.StrategyNum;
+import net.atayun.bazooka.combase.annotation.StrategyNum;
 import net.atayun.bazooka.deploy.api.param.AppOperationEventParam;
 import mesosphere.client.common.ModelUtils;
 import mesosphere.marathon.client.model.v2.App;
-import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
+import net.atayun.bazooka.combase.enums.deploy.AppOperationEnum;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 

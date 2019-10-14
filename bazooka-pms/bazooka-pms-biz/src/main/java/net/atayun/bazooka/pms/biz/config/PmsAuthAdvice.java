@@ -15,7 +15,7 @@
  */
 package net.atayun.bazooka.pms.biz.config;
 
-import net.atayun.bazooka.base.annotation.PmsAuth;
+import net.atayun.bazooka.combase.annotation.PmsAuth;
 import net.atayun.bazooka.pms.api.dto.AppInfoDto;
 import net.atayun.bazooka.pms.api.enums.UserTypeEnum;
 import net.atayun.bazooka.pms.biz.dal.entity.AppInfoEntity;
@@ -66,7 +66,7 @@ public class PmsAuthAdvice {
      *
      * @param joinPoint
      */
-    @Before("@annotation(net.atayun.bazooka.base.annotation.PmsAuth)")
+    @Before("@annotation(net.atayun.bazooka.combase.annotation.PmsAuth)")
     public void validate(JoinPoint joinPoint) {
         //当前用户ID
         Long currentUserId = YyRequestInfoHelper.getCurrentUserId();

@@ -15,8 +15,8 @@
  */
 package net.atayun.bazooka.upms.biz.component.strategy.shiro.session;
 
-import net.atayun.bazooka.base.annotation.StrategyNum;
-import net.atayun.bazooka.upms.biz.dal.entity.User;
+import net.atayun.bazooka.combase.annotation.StrategyNum;
+import net.atayun.bazooka.upms.biz.domain.User;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.eis.SessionDAO;

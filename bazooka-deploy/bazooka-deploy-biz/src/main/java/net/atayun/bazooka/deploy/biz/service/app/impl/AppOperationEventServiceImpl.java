@@ -16,10 +16,10 @@
 package net.atayun.bazooka.deploy.biz.service.app.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import net.atayun.bazooka.base.bean.StrategyNumBean;
-import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
-import net.atayun.bazooka.base.enums.deploy.AppOperationEventLogTypeEnum;
-import net.atayun.bazooka.base.enums.status.FinishStatusEnum;
+import net.atayun.bazooka.combase.bean.StrategyNumBean;
+import net.atayun.bazooka.combase.enums.deploy.AppOperationEnum;
+import net.atayun.bazooka.combase.enums.deploy.AppOperationEventLogTypeEnum;
+import net.atayun.bazooka.combase.enums.status.FinishStatusEnum;
 import net.atayun.bazooka.deploy.api.dto.AppRunningEventDto;
 import net.atayun.bazooka.deploy.api.param.AppOperationEventParam;
 import net.atayun.bazooka.deploy.biz.dal.dao.app.AppOperationEventMapper;
@@ -49,10 +49,10 @@ import net.atayun.bazooka.deploy.biz.service.status.EventStatusOpt;
 import net.atayun.bazooka.pms.api.dto.AppInfoDto;
 import net.atayun.bazooka.pms.api.dto.PmsAppDeployStatusDto;
 import net.atayun.bazooka.pms.api.feign.AppApi;
-import net.atayun.bazooka.rms.api.RmsDockerImageApi;
-import net.atayun.bazooka.rms.api.api.EnvApi;
-import net.atayun.bazooka.rms.api.dto.ClusterConfigDto;
-import net.atayun.bazooka.rms.api.dto.RmsDockerImageDto;
+import net.atayun.bazooka.pms.api.RmsDockerImageApi;
+import net.atayun.bazooka.pms.api.api.EnvApi;
+import net.atayun.bazooka.pms.api.dto.ClusterConfigDto;
+import net.atayun.bazooka.pms.api.dto.RmsDockerImageDto;
 import com.youyu.common.api.PageData;
 import com.youyu.common.enums.IsDeleted;
 import com.youyu.common.exception.BizException;
@@ -61,7 +61,6 @@ import com.youyu.common.utils.YyBeanUtils;
 import lombok.extern.slf4j.Slf4j;
 import mesosphere.client.common.ModelUtils;
 import mesosphere.marathon.client.model.v2.App;
-import net.atayun.bazooka.deploy.biz.dto.app.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -71,7 +70,7 @@ import javax.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
+import static net.atayun.bazooka.combase.bean.SpringContextBean.getBean;
 import static net.atayun.bazooka.deploy.biz.constants.DeployResultCodeConstants.APP_DEPLOY_MARATHON_CALLBACK_ERR_CODE;
 import static net.atayun.bazooka.deploy.biz.constants.DeployResultCodeConstants.APP_IS_DEPLOYING_ERR_CODE;
 

@@ -15,7 +15,7 @@
  */
 package net.atayun.bazooka.deploy.biz.log;
 
-import net.atayun.bazooka.base.enums.deploy.AppOperationEventLogTypeEnum;
+import net.atayun.bazooka.combase.enums.deploy.AppOperationEventLogTypeEnum;
 import net.atayun.bazooka.deploy.biz.constants.DeployConstants;
 import net.atayun.bazooka.deploy.biz.dal.entity.app.AppOperationEventDetailEntity;
 import net.atayun.bazooka.deploy.biz.service.app.AppOperationEventDetailService;

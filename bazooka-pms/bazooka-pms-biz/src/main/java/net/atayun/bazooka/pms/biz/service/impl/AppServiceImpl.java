@@ -15,6 +15,7 @@
  */
 package net.atayun.bazooka.pms.biz.service.impl;
 
+import com.youyu.common.api.AppInfo;
 import net.atayun.bazooka.deploy.api.AppOperationEventApi;
 import net.atayun.bazooka.deploy.api.dto.AppRunningEventDto;
 import net.atayun.bazooka.pms.api.dto.AppDeployConfigDto;
@@ -29,10 +30,11 @@ import net.atayun.bazooka.pms.biz.dal.entity.AppDeployConfigEntity;
 import net.atayun.bazooka.pms.biz.dal.entity.AppInfoEntity;
 import net.atayun.bazooka.pms.biz.dal.entity.PmsProjectEnvRelationEntity;
 import net.atayun.bazooka.pms.biz.dal.entity.PmsUserProjectRelationEntity;
+import net.atayun.bazooka.pms.biz.repository.AppUserRepository;
 import net.atayun.bazooka.pms.biz.service.*;
-import net.atayun.bazooka.rms.api.api.EnvApi;
-import net.atayun.bazooka.rms.api.dto.ClusterAppServiceInfoDto;
-import net.atayun.bazooka.rms.api.param.EnvAppReq;
+import net.atayun.bazooka.pms.api.api.EnvApi;
+import net.atayun.bazooka.pms.api.dto.ClusterAppServiceInfoDto;
+import net.atayun.bazooka.pms.api.param.EnvAppReq;
 import net.atayun.bazooka.upms.api.dto.rsp.UserDetailRspDTO;
 import net.atayun.bazooka.upms.api.feign.UserApi;
 import com.youyu.common.enums.BaseResultCode;
@@ -41,7 +43,6 @@ import com.youyu.common.exception.BizException;
 import com.youyu.common.mapper.support.ExampleEnhancer;
 import com.youyu.common.utils.YyAssert;
 import lombok.extern.slf4j.Slf4j;
-import net.atayun.bazooka.pms.biz.service.*;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Namespace;
@@ -92,6 +93,10 @@ public class AppServiceImpl implements AppService {
     @Autowired
     private EnvApi envApi;
 
+    @Autowired
+    private AppUserRepository appUserRepository;
+
+
     private final static Comparator<Object> CHINA_COMPARE = Collator.getInstance(java.util.Locale.CHINA);
 
     /**
@@ -106,7 +111,7 @@ public class AppServiceImpl implements AppService {
      * @param appInfoEntity
      */
     @Override
-    public synchronized AppInfoEntity addAppInfo(AppInfoEntity appInfoEntity) {
+    public synchronized AppInfo addAppInfo(AppInfo appInfoEntity) {
         ProjectInfoDto projectInfoDto = this.projectService.queryProjectById(appInfoEntity.getProjectId());
         YyAssert.paramCheck(ObjectUtils.isEmpty(projectInfoDto), "项目ID不存在！");
 

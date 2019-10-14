@@ -18,8 +18,8 @@
         </dependency>
 
         <dependency>
-            <groupId>net.atayun.bazooka</groupId>
-            <artifactId>bazooka-common</artifactId>
+        <groupId>net.atayun.bazooka</groupId>
+        <artifactId>bazooka-util</artifactId>
         </dependency>
 
         <dependency>

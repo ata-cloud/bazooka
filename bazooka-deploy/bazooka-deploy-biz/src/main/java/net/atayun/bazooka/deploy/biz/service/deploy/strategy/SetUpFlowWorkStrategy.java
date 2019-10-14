@@ -15,16 +15,16 @@
  */
 package net.atayun.bazooka.deploy.biz.service.deploy.strategy;
 
-import net.atayun.bazooka.base.annotation.StrategyNum;
-import net.atayun.bazooka.base.bean.StrategyNumBean;
-import net.atayun.bazooka.base.enums.deploy.AppOperationEventLogTypeEnum;
+import net.atayun.bazooka.combase.annotation.StrategyNum;
+import net.atayun.bazooka.combase.bean.StrategyNumBean;
+import net.atayun.bazooka.combase.enums.deploy.AppOperationEventLogTypeEnum;
 import net.atayun.bazooka.deploy.biz.dal.entity.flow.DeployFlowEntity;
 import net.atayun.bazooka.deploy.biz.enums.flow.DeployFlowEnum;
 import net.atayun.bazooka.deploy.biz.log.LogConcat;
 import net.atayun.bazooka.deploy.biz.service.deploy.strategy.setup.AbstractSetUpFlowStrategy;
 import net.atayun.bazooka.pms.api.dto.AppDeployConfigDto;
-import net.atayun.bazooka.rms.api.api.EnvApi;
-import net.atayun.bazooka.rms.api.dto.EnvResourceDto;
+import net.atayun.bazooka.pms.api.api.EnvApi;
+import net.atayun.bazooka.pms.api.dto.EnvResourceDto;
 import com.youyu.common.exception.BizException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -17,18 +17,18 @@ package net.atayun.bazooka.deploy.biz.service.deploy.cancel;
 
 import mesosphere.marathon.client.Marathon;
 import mesosphere.marathon.client.MarathonClient;
-import net.atayun.bazooka.base.constant.CommonConstants;
+import net.atayun.bazooka.combase.constant.CommonConstants;
 import net.atayun.bazooka.deploy.biz.dal.entity.deploy.DeployEntity;
 import net.atayun.bazooka.deploy.biz.dal.entity.flow.DeployFlowEntity;
 import net.atayun.bazooka.deploy.biz.dal.entity.flow.DeployFlowMarathonEntity;
 import net.atayun.bazooka.deploy.biz.service.deploy.DeployService;
 import net.atayun.bazooka.deploy.biz.service.flow.DeployFlowMarathonService;
-import net.atayun.bazooka.rms.api.api.EnvApi;
-import net.atayun.bazooka.rms.api.dto.ClusterConfigDto;
+import net.atayun.bazooka.pms.api.api.EnvApi;
+import net.atayun.bazooka.pms.api.dto.ClusterConfigDto;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
+import static net.atayun.bazooka.combase.bean.SpringContextBean.getBean;
 
 /**
  * @author Ping

@@ -17,6 +17,16 @@
         <dependency>
             <groupId>net.atayun.bazooka</groupId>
             <artifactId>bazooka-upms-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>persistence-api</artifactId>
+                    <groupId>javax.persistence</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>javassist</artifactId>
+                    <groupId>org.javassist</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -25,15 +35,44 @@
         </dependency>
 
         <dependency>
-            <groupId>com.yofish.platform</groupId>
-            <artifactId>sword-dao</artifactId>
+        <groupId>com.yofish.platform</groupId>
+        <artifactId>sword-dao</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>persistence-api</artifactId>
+                    <groupId>javax.persistence</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>javassist</artifactId>
+                    <groupId>javassist</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>net.atayun.bazooka</groupId>
-            <artifactId>bazooka-common</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.atayun.bazooka</groupId>
+            <artifactId>bazooka-util</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>javassist</artifactId>
+                    <groupId>org.javassist</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
 
         <dependency>

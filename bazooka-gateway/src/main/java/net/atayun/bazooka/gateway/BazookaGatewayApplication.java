@@ -17,6 +17,7 @@ package net.atayun.bazooka.gateway;
 
 import net.atayun.bazooka.gateway.application.OpsSpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -41,7 +42,8 @@ public class BazookaGatewayApplication {
 
     public static void main(String[] args) {
         OpsSpringApplication opsSpringApplication = new OpsSpringApplication(BazookaGatewayApplication.class);
-        opsSpringApplication.run(args);
+        ConfigurableApplicationContext run = opsSpringApplication.run(args);
+        System.out.println("ss");
     }
 
 }

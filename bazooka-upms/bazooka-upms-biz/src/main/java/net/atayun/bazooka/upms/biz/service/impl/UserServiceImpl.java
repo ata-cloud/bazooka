@@ -15,45 +15,38 @@
  */
 package net.atayun.bazooka.upms.biz.service.impl;
 
-import net.atayun.bazooka.base.service.BatchService;
-import net.atayun.bazooka.base.tuple.Tuple2;
-import net.atayun.bazooka.upms.biz.component.properties.ShiroProperties;
-import net.atayun.bazooka.upms.biz.component.realm.ShiroAuthRealm;
-import net.atayun.bazooka.upms.biz.dal.dao.PermissionMapper;
-import net.atayun.bazooka.upms.biz.dal.dao.UserMapper;
-import net.atayun.bazooka.upms.biz.dal.dao.UserRoleMapper;
-import net.atayun.bazooka.upms.biz.dal.entity.Permission;
-import net.atayun.bazooka.upms.biz.dal.entity.User;
-import net.atayun.bazooka.upms.biz.dal.entity.UserRole;
-import net.atayun.bazooka.upms.biz.service.UserService;
 import com.github.pagehelper.PageInfo;
 import com.youyu.common.api.PageData;
+import net.atayun.bazooka.combase.tuple.Tuple2;
 import net.atayun.bazooka.upms.api.dto.req.*;
 import net.atayun.bazooka.upms.api.dto.rsp.*;
+import net.atayun.bazooka.upms.biz.component.properties.ShiroProperties;
+import net.atayun.bazooka.upms.biz.component.realm.ShiroAuthRealm;
+import net.atayun.bazooka.upms.biz.repository.PermissionRepository;
+import net.atayun.bazooka.upms.biz.repository.UserRepository;
+import net.atayun.bazooka.upms.biz.domain.Permission;
+import net.atayun.bazooka.upms.biz.domain.User;
+import net.atayun.bazooka.upms.biz.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static net.atayun.bazooka.base.utils.BizExceptionUtil.exception;
-import static net.atayun.bazooka.base.utils.BizExceptionUtil.exception2MatchingExpression;
-import static net.atayun.bazooka.base.utils.OrikaCopyUtil.copyProperty;
-import static net.atayun.bazooka.base.utils.OrikaCopyUtil.copyProperty4List;
-import static net.atayun.bazooka.base.utils.PageDataUtil.pageInfo2PageData;
-import static net.atayun.bazooka.base.utils.StringUtil.eq;
-import static net.atayun.bazooka.upms.api.enums.PermissionTypeEnum.MENU;
-import static net.atayun.bazooka.upms.api.enums.RoleTypeEnum.ADMIN;
-import static net.atayun.bazooka.upms.api.enums.UpmsResultCode.*;
-import static net.atayun.bazooka.upms.biz.component.realm.ShiroAuthRealm.getUserId;
-import static net.atayun.bazooka.upms.biz.helper.constant.PermissionConstant.ROOT_PERMISSION;
-import static net.atayun.bazooka.upms.biz.helper.exception.ExceptionHelper.loginException;
 import static com.github.pagehelper.page.PageMethod.startPage;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static net.atayun.bazooka.combase.utils.BizExceptionUtil.exception;
+import static net.atayun.bazooka.combase.utils.BizExceptionUtil.exception2MatchingExpression;
+import static net.atayun.bazooka.combase.utils.OrikaCopyUtil.copyProperty;
+import static net.atayun.bazooka.combase.utils.OrikaCopyUtil.copyProperty4List;
+import static net.atayun.bazooka.combase.utils.PageDataUtil.pageInfo2PageData;
+import static net.atayun.bazooka.combase.utils.StringUtil.eq;
+import static net.atayun.bazooka.upms.api.enums.UpmsResultCode.*;
+import static net.atayun.bazooka.upms.biz.component.realm.ShiroAuthRealm.getUserId;
+import static net.atayun.bazooka.upms.biz.helper.exception.ExceptionHelper.loginException;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
@@ -65,15 +58,11 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private BatchService batchService;
 
     @Autowired
-    private UserMapper userMapper;
+    private UserRepository userRepository;
     @Autowired
-    private UserRoleMapper userRoleMapper;
-    @Autowired
-    private PermissionMapper permissionMapper;
+    private PermissionRepository permissionRepository;
 
     @Autowired
     private ShiroProperties shiroProperties;
@@ -97,19 +86,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void modifyPassword(UserModifyPasswordReqDTO userModifyPasswordReqDTO) {
-        User user = userMapper.selectByPrimaryKey(getUserId());
+        User user = userRepository.findById(getUserId()).get();
         checkUser(user);
 
         user.modifyPassword(userModifyPasswordReqDTO, shiroProperties.getHashAlgorithmName());
-        userMapper.updateByPrimaryKey(user);
+        userRepository.save(user);
         shiroAuthRealm.logout();
     }
 
 
     @Override
     public User getAuthenticationUser(String username, String password) {
-        User queryUser = new User(username, password);
-        User user = userMapper.selectOne(queryUser);
+        User user = userRepository.findUserByUsernameAndPassword(username, password);
         checkUser(user);
         return user;
     }
@@ -119,9 +107,9 @@ public class UserServiceImpl implements UserService {
     public Long add(UserAddReqDTO userAddReqDTO) {
         checkUserAdd(userAddReqDTO);
         User user = new User(userAddReqDTO, shiroProperties.getHashAlgorithmName());
-        userMapper.insertSelective(user);
+        userRepository.save(user);
 
-        saveUserRoles(user, userAddReqDTO.getRoleIds());
+//        saveUserRoles(user, userAddReqDTO.getRoleIds());
         return user.getId();
     }
 
@@ -129,31 +117,32 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public void delete(UserDeleteReqDTO userDeleteReqDTO) {
         Long userId = userDeleteReqDTO.getUserId();
-        userMapper.deleteByPrimaryKey(userId);
-        userRoleMapper.deleteByUserId(userId);
+        userRepository.deleteById(userId);
+//        userMapper.deleteByPrimaryKey(userId);
+//        userRoleMapper.deleteByUserId(userId);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void edit(UserEditReqDTO userEditReqDTO) {
-        User existUser = userMapper.selectByPrimaryKey(userEditReqDTO.getUserId());
+        User existUser = userRepository.findById(userEditReqDTO.getUserId()).get();
         if (!eq(existUser.getEmail(), userEditReqDTO.getEmail())) {
             checkUserEmail(userEditReqDTO.getEmail());
         }
 
         User user = new User(userEditReqDTO, shiroProperties.getHashAlgorithmName());
-        userMapper.updateByPrimaryKeySelective(user);
+        userRepository.save(user);
         updateUserRoles(user, userEditReqDTO.getRoleIds());
     }
 
     @Override
     public PageData<UserQueryRspDTO> getPage(UserQueryReqDTO userQueryReqDTO) {
         startPage(userQueryReqDTO.getPageNo(), userQueryReqDTO.getPageSize());
-        List<User> users = userMapper.getPage(userQueryReqDTO);
+        List<User> users = null;
         PageInfo userPage = new PageInfo(users);
 
         List<UserQueryRspDTO> userQueryRsps = copyProperty4List(users, UserQueryRspDTO.class);
-        fillUserRole(userQueryRsps);
+//        fillUserRole(userQueryRsps);
         return pageInfo2PageData(userPage, userQueryRsps);
     }
 
@@ -169,21 +158,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Tuple2<Set<String>, Set<String>> getRolePermissionTuple2(Long userId) {
-        List<String> roles = userMapper.getRoleNameByUserId(userId);
-        List<String> permissions = userMapper.getPermissionNameByUserId(userId);
+        User user = userRepository.findById(userId).get();
 
-        return new Tuple2<>(new HashSet<>(roles), new HashSet<>(permissions));
+        return new Tuple2<>(new HashSet<>(null), new HashSet<>(null));
     }
 
     @Override
     public boolean hasUrlPermission(Long userId, String url) {
-        int count = userMapper.countByUserIdUrl(userId, url);
+        int count = 1;
         return count == 0 ? false : true;
     }
 
     @Override
     public List<UserMenuPermissionRspDTO> getUserMenuPermissions(UserMenuPermissionReqDTO userPermissionReqDTO) {
-        List<Permission> rootPermissions = permissionMapper.getPermissionByUserIdParentIdPermissionType(getUserId(), ROOT_PERMISSION, MENU.getCode());
+//        List<Permission> rootPermissions = userRepository.getPermissionByUserIdParentIdPermissionType(getUserId(), ROOT_PERMISSION, MENU.getCode());
+        List<Permission> rootPermissions = null;
+
         return copyProperty4List(rootPermissions, UserMenuPermissionRspDTO.class);
     }
 
@@ -197,7 +187,8 @@ public class UserServiceImpl implements UserService {
     public Boolean isAdmin(Long userId) {
         userId = isNull(userId) ? getUserId() : userId;
         User user = getUser(userId);
-        Integer count = userRoleMapper.countByUserIdRoleType(user.getId(), ADMIN.getCode());
+//        Integer count = userRoleMapper.countByUserIdRoleType(user.getId(), ADMIN.getCode());
+        Integer count = 1;
         return count > 0 ? true : false;
     }
 
@@ -208,7 +199,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     private User getUser(Long userId) {
-        User user = userMapper.selectByPrimaryKey(userId);
+        User user = userRepository.findById(userId).get();
         return user;
     }
 
@@ -217,16 +208,6 @@ public class UserServiceImpl implements UserService {
      *
      * @param users
      */
-    private void fillUserRole(List<UserQueryRspDTO> users) {
-        if (isEmpty(users)) {
-            return;
-        }
-
-        for (UserQueryRspDTO user : users) {
-            List<UserRoleRspDTO> userRoles = userRoleMapper.getRoleByUserId(user.getUserId());
-            user.setUserRoles(userRoles);
-        }
-    }
 
     /**
      * 更新用户角色
@@ -235,26 +216,8 @@ public class UserServiceImpl implements UserService {
      * @param roleIds
      */
     private void updateUserRoles(User user, List<Long> roleIds) {
-        userRoleMapper.deleteByUserId(user.getId());
-        saveUserRoles(user, roleIds);
-    }
-
-    /**
-     * 保存用户角色信息
-     *
-     * @param user
-     * @param roleIds
-     */
-    private void saveUserRoles(User user, List<Long> roleIds) {
-        if (isEmpty(roleIds)) {
-            return;
-        }
-
-        List<UserRole> userRoles = new ArrayList<>();
-        for (Long roleId : roleIds) {
-            userRoles.add(new UserRole(user.getId(), roleId));
-        }
-        batchService.batchDispose(userRoles, UserRoleMapper.class, "insertSelective");
+//        userRepository.deleteByUserId(user.getId());
+//        saveUserRoles(user, roleIds);
     }
 
     /**
@@ -263,7 +226,7 @@ public class UserServiceImpl implements UserService {
      * @param userAddReqDTO
      */
     private void checkUserAdd(UserAddReqDTO userAddReqDTO) {
-        User user = userMapper.getByUserNameOrEmail(userAddReqDTO.getUsername(), userAddReqDTO.getEmail());
+        User user = userRepository.findUserByUsernameAndEmail(userAddReqDTO.getUsername(), userAddReqDTO.getEmail());
         exception2MatchingExpression(nonNull(user), USERNAME_OR_EMAIL_ALREADY_EXIST);
     }
 
@@ -285,7 +248,7 @@ public class UserServiceImpl implements UserService {
     private void checkUserEmail(String email) {
         User queryUser = new User();
         queryUser.setEmail(email);
-        User user = userMapper.selectOne(queryUser);
+        User user = userRepository.findUserByEmail(email);
         exception2MatchingExpression(nonNull(user), EMAIL_ALREADY_EXIST);
     }
 

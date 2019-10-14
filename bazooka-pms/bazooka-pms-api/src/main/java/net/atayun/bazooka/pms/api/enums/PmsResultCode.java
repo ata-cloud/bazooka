@@ -18,7 +18,7 @@ package net.atayun.bazooka.pms.api.enums;
 import com.youyu.common.api.IBaseResultCode;
 import org.springframework.util.ObjectUtils;
 
-import static net.atayun.bazooka.base.constant.AtaResultCode.PMS_CODE;
+import static net.atayun.bazooka.combase.constant.AtaResultCode.PMS_CODE;
 import static com.youyu.common.constant.ResultCodeConstant.COMMON_CODE_PREFIX;
 import static com.youyu.common.constant.ResultCodeConstant.SUCCESS;
 

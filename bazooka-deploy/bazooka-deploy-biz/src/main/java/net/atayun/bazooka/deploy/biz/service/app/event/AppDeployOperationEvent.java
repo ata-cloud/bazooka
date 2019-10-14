@@ -17,9 +17,9 @@ package net.atayun.bazooka.deploy.biz.service.app.event;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import net.atayun.bazooka.base.annotation.StrategyNum;
-import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
-import net.atayun.bazooka.base.enums.status.FinishStatusEnum;
+import net.atayun.bazooka.combase.annotation.StrategyNum;
+import net.atayun.bazooka.combase.enums.deploy.AppOperationEnum;
+import net.atayun.bazooka.combase.enums.status.FinishStatusEnum;
 import net.atayun.bazooka.deploy.api.param.AppOperationEventParam;
 import net.atayun.bazooka.deploy.biz.dal.entity.deploy.DeployEntity;
 import net.atayun.bazooka.deploy.biz.dal.entity.flow.DeployFlowEntity;

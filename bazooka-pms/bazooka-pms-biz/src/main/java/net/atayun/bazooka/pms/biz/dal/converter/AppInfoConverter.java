@@ -15,6 +15,7 @@
  */
 package net.atayun.bazooka.pms.biz.dal.converter;
 
+import com.youyu.common.api.AppInfo;
 import net.atayun.bazooka.pms.api.vo.AppInfoAddFormParam;
 import net.atayun.bazooka.pms.api.vo.AppInfoUpdateFormParam;
 import net.atayun.bazooka.pms.biz.dal.entity.AppInfoEntity;
@@ -26,7 +27,7 @@ import org.springframework.util.ObjectUtils;
  */
 public class AppInfoConverter {
 
-    public static AppInfoEntity appInfoEntity(Long projectId, AppInfoAddFormParam formParam) {
+    public static AppInfo appInfo(Long projectId, AppInfoAddFormParam formParam) {
         return ObjectUtils.isEmpty(formParam)
                 ? null
                 : new AppInfoEntity(
@@ -41,7 +42,7 @@ public class AppInfoConverter {
         );
     }
 
-    public static AppInfoEntity appInfoEntity(Long appId, AppInfoUpdateFormParam formParam) {
+    public static AppInfoEntity appInfo(Long appId, AppInfoUpdateFormParam formParam) {
         return ObjectUtils.isEmpty(formParam)
                 ? null
                 : new AppInfoEntity(

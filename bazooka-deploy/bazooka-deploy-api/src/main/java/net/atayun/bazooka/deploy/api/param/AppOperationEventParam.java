@@ -15,7 +15,7 @@
  */
 package net.atayun.bazooka.deploy.api.param;
 
-import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
+import net.atayun.bazooka.combase.enums.deploy.AppOperationEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

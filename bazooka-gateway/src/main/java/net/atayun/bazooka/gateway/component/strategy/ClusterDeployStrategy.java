@@ -15,7 +15,7 @@
  */
 package net.atayun.bazooka.gateway.component.strategy;
 
-import net.atayun.bazooka.rms.api.dto.rsp.ClusterMarathonConfigRspDto;
+import net.atayun.bazooka.pms.api.dto.rsp.ClusterMarathonConfigRspDto;
 
 /**
  * @author pqq

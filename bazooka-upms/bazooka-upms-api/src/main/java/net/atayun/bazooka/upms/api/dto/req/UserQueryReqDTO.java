@@ -15,7 +15,7 @@
  */
 package net.atayun.bazooka.upms.api.dto.req;
 
-import net.atayun.bazooka.base.page.PageQuery;
+import net.atayun.bazooka.combase.page.PageQuery;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;

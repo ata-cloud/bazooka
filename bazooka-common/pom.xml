@@ -17,85 +17,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.yofish.platform</groupId>
-            <artifactId>sword-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>ma.glasnost.orika</groupId>
-            <artifactId>orika-core</artifactId>
-            <version>${orika.core.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>3.11.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.gitlab4j</groupId>
-            <artifactId>gitlab4j-api</artifactId>
-            <version>4.11.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.offbytwo.jenkins</groupId>
-            <artifactId>jenkins-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.mesosphere</groupId>
-            <artifactId>marathon-client</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jgit</groupId>
-            <artifactId>org.eclipse.jgit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.main</groupId>
-            <artifactId>jenkins-core</artifactId>
+            <groupId>net.atayun.bazooka</groupId>
+            <artifactId>bazooka-util</artifactId>
         </dependency>
     </dependencies>
 </project>

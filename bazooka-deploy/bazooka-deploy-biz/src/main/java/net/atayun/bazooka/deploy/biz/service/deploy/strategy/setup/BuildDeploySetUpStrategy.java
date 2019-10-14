@@ -15,21 +15,21 @@
  */
 package net.atayun.bazooka.deploy.biz.service.deploy.strategy.setup;
 
-import net.atayun.bazooka.base.annotation.StrategyNum;
-import net.atayun.bazooka.base.enums.deploy.AppOperationEventLogTypeEnum;
-import net.atayun.bazooka.base.enums.deploy.DeployModeEnum;
-import net.atayun.bazooka.base.git.GitServiceHelp;
-import net.atayun.bazooka.base.jenkins.JenkinsJobPropertiesHelper;
-import net.atayun.bazooka.base.jenkins.JenkinsServerHelper;
+import net.atayun.bazooka.combase.annotation.StrategyNum;
+import net.atayun.bazooka.combase.enums.deploy.AppOperationEventLogTypeEnum;
+import net.atayun.bazooka.combase.enums.deploy.DeployModeEnum;
+import net.atayun.bazooka.combase.git.GitServiceHelp;
+import net.atayun.bazooka.combase.JenkinsJobPropertiesHelper;
+import net.atayun.bazooka.combase.JenkinsServerHelper;
 import net.atayun.bazooka.deploy.biz.constants.JenkinsBuildJobConstants;
 import net.atayun.bazooka.deploy.biz.dal.entity.deploy.DeployEntity;
 import net.atayun.bazooka.deploy.biz.log.LogConcat;
 import net.atayun.bazooka.deploy.biz.service.deploy.strategy.WorkDetailPojo;
 import net.atayun.bazooka.pms.api.dto.AppDeployConfigDto;
 import net.atayun.bazooka.pms.api.dto.AppInfoWithCredential;
-import net.atayun.bazooka.rms.api.api.EnvApi;
-import net.atayun.bazooka.rms.api.dto.ClusterConfigDto;
-import net.atayun.bazooka.rms.api.dto.EnvDto;
+import net.atayun.bazooka.pms.api.api.EnvApi;
+import net.atayun.bazooka.pms.api.dto.ClusterConfigDto;
+import net.atayun.bazooka.pms.api.EnvDto;
 import com.youyu.common.exception.BizException;
 import net.atayun.bazooka.deploy.biz.constants.DeployResultCodeConstants;
 import org.springframework.beans.factory.annotation.Autowired;

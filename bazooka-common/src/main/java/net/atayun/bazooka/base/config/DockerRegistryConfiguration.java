@@ -15,8 +15,8 @@
  */
 package net.atayun.bazooka.base.config;
 
-import net.atayun.bazooka.base.docker.DockerRegistryService;
-import net.atayun.bazooka.base.docker.DockerRegistryServiceImpl;
+import net.atayun.bazooka.combase.docker.DockerRegistryService;
+import net.atayun.bazooka.combase.docker.DockerRegistryServiceImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -15,6 +15,7 @@
  */
 package net.atayun.bazooka.pms.biz.service.impl;
 
+import net.atayun.bazooka.pms.api.EnvDto;
 import net.atayun.bazooka.pms.api.dto.*;
 import net.atayun.bazooka.pms.api.enums.*;
 import net.atayun.bazooka.pms.api.vo.ProjectRequest;
@@ -26,13 +27,12 @@ import net.atayun.bazooka.pms.biz.dal.entity.PmsProjectEnvRelationEntity;
 import net.atayun.bazooka.pms.biz.dal.entity.PmsProjectInfoEntity;
 import net.atayun.bazooka.pms.biz.dal.entity.PmsUserProjectRelationEntity;
 import net.atayun.bazooka.pms.biz.service.*;
-import net.atayun.bazooka.rms.api.api.EnvApi;
+import net.atayun.bazooka.pms.api.api.EnvApi;
 import net.atayun.bazooka.upms.api.feign.UserApi;
 import com.youyu.common.enums.IsDeleted;
 import com.youyu.common.exception.BizException;
 import com.youyu.common.transfer.BaseBeanUtils;
 import lombok.extern.slf4j.Slf4j;
-import net.atayun.bazooka.pms.biz.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -125,10 +125,10 @@ public class ProjectImpl implements ProjectService {
         try {
 
             if (req.getEnvList()!=null&&req.getEnvList().size() > 0) {
-                for (EnvDto envDto : req.getEnvList()) {
+                for (net.atayun.bazooka.pms.api.EnvDto envDto : req.getEnvList()) {
                     //查询环境所在集群
                     Long clusterId= envApi.get(envDto.getEnvId()).ifNotSuccessThrowException().getData().getClusterId();
-                    EnvDto insertEnvInfo= queryDistributePort(envDto.getEnvId(),clusterId);
+                    net.atayun.bazooka.pms.api.EnvDto insertEnvInfo= queryDistributePort(envDto.getEnvId(),clusterId);
                     createEnvProjectRelation(project.getId(), insertEnvInfo.getEnvId(),
                             insertEnvInfo.getPortStart(), insertEnvInfo.getPortEnd(),clusterId);
                 }
@@ -248,14 +248,14 @@ public class ProjectImpl implements ProjectService {
         //env变化
         if(req.getEnvList()!=null&&req.getEnvList().size()>0){
             List<Long> oldEnvIds= pmsProjectEnvRelationService.queryEnvListForProject(req.getProjectId());
-            for (EnvDto envDto : req.getEnvList()) {
+            for (net.atayun.bazooka.pms.api.EnvDto envDto : req.getEnvList()) {
                 if(oldEnvIds.size()>0){
                    if(oldEnvIds.contains(envDto.getEnvId())){
                        throw new BizException(ENV_NOT_CHANGE.getCode(),ENV_NOT_CHANGE.getDesc());
                    }
                 }
                 Long clusterId= envApi.get(envDto.getEnvId()).ifNotSuccessThrowException().getData().getClusterId();
-                EnvDto insertEnvInfo= queryDistributePort(envDto.getEnvId(),clusterId);
+                net.atayun.bazooka.pms.api.EnvDto insertEnvInfo= queryDistributePort(envDto.getEnvId(),clusterId);
                 createEnvProjectRelation(req.getProjectId(), insertEnvInfo.getEnvId(), insertEnvInfo.getPortStart(),
                         insertEnvInfo.getPortEnd(),clusterId);
             }
@@ -429,8 +429,8 @@ public class ProjectImpl implements ProjectService {
      * @return
      */
     @Override
-    public EnvDto queryDistributePort(Long envId,Long clusterId){
-        EnvDto envDto =new EnvDto();
+    public net.atayun.bazooka.pms.api.EnvDto queryDistributePort(Long envId, Long clusterId){
+        net.atayun.bazooka.pms.api.EnvDto envDto =new EnvDto();
         List<PmsProjectEnvRelationEntity> envList= queryProjectByCluster(clusterId);
         //库里没有为初始值
         if(envList.size()==0){

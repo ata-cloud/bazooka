@@ -15,9 +15,9 @@
  */
 package net.atayun.bazooka.deploy.biz.service.deploy.strategy;
 
-import net.atayun.bazooka.base.annotation.StrategyNum;
-import net.atayun.bazooka.base.bean.SpringContextBean;
-import net.atayun.bazooka.base.enums.deploy.AppOperationEventLogTypeEnum;
+import net.atayun.bazooka.combase.annotation.StrategyNum;
+import net.atayun.bazooka.combase.bean.SpringContextBean;
+import net.atayun.bazooka.combase.enums.deploy.AppOperationEventLogTypeEnum;
 import net.atayun.bazooka.deploy.biz.dal.entity.flow.DeployFlowEntity;
 import net.atayun.bazooka.deploy.biz.enums.flow.DeployFlowEnum;
 import net.atayun.bazooka.deploy.biz.log.LogConcat;
@@ -27,7 +27,7 @@ import net.atayun.bazooka.deploy.biz.service.jenkins.JenkinsService;
 import net.atayun.bazooka.pms.api.dto.AppInfoWithCredential;
 import org.springframework.stereotype.Component;
 
-import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
+import static net.atayun.bazooka.combase.bean.SpringContextBean.getBean;
 
 /**
  * @author Ping

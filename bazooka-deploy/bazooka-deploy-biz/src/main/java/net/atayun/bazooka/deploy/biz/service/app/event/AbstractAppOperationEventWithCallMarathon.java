@@ -21,8 +21,8 @@ import mesosphere.marathon.client.Marathon;
 import mesosphere.marathon.client.MarathonClient;
 import mesosphere.marathon.client.model.v2.App;
 import mesosphere.marathon.client.model.v2.Result;
-import net.atayun.bazooka.base.constant.CommonConstants;
-import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
+import net.atayun.bazooka.combase.constant.CommonConstants;
+import net.atayun.bazooka.combase.enums.deploy.AppOperationEnum;
 import net.atayun.bazooka.deploy.api.param.AppOperationEventParam;
 import net.atayun.bazooka.deploy.biz.constants.MarathonAppConfigConstants;
 import net.atayun.bazooka.deploy.biz.dal.entity.app.AppOperationEventMarathonEntity;
@@ -31,17 +31,17 @@ import net.atayun.bazooka.deploy.biz.log.LogConcat;
 import net.atayun.bazooka.deploy.biz.service.app.AppOperationEventMarathonService;
 import net.atayun.bazooka.pms.api.dto.AppInfoDto;
 import net.atayun.bazooka.pms.api.feign.AppApi;
-import net.atayun.bazooka.rms.api.api.EnvApi;
-import net.atayun.bazooka.rms.api.dto.ClusterConfigDto;
-import net.atayun.bazooka.rms.api.dto.EnvDto;
-import net.atayun.bazooka.rms.api.dto.EnvResourceDto;
+import net.atayun.bazooka.pms.api.api.EnvApi;
+import net.atayun.bazooka.pms.api.dto.ClusterConfigDto;
+import net.atayun.bazooka.pms.api.EnvDto;
+import net.atayun.bazooka.pms.api.dto.EnvResourceDto;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
+import static net.atayun.bazooka.combase.bean.SpringContextBean.getBean;
 import static net.atayun.bazooka.deploy.biz.constants.DeployResultCodeConstants.*;
 
 /**

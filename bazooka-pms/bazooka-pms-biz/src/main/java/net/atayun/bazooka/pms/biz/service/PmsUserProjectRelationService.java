@@ -15,7 +15,7 @@
  */
 package net.atayun.bazooka.pms.biz.service;
 
-import net.atayun.bazooka.base.page.PageQuery;
+import net.atayun.bazooka.combase.page.PageQuery;
 import net.atayun.bazooka.pms.api.dto.PmsUserProjectRelationDto;
 import net.atayun.bazooka.pms.api.enums.UserTypeEnum;
 import net.atayun.bazooka.pms.api.vo.DevUserResponse;

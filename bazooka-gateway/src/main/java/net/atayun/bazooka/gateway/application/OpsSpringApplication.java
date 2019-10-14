@@ -16,8 +16,8 @@
 package net.atayun.bazooka.gateway.application;
 
 import net.atayun.bazooka.gateway.component.strategy.ClusterDeployStrategy;
-import net.atayun.bazooka.rms.api.api.RmsClusterApi;
-import net.atayun.bazooka.rms.api.dto.rsp.ClusterMarathonConfigRspDto;
+import net.atayun.bazooka.pms.api.api.RmsClusterApi;
+import net.atayun.bazooka.pms.api.dto.rsp.ClusterMarathonConfigRspDto;
 import com.youyu.common.api.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -26,7 +26,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 import java.util.List;
 
-import static net.atayun.bazooka.base.bean.StrategyNumBean.getBeanInstance;
+import static net.atayun.bazooka.combase.bean.StrategyNumBean.getBeanInstance;
 import static org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace;
 import static org.springframework.util.CollectionUtils.isEmpty;
 

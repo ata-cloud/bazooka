@@ -62,7 +62,7 @@ public class PmsGitlabUserServiceImpl extends AbstractService<Long, PmsGitlabUse
     public PmsGitlabUserEntity getUserInfo(Long userId) {
         PmsGitlabUserEntity entity=new PmsGitlabUserEntity();
         entity.setUserId(userId);
-        /*PmsGitlabUserEntity result= super.selectOneEntity(entity);
+        /*PmsGitlabUserEntity result= super.selectOneEntity(domain);
         if(result==null){
             throw new BizException(PMS_NO_GITLAB_USER.getCode(),PMS_NO_GITLAB_USER.getDesc());
         }*/

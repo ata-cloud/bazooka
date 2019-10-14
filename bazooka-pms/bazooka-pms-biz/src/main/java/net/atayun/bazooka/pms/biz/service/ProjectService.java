@@ -15,6 +15,7 @@
  */
 package net.atayun.bazooka.pms.biz.service;
 
+import net.atayun.bazooka.pms.api.EnvDto;
 import net.atayun.bazooka.pms.api.dto.*;
 import net.atayun.bazooka.pms.api.enums.UserTypeEnum;
 import net.atayun.bazooka.pms.api.vo.ProjectRequest;
@@ -77,7 +78,7 @@ public interface ProjectService {
      * @param envId
      * @return
      */
-    EnvDto queryDistributePort(Long envId,Long clusterId);
+    EnvDto queryDistributePort(Long envId, Long clusterId);
     void bathInsertDev(List<DevUserInfo> devIds, Long projectId, Integer gitlabGroupId);
 
     UserTypeEnum queryUserInProject(Long projectId,Long userId);

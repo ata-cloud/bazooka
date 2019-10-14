@@ -21,8 +21,8 @@
         <module>bazooka-upms</module>
         <module>bazooka-deploy</module>
         <module>bazooka-rms</module>
-        <module>bazoo-kadeploy2</module>
         <module>bazooka-deploy2</module>
+        <module>bazooka-util</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -36,6 +36,11 @@
     <dependencyManagement>
         <dependencies>
             <!--bazooka相关-->
+            <dependency>
+                <groupId>net.atayun.bazooka</groupId>
+                <artifactId>bazooka-util</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>net.atayun.bazooka</groupId>
                 <artifactId>bazooka-pms-api</artifactId>

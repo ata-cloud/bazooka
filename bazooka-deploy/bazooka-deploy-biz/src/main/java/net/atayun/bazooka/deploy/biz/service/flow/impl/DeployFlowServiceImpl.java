@@ -15,9 +15,9 @@
  */
 package net.atayun.bazooka.deploy.biz.service.flow.impl;
 
-import net.atayun.bazooka.base.bean.StrategyNumBean;
-import net.atayun.bazooka.base.enums.deploy.DeployModeEnum;
-import net.atayun.bazooka.base.service.BatchService;
+import net.atayun.bazooka.combase.bean.StrategyNumBean;
+import net.atayun.bazooka.combase.enums.deploy.DeployModeEnum;
+import net.atayun.bazooka.combase.service.BatchService;
 import net.atayun.bazooka.deploy.biz.dal.dao.flow.DeployFlowMapper;
 import net.atayun.bazooka.deploy.biz.dal.entity.flow.DeployFlowEntity;
 import net.atayun.bazooka.deploy.biz.dto.flow.DeployFlowDto;
@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
+import static net.atayun.bazooka.combase.bean.SpringContextBean.getBean;
 import static net.atayun.bazooka.deploy.biz.constants.DeployResultCodeConstants.UNKNOWN_FLOW;
 
 /**

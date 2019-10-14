@@ -15,13 +15,13 @@
  */
 package net.atayun.bazooka.upms.biz.component.realm;
 
-import net.atayun.bazooka.base.tuple.Tuple2;
+import net.atayun.bazooka.combase.tuple.Tuple2;
 import net.atayun.bazooka.upms.api.dto.req.UserLoginReqDTO;
 import net.atayun.bazooka.upms.api.dto.rsp.UserLoginRspDTO;
 import net.atayun.bazooka.upms.biz.component.properties.ShiroProperties;
 import net.atayun.bazooka.upms.biz.component.strategy.shiro.session.ShiroConcurrentSessionStrategy;
 import net.atayun.bazooka.upms.biz.component.strategy.shiro.signature.ShiroSimpleHashStrategy;
-import net.atayun.bazooka.upms.biz.dal.entity.User;
+import net.atayun.bazooka.upms.biz.domain.User;
 import net.atayun.bazooka.upms.biz.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -36,9 +36,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Set;
 
-import static net.atayun.bazooka.base.bean.StrategyNumBean.getBeanInstance;
-import static net.atayun.bazooka.base.utils.BizExceptionUtil.exception2MatchingExpression;
-import static net.atayun.bazooka.base.utils.OrikaCopyUtil.copyProperty;
+import static net.atayun.bazooka.combase.bean.StrategyNumBean.getBeanInstance;
+import static net.atayun.bazooka.combase.utils.BizExceptionUtil.exception2MatchingExpression;
+import static net.atayun.bazooka.combase.utils.OrikaCopyUtil.copyProperty;
 import static net.atayun.bazooka.upms.api.enums.UpmsResultCode.SESSION_USER_ID_IS_NULL;
 import static net.atayun.bazooka.upms.api.enums.UpmsResultCode.USER_SESSION_EXPIRED;
 import static java.util.Objects.isNull;

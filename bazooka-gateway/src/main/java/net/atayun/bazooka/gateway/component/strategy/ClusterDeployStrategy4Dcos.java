@@ -16,11 +16,11 @@
 package net.atayun.bazooka.gateway.component.strategy;
 
 
-import net.atayun.bazooka.base.annotation.StrategyNum;
-import net.atayun.bazooka.base.dcos.dto.MarathonEventDeployDto;
+import net.atayun.bazooka.combase.annotation.StrategyNum;
+import net.atayun.bazooka.combase.dcos.dto.MarathonEventDeployDto;
 import net.atayun.bazooka.deploy.api.AppOperationEventApi;
 import net.atayun.bazooka.deploy.api.param.MarathonCallbackParam;
-import net.atayun.bazooka.rms.api.dto.rsp.ClusterMarathonConfigRspDto;
+import net.atayun.bazooka.pms.api.dto.rsp.ClusterMarathonConfigRspDto;
 import com.youyu.common.api.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
@@ -36,11 +36,11 @@ import java.io.InputStreamReader;
 
 import static com.alibaba.fastjson.JSON.parseObject;
 import static com.alibaba.fastjson.JSON.toJSONString;
-import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
-import static net.atayun.bazooka.base.constant.CommonConstants.PROTOCOL;
-import static net.atayun.bazooka.base.enums.status.FinishStatusEnum.FAILURE;
-import static net.atayun.bazooka.base.enums.status.FinishStatusEnum.SUCCESS;
-import static net.atayun.bazooka.base.utils.StringUtil.eq;
+import static net.atayun.bazooka.combase.bean.SpringContextBean.getBean;
+import static net.atayun.bazooka.combase.constant.CommonConstants.PROTOCOL;
+import static net.atayun.bazooka.combase.enums.status.FinishStatusEnum.FAILURE;
+import static net.atayun.bazooka.combase.enums.status.FinishStatusEnum.SUCCESS;
+import static net.atayun.bazooka.combase.utils.StringUtil.eq;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.nonNull;
 import static java.util.concurrent.CompletableFuture.runAsync;

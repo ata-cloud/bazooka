@@ -15,7 +15,7 @@
  */
 package net.atayun.bazooka.pms.api.feign;
 
-import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
+import net.atayun.bazooka.combase.enums.deploy.AppOperationEnum;
 import net.atayun.bazooka.pms.api.dto.AppDeployConfigDto;
 import net.atayun.bazooka.pms.api.dto.AppInfoDto;
 import net.atayun.bazooka.pms.api.dto.AppInfoWithCredential;

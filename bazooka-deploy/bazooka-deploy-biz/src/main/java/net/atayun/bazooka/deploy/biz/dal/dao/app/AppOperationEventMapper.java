@@ -15,7 +15,7 @@
  */
 package net.atayun.bazooka.deploy.biz.dal.dao.app;
 
-import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
+import net.atayun.bazooka.combase.enums.deploy.AppOperationEnum;
 import net.atayun.bazooka.deploy.biz.dal.entity.app.AppOperateEventHistoryEntity;
 import net.atayun.bazooka.deploy.biz.dal.entity.app.AppOperationEventEntity;
 import net.atayun.bazooka.deploy.biz.dal.entity.app.EventWithMarathonEntity;

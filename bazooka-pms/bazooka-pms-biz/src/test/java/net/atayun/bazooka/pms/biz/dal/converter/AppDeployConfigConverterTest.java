@@ -15,8 +15,8 @@
  */
 package net.atayun.bazooka.pms.biz.dal.converter;
 
-import net.atayun.bazooka.base.enums.deploy.DeployModeEnum;
-import net.atayun.bazooka.base.utils.JsonUtil;
+import net.atayun.bazooka.combase.enums.deploy.DeployModeEnum;
+import net.atayun.bazooka.combase.utils.JsonUtil;
 import net.atayun.bazooka.pms.api.dto.AppDeployConfigDto;
 import net.atayun.bazooka.pms.api.param.HealthCheck;
 import net.atayun.bazooka.pms.api.param.PortMapping;

@@ -23,6 +23,11 @@
             <artifactId>bazooka-rms-api</artifactId>
             <version>1.0.0.RELEASE</version>
         </dependency>
+           <dependency>
+            <groupId>net.atayun.bazooka</groupId>
+            <artifactId>bazooka-pms-api</artifactId>
+            <version>1.0.0.RELEASE</version>
+        </dependency>
         <dependency>
             <groupId>net.atayun.bazooka</groupId>
             <artifactId>bazooka-common</artifactId>

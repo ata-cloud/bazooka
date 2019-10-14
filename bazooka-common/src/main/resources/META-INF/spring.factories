@@ -1,7 +1,7 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-net.atayun.bazooka.base.config.BatchServiceConfiguration,\
-net.atayun.bazooka.base.config.PatternsBeanConfiguration,\
-net.atayun.bazooka.base.config.DcosServerBeanConfiguration,\
-net.atayun.bazooka.base.config.SpringContextBeanConfiguration,\
-net.atayun.bazooka.base.config.JenkinsConfiguration,\
-net.atayun.bazooka.base.config.MlbServiceBeanConfiguration
+#org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+#net.atayun.bazooka.base.config.BatchServiceConfiguration,\
+#net.atayun.bazooka.base.config.PatternsBeanConfiguration,\
+#net.atayun.bazooka.base.config.DcosServerBeanConfiguration,\
+#net.atayun.bazooka.base.config.SpringContextBeanConfiguration,\
+#net.atayun.bazooka.base.config.JenkinsConfiguration,\
+#net.atayun.bazooka.base.config.MlbServiceBeanConfiguration

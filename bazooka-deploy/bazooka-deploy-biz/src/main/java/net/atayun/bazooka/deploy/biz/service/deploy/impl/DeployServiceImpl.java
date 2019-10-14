@@ -18,7 +18,7 @@ package net.atayun.bazooka.deploy.biz.service.deploy.impl;
 import com.youyu.common.exception.BizException;
 import com.youyu.common.service.AbstractService;
 import com.youyu.common.utils.YyBeanUtils;
-import net.atayun.bazooka.base.enums.deploy.DeployModeEnum;
+import net.atayun.bazooka.combase.enums.deploy.DeployModeEnum;
 import net.atayun.bazooka.deploy.biz.dal.dao.deploy.DeployMapper;
 import net.atayun.bazooka.deploy.biz.dal.entity.deploy.DeployCountsEntity;
 import net.atayun.bazooka.deploy.biz.dal.entity.deploy.DeployEntity;
@@ -55,7 +55,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
+import static net.atayun.bazooka.combase.bean.SpringContextBean.getBean;
 import static net.atayun.bazooka.deploy.biz.constants.DeployResultCodeConstants.*;
 
 /**

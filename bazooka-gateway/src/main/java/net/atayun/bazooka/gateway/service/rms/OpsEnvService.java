@@ -16,9 +16,9 @@
 package net.atayun.bazooka.gateway.service.rms;
 
 import net.atayun.bazooka.gateway.vo.rms.EnvVo;
-import net.atayun.bazooka.rms.api.param.EnvCreateReq;
-import net.atayun.bazooka.rms.api.param.EnvModifyReq;
-import net.atayun.bazooka.rms.api.param.EnvQueryReq;
+import net.atayun.bazooka.pms.api.param.EnvCreateReq;
+import net.atayun.bazooka.pms.api.param.EnvModifyReq;
+import net.atayun.bazooka.pms.api.param.EnvQueryReq;
 
 import java.util.List;
 

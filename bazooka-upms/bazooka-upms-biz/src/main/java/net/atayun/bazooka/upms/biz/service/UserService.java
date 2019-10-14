@@ -15,13 +15,13 @@
  */
 package net.atayun.bazooka.upms.biz.service;
 
-import net.atayun.bazooka.base.tuple.Tuple2;
+import net.atayun.bazooka.combase.tuple.Tuple2;
 import net.atayun.bazooka.upms.api.dto.req.*;
 import net.atayun.bazooka.upms.api.dto.rsp.UserDetailRspDTO;
 import net.atayun.bazooka.upms.api.dto.rsp.UserLoginRspDTO;
 import net.atayun.bazooka.upms.api.dto.rsp.UserMenuPermissionRspDTO;
 import net.atayun.bazooka.upms.api.dto.rsp.UserQueryRspDTO;
-import net.atayun.bazooka.upms.biz.dal.entity.User;
+import net.atayun.bazooka.upms.biz.domain.User;
 import com.youyu.common.api.PageData;
 
 import java.util.List;

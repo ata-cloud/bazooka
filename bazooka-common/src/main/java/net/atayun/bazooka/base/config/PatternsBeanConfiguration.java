@@ -15,8 +15,8 @@
  */
 package net.atayun.bazooka.base.config;
 
-import net.atayun.bazooka.base.bean.BridgeBean;
-import net.atayun.bazooka.base.bean.StrategyNumBean;
+import net.atayun.bazooka.combase.bean.BridgeBean;
+import net.atayun.bazooka.combase.bean.StrategyNumBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;

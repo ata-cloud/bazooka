@@ -15,8 +15,8 @@
  */
 package net.atayun.bazooka.base.config;
 
-import net.atayun.bazooka.base.service.BatchService;
-import net.atayun.bazooka.base.service.impl.BatchServiceImpl;
+import net.atayun.bazooka.combase.service.BatchService;
+import net.atayun.bazooka.combase.service.impl.BatchServiceImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;

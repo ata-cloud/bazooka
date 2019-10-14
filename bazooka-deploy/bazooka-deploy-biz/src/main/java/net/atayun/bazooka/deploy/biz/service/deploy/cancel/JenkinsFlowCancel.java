@@ -15,14 +15,14 @@
  */
 package net.atayun.bazooka.deploy.biz.service.deploy.cancel;
 
-import net.atayun.bazooka.base.jenkins.JenkinsServerHelper;
+import net.atayun.bazooka.combase.JenkinsServerHelper;
 import net.atayun.bazooka.deploy.biz.dal.entity.flow.DeployFlowEntity;
 import net.atayun.bazooka.deploy.biz.dal.entity.flow.DeployFlowJenkinsEntity;
 import net.atayun.bazooka.deploy.biz.service.flow.DeployFlowJenkinsService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
+import static net.atayun.bazooka.combase.bean.SpringContextBean.getBean;
 
 /**
  * @author Ping

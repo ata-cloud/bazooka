@@ -15,7 +15,7 @@
  */
 package net.atayun.bazooka.gateway.application;
 
-import net.atayun.bazooka.base.bean.StrategyNumBean;
+import net.atayun.bazooka.combase.bean.StrategyNumBean;
 import net.atayun.bazooka.deploy.biz.dal.entity.app.AppOperationEventEntity;
 import net.atayun.bazooka.deploy.biz.dal.entity.flow.DeployFlowEntity;
 import net.atayun.bazooka.deploy.biz.enums.status.AppOperationEventStatusEnum;
@@ -34,7 +34,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.Comparator;
 import java.util.List;
 
-import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
+import static net.atayun.bazooka.combase.bean.SpringContextBean.getBean;
 
 /**
  * @author Ping

@@ -15,10 +15,10 @@
  */
 package net.atayun.bazooka.pms.biz.controller;
 
-import net.atayun.bazooka.base.annotation.PmsAuth;
-import net.atayun.bazooka.base.page.PageQuery;
+import net.atayun.bazooka.combase.annotation.PmsAuth;
+import net.atayun.bazooka.combase.page.PageQuery;
 import net.atayun.bazooka.pms.api.ProjectApi;
-import net.atayun.bazooka.pms.api.dto.EnvDto;
+import net.atayun.bazooka.pms.api.EnvDto;
 import net.atayun.bazooka.pms.api.dto.PmsProjectInfoDto;
 import net.atayun.bazooka.pms.api.dto.ProjectCountDto;
 import net.atayun.bazooka.pms.api.dto.ProjectInfoDto;
@@ -27,7 +27,7 @@ import net.atayun.bazooka.pms.api.enums.UserTypeEnum;
 import net.atayun.bazooka.pms.biz.dal.entity.PmsProjectEnvRelationEntity;
 import net.atayun.bazooka.pms.biz.dal.entity.PmsUserProjectRelationEntity;
 import net.atayun.bazooka.pms.biz.service.*;
-import net.atayun.bazooka.rms.api.api.EnvApi;
+import net.atayun.bazooka.pms.api.api.EnvApi;
 import com.youyu.common.api.PageData;
 import com.youyu.common.api.Result;
 import com.youyu.common.exception.BizException;
@@ -38,7 +38,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import net.atayun.bazooka.pms.api.vo.*;
-import net.atayun.bazooka.pms.biz.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -183,7 +182,7 @@ public class ProjectController implements ProjectApi {
     @ApiOperation(value = "根据环境获取可使用端口")
     @PostMapping("/project/queryDistributePort/{envId}")
     public Result<EnvDto> queryDistributePort(@PathVariable Long envId) {
-        net.atayun.bazooka.rms.api.dto.EnvDto envDto= envApi.get(envId).ifNotSuccessThrowException().getData();
+        EnvDto envDto= envApi.get(envId).ifNotSuccessThrowException().getData();
         EnvDto dto= projectService.queryDistributePort(envId,envDto.getClusterId());
         return Result.ok(dto);
     }

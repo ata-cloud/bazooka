@@ -15,7 +15,7 @@
  */
 package net.atayun.bazooka.pms.api.dto;
 
-import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
+import net.atayun.bazooka.combase.enums.deploy.AppOperationEnum;
 import com.youyu.common.dto.BaseDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;

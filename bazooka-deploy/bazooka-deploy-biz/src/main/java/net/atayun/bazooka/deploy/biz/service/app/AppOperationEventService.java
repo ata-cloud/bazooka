@@ -15,7 +15,7 @@
  */
 package net.atayun.bazooka.deploy.biz.service.app;
 
-import net.atayun.bazooka.base.enums.status.FinishStatusEnum;
+import net.atayun.bazooka.combase.enums.status.FinishStatusEnum;
 import net.atayun.bazooka.deploy.api.dto.AppRunningEventDto;
 import net.atayun.bazooka.deploy.api.param.AppOperationEventParam;
 import net.atayun.bazooka.deploy.biz.dal.entity.app.AppOperationEventEntity;

@@ -18,7 +18,7 @@ package net.atayun.bazooka.deploy.biz.service.deploy.strategy.setup;
 import net.atayun.bazooka.deploy.biz.log.AppOperationEventLog;
 import net.atayun.bazooka.deploy.biz.service.deploy.strategy.WorkDetailPojo;
 import lombok.Getter;
-import net.atayun.bazooka.base.enums.deploy.DeployModeEnum;
+import net.atayun.bazooka.combase.enums.deploy.DeployModeEnum;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;

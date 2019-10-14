@@ -16,12 +16,12 @@
 package net.atayun.bazooka.deploy.biz.service.app.event;
 
 import com.alibaba.fastjson.JSONObject;
-import net.atayun.bazooka.base.annotation.StrategyNum;
-import net.atayun.bazooka.base.bean.SpringContextBean;
-import net.atayun.bazooka.base.constant.CommonConstants;
-import net.atayun.bazooka.base.enums.deploy.AppOperationEventLogTypeEnum;
-import net.atayun.bazooka.base.jenkins.JenkinsJobPropertiesHelper;
-import net.atayun.bazooka.base.jenkins.JenkinsServerHelper;
+import net.atayun.bazooka.combase.annotation.StrategyNum;
+import net.atayun.bazooka.combase.bean.SpringContextBean;
+import net.atayun.bazooka.combase.constant.CommonConstants;
+import net.atayun.bazooka.combase.enums.deploy.AppOperationEventLogTypeEnum;
+import net.atayun.bazooka.combase.JenkinsJobPropertiesHelper;
+import net.atayun.bazooka.combase.JenkinsServerHelper;
 import net.atayun.bazooka.deploy.api.param.AppOperationEventParam;
 import net.atayun.bazooka.deploy.biz.constants.JenkinsPushDockerImageJobConstants;
 import net.atayun.bazooka.deploy.biz.enums.status.AppOperationEventStatusEnum;
@@ -31,11 +31,11 @@ import net.atayun.bazooka.pms.api.PmsCredentialsApi;
 import net.atayun.bazooka.pms.api.dto.AppInfoDto;
 import net.atayun.bazooka.pms.api.dto.PmsCredentialsDto;
 import net.atayun.bazooka.pms.api.feign.AppApi;
-import net.atayun.bazooka.rms.api.RmsDockerImageApi;
-import net.atayun.bazooka.rms.api.api.EnvApi;
-import net.atayun.bazooka.rms.api.dto.ClusterConfigDto;
-import net.atayun.bazooka.rms.api.dto.RmsDockerImagePushCheckResultDto;
-import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
+import net.atayun.bazooka.pms.api.RmsDockerImageApi;
+import net.atayun.bazooka.pms.api.api.EnvApi;
+import net.atayun.bazooka.pms.api.dto.ClusterConfigDto;
+import net.atayun.bazooka.pms.api.dto.RmsDockerImagePushCheckResultDto;
+import net.atayun.bazooka.combase.enums.deploy.AppOperationEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -43,7 +43,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
+import static net.atayun.bazooka.combase.bean.SpringContextBean.getBean;
 
 /**
  * @author Ping

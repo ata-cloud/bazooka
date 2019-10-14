@@ -15,9 +15,9 @@
  */
 package net.atayun.bazooka.upms.biz.component.filter;
 
-import net.atayun.bazooka.base.subject.dto.OpsUserDto;
+import net.atayun.bazooka.combase.subject.dto.OpsUserDto;
 import net.atayun.bazooka.upms.biz.component.properties.ShiroProperties;
-import net.atayun.bazooka.upms.biz.dal.entity.User;
+import net.atayun.bazooka.upms.biz.domain.User;
 import net.atayun.bazooka.upms.biz.helper.header.OpsServletRequestHelper;
 import net.atayun.bazooka.upms.biz.service.PermissionService;
 import net.atayun.bazooka.upms.biz.service.UserService;
@@ -34,10 +34,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static net.atayun.bazooka.base.subject.OpsThreadLocalSubject.removeOpsUser;
-import static net.atayun.bazooka.base.subject.OpsThreadLocalSubject.setOpsUser;
-import static net.atayun.bazooka.base.utils.OrikaCopyUtil.copyProperty;
-import static net.atayun.bazooka.base.utils.StringUtil.eq;
+import static net.atayun.bazooka.combase.subject.OpsThreadLocalSubject.removeOpsUser;
+import static net.atayun.bazooka.combase.subject.OpsThreadLocalSubject.setOpsUser;
+import static net.atayun.bazooka.combase.utils.OrikaCopyUtil.copyProperty;
+import static net.atayun.bazooka.combase.utils.StringUtil.eq;
 import static com.youyu.common.constant.RequestHeaderConst.REAL_NAME_HEADER;
 import static com.youyu.common.constant.RequestHeaderConst.USER_ID_HEADER;
 import static java.lang.String.valueOf;

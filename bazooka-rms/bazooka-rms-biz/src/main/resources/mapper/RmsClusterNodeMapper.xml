@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="net.atayun.bazooka.rms.biz.dal.dao.RmsClusterNodeMapper">
+<mapper namespace="net.atayun.bazooka.pms.biz.dal.dao.RmsClusterNodeMapper">
 
     <delete id="deleteClusterNodeByClusterId" parameterType="long">
         delete from rms_cluster_node where cluster_id = #{clusterId}

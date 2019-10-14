@@ -15,6 +15,7 @@
  */
 package net.atayun.bazooka.pms.biz.service;
 
+import com.youyu.common.api.AppInfo;
 import net.atayun.bazooka.pms.api.dto.AppDeployConfigDto;
 import net.atayun.bazooka.pms.api.dto.AppInfoDto;
 import net.atayun.bazooka.pms.biz.dal.entity.AppDeployConfigEntity;
@@ -34,7 +35,7 @@ public interface AppService {
      * @param appInfoEntity
      * @return
      */
-    AppInfoEntity addAppInfo(AppInfoEntity appInfoEntity);
+    AppInfo addAppInfo(AppInfo appInfoEntity);
 
     /**
      * 更新应用

@@ -15,7 +15,7 @@
  */
 package net.atayun.bazooka.upms.biz.component.strategy.shiro.signature;
 
-import net.atayun.bazooka.base.annotation.StrategyNum;
+import net.atayun.bazooka.combase.annotation.StrategyNum;
 import net.atayun.bazooka.upms.biz.component.properties.ShiroProperties;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.crypto.hash.SimpleHash;

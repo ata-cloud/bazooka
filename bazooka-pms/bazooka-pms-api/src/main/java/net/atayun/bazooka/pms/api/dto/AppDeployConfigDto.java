@@ -15,7 +15,7 @@
  */
 package net.atayun.bazooka.pms.api.dto;
 
-import net.atayun.bazooka.base.enums.deploy.DeployModeEnum;
+import net.atayun.bazooka.combase.enums.deploy.DeployModeEnum;
 import net.atayun.bazooka.pms.api.param.HealthCheck;
 import net.atayun.bazooka.pms.api.param.PortMapping;
 import net.atayun.bazooka.pms.api.param.VolumeMount;

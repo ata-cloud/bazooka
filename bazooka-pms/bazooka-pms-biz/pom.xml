@@ -35,6 +35,10 @@
             <groupId>net.atayun.bazooka</groupId>
             <artifactId>bazooka-upms-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.atayun.bazooka</groupId>
+            <artifactId>bazooka-upms-biz</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.github.xiaoymin</groupId>

@@ -15,7 +15,7 @@
  */
 package net.atayun.bazooka.base.config;
 
-import net.atayun.bazooka.base.mlb.MlbServiceBean;
+import net.atayun.bazooka.combase.mlb.MlbServiceBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;

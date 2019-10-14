@@ -15,7 +15,7 @@
  */
 package net.atayun.bazooka.pms.api;
 
-import net.atayun.bazooka.base.page.PageQuery;
+import net.atayun.bazooka.combase.page.PageQuery;
 import net.atayun.bazooka.pms.api.dto.EnvDto;
 import net.atayun.bazooka.pms.api.vo.DevUserResponse;
 import net.atayun.bazooka.pms.api.vo.GitlabUserRequest;

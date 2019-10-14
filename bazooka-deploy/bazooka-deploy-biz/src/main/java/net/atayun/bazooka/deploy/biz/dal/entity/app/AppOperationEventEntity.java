@@ -15,7 +15,7 @@
  */
 package net.atayun.bazooka.deploy.biz.dal.entity.app;
 
-import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
+import net.atayun.bazooka.combase.enums.deploy.AppOperationEnum;
 import net.atayun.bazooka.deploy.biz.enums.status.AppOperationEventStatusEnum;
 import com.youyu.common.entity.JdbcMysqlEntity;
 import lombok.Getter;

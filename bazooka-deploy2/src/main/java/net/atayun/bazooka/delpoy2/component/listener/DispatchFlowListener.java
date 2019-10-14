@@ -1,10 +1,10 @@
 package net.atayun.bazooka.delpoy2.component.listener;
 
 import lombok.extern.slf4j.Slf4j;
-import net.atayun.bazooka.base.bean.StrategyNumBean;
-import net.atayun.bazooka.delpoy2.component.strategy.flow.DeployFlowStrategy;
-import net.atayun.bazooka.delpoy2.dal.entity.DeployCommand;
-import net.atayun.bazooka.delpoy2.dal.entity.DeployCommandMapper;
+import net.atayun.bazooka.combase.bean.StrategyNumBean;
+import net.atayun.bazooka.delpoy2.component.strategy.flow.DeployFlowExecStrategy;
+import net.atayun.bazooka.delpoy2.dal.entity.DeployEntity;
+import net.atayun.bazooka.delpoy2.dal.dao.DeployCommandMapper;
 import net.atayun.bazooka.deploy.biz.dal.dao.flow.DeployFlowMapper;
 import net.atayun.bazooka.deploy.biz.dal.entity.flow.DeployFlowEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,23 +64,23 @@ public class DispatchFlowListener {
     }
 
     private void updateDeployCommandStatus(DeployFlowEntity deployFlowEntity) {
-        DeployCommand deployCommand = getDeployCommand(deployFlowEntity);
-        deployCommandMapper.updateDeployStatus(deployCommand);
+        DeployEntity deployEntity = getDeployCommand(deployFlowEntity);
+        deployCommandMapper.updateDeployStatus(deployEntity);
     }
 
     private void releaseAppLock(DeployFlowEntity deployFlowEntity) {
 
     }
 
-    private DeployCommand getDeployCommand(DeployFlowEntity deployFlowEntity) {
+    private DeployEntity getDeployCommand(DeployFlowEntity deployFlowEntity) {
         return null;
     }
 
     private void excDeployFlow(DeployFlowEntity deployFlow) {
         deployFlow.callDeploy();
         deployFlowMapper.updateByPrimaryKey(deployFlow);
-        DeployFlowStrategy deployFlowStrategy = StrategyNumBean.getBeanInstance(DeployFlowStrategy.class, deployFlow.getFlowType().name());
-        deployFlowStrategy.action(deployFlow);
+        DeployFlowExecStrategy deployFlowExecStrategy = StrategyNumBean.getBeanInstance(DeployFlowExecStrategy.class, deployFlow.getFlowType().name());
+        deployFlowExecStrategy.execute(deployFlow);
     }
 
 

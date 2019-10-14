@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="net.atayun.bazooka.rms.biz.dal.dao.RmsClusterConfigMapper">
+<mapper namespace="net.atayun.bazooka.pms.biz.dal.dao.RmsClusterConfigMapper">
 
-    <select id="getByClusterId" parameterType="long" resultType="net.atayun.bazooka.rms.biz.dal.entity.RmsClusterConfigEntity">
+    <select id="getByClusterId" parameterType="long" resultType="net.atayun.bazooka.pms.biz.dal.entity.RmsClusterConfigEntity">
         select
         t.id,
         t.cluster_id,

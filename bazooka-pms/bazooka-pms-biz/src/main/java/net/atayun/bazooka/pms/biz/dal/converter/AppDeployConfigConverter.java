@@ -15,7 +15,7 @@
  */
 package net.atayun.bazooka.pms.biz.dal.converter;
 
-import net.atayun.bazooka.base.utils.JsonUtil;
+import net.atayun.bazooka.combase.utils.JsonUtil;
 import net.atayun.bazooka.pms.api.dto.AppDeployConfigDto;
 import net.atayun.bazooka.pms.api.param.HealthCheck;
 import net.atayun.bazooka.pms.api.param.PortMapping;
@@ -36,7 +36,7 @@ import java.util.Map;
 public class AppDeployConfigConverter {
 
     /**
-     * dto to entity
+     * dto to domain
      *
      * @param source
      * @return
@@ -69,7 +69,7 @@ public class AppDeployConfigConverter {
     }
 
     /**
-     * entity to dto
+     * domain to dto
      *
      * @param source
      * @return

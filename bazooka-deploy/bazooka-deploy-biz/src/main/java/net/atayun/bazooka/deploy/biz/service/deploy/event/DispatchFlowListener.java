@@ -15,7 +15,7 @@
  */
 package net.atayun.bazooka.deploy.biz.service.deploy.event;
 
-import net.atayun.bazooka.base.bean.StrategyNumBean;
+import net.atayun.bazooka.combase.bean.StrategyNumBean;
 import net.atayun.bazooka.deploy.biz.dal.entity.deploy.DeployEntity;
 import net.atayun.bazooka.deploy.biz.dal.entity.flow.DeployFlowEntity;
 import net.atayun.bazooka.deploy.biz.enums.flow.DeployFlowEnum;
@@ -35,7 +35,7 @@ import org.springframework.context.event.SmartApplicationListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
+import static net.atayun.bazooka.combase.bean.SpringContextBean.getBean;
 
 /**
  * @author Ping

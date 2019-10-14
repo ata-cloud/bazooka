@@ -15,7 +15,7 @@
  */
 package net.atayun.bazooka.pms.biz.service.impl;
 
-import net.atayun.bazooka.base.page.PageQuery;
+import net.atayun.bazooka.combase.page.PageQuery;
 import net.atayun.bazooka.pms.api.dto.PmsUserProjectRelationDto;
 import net.atayun.bazooka.pms.api.dto.ProjectInfoDto;
 import net.atayun.bazooka.pms.api.enums.UserTypeEnum;
@@ -37,7 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static net.atayun.bazooka.base.utils.PageDataUtil.pageInfo2PageData;
+import static net.atayun.bazooka.combase.utils.PageDataUtil.pageInfo2PageData;
 import static com.github.pagehelper.page.PageMethod.startPage;
 
 /**

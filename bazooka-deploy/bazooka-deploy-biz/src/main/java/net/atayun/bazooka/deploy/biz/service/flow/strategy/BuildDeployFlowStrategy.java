@@ -15,8 +15,8 @@
  */
 package net.atayun.bazooka.deploy.biz.service.flow.strategy;
 
-import net.atayun.bazooka.base.annotation.StrategyNum;
-import net.atayun.bazooka.base.enums.deploy.DeployModeEnum;
+import net.atayun.bazooka.combase.annotation.StrategyNum;
+import net.atayun.bazooka.combase.enums.deploy.DeployModeEnum;
 import net.atayun.bazooka.deploy.biz.enums.flow.DeployFlowEnum;
 import org.springframework.stereotype.Component;
 

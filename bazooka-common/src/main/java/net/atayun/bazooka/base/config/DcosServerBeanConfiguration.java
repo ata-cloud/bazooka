@@ -15,8 +15,9 @@
  */
 package net.atayun.bazooka.base.config;
 
-import net.atayun.bazooka.base.dcos.DcosPropertiesHelper;
-import net.atayun.bazooka.base.dcos.DcosServerBean;
+import net.atayun.bazooka.combase.DcosProperties;
+import net.atayun.bazooka.combase.dcos.DcosPropertiesHelper;
+import net.atayun.bazooka.combase.dcos.DcosServerBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

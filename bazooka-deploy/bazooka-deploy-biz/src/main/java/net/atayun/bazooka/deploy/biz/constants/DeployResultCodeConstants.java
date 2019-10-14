@@ -15,7 +15,7 @@
  */
 package net.atayun.bazooka.deploy.biz.constants;
 
-import net.atayun.bazooka.base.constant.AtaResultCode;
+import net.atayun.bazooka.combase.constant.AtaResultCode;
 
 /**
  * @author Ping

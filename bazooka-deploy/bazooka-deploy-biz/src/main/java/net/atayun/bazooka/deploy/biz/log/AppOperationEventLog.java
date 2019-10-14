@@ -15,7 +15,7 @@
  */
 package net.atayun.bazooka.deploy.biz.log;
 
-import net.atayun.bazooka.base.enums.deploy.AppOperationEventLogTypeEnum;
+import net.atayun.bazooka.combase.enums.deploy.AppOperationEventLogTypeEnum;
 
 /**
  * @author Ping

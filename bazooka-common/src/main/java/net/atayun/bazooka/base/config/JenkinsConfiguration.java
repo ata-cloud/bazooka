@@ -15,8 +15,10 @@
  */
 package net.atayun.bazooka.base.config;
 
-import net.atayun.bazooka.base.jenkins.JenkinsJobPropertiesHelper;
-import net.atayun.bazooka.base.jenkins.JenkinsServerHelper;
+import net.atayun.bazooka.combase.JenkinsClientProperties;
+import net.atayun.bazooka.combase.JenkinsJobProperties;
+import net.atayun.bazooka.combase.JenkinsJobPropertiesHelper;
+import net.atayun.bazooka.combase.JenkinsServerHelper;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

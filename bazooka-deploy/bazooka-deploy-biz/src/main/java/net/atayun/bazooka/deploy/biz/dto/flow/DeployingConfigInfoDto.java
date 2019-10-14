@@ -15,7 +15,7 @@
  */
 package net.atayun.bazooka.deploy.biz.dto.flow;
 
-import net.atayun.bazooka.base.enums.deploy.DeployModeEnum;
+import net.atayun.bazooka.combase.enums.deploy.DeployModeEnum;
 import lombok.Getter;
 import lombok.Setter;
 

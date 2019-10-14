@@ -15,10 +15,10 @@
  */
 package net.atayun.bazooka.pms.biz.config;
 
-import net.atayun.bazooka.base.config.GitLabProperties;
-import net.atayun.bazooka.base.dcos.DcosPropertiesHelper;
-import net.atayun.bazooka.base.git.GitServiceHelp;
-import net.atayun.bazooka.base.git.JGitHelpImpl;
+import net.atayun.bazooka.combase.GitLabProperties;
+import net.atayun.bazooka.combase.dcos.DcosPropertiesHelper;
+import net.atayun.bazooka.combase.git.GitServiceHelp;
+import net.atayun.bazooka.combase.git.JGitHelpImpl;
 import net.atayun.bazooka.pms.biz.service.ProjectExtra;
 import net.atayun.bazooka.pms.biz.service.impl.ProjectExtraAtaImpl;
 import net.atayun.bazooka.pms.biz.service.impl.ProjectExtraGitImpl;

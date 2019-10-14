@@ -1,12 +1,15 @@
 package net.atayun.bazooka.delpoy2.service;
 
-import net.atayun.bazooka.base.bean.StrategyNumBean;
-import net.atayun.bazooka.delpoy2.dal.entity.DeployCommandMapper;
-import net.atayun.bazooka.delpoy2.dal.entity.AppEnvDeployConfig;
-import net.atayun.bazooka.delpoy2.dal.entity.DeployCommand;
+import net.atayun.bazooka.combase.bean.StrategyNumBean;
+import net.atayun.bazooka.delpoy2.component.strategy.flow.DeployFlowExecStrategy;
+import net.atayun.bazooka.delpoy2.dal.dao.AppEnvDeployConfigMapper;
+import net.atayun.bazooka.delpoy2.dal.dao.DeployCommandMapper;
+import net.atayun.bazooka.delpoy2.dal.entity.DeployEntity;
 import net.atayun.bazooka.delpoy2.dto.DeployCommandReqDto;
-import net.atayun.bazooka.delpoy2.component.bridge.deploy.DeployBridge;
+import net.atayun.bazooka.delpoy2.component.strategy.deploy.DeployCreateAndExecuteStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 /**
  * @Author: xiongchengwei
@@ -20,22 +23,28 @@ public class DeloyCommandServiceImpl {
     private AppEnvDeployConfigMapper appEnvDeployConfigMapper;
 
     public void executeCommand(DeployCommandReqDto deployCommandReqDto) {
-        Long appEnvDeployConfigId = deployCommandReqDto.getAppEnvDeployConfigId();
-        AppEnvDeployConfig appEnvDeployConfig = appEnvDeployConfigMapper.select(appEnvDeployConfigId);
-        Long clusterId = appEnvDeployConfig.getClusterId();
 
-        DeployCommand deployCommand = getDeployCommand(deployCommandReqDto);
-        deployCommand.callDeploying();
-        deployCommandMapper.insert(deployCommand);
-        DeployBridge deployBridge = StrategyNumBean.getBeanInstance(DeployBridge.class, clusterId.toString());
-        // App的服务已锁定，  1新建发布， 并且锁定deploy
-        deployBridge.execute(deployCommand);
+        //一次发布请求， 找到对应的发布动作，创建发布实体， 由发布动作执行发布实体。 动作执行的成功，失败发送相应的 事件
+        DeployCreateAndExecuteStrategy deployCreateAndExecuteStrategy = getDeployBridge(deployCommandReqDto);
+        deployCreateAndExecuteStrategy.createAndExecute(deployCommandReqDto);
+    }
+
+    private DeployCreateAndExecuteStrategy getDeployBridge(DeployCommandReqDto deployCommandReqDto) {
+        String deployActions = getDeployActions(deployCommandReqDto);
+        DeployCreateAndExecuteStrategy deployCreateAndExecuteStrategy = StrategyNumBean.getBeanInstance(DeployCreateAndExecuteStrategy.class, deployCommandReqDto.getAppOperationEnum().name());
+        List<DeployFlowExecStrategy> deployFlowStrategies = StrategyNumBean.getBeanInstances(DeployFlowExecStrategy.class, deployActions);
+        deployCreateAndExecuteStrategy.setDeployActionStrategyList(deployFlowStrategies);
+        return deployCreateAndExecuteStrategy;
+    }
+
+    private String getDeployActions(DeployCommandReqDto deployCommandReqDto) {
+        return null;
     }
 
 
-    private DeployCommand getDeployCommand(DeployCommandReqDto deployCommandReqDto) {
+    private DeployEntity getDeployCommand(DeployCommandReqDto deployCommandReqDto) {
         // TODO: 2019/9/25  
-        return new DeployCommand();
+        return new DeployEntity();
     }
 
 
