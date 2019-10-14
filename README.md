@@ -1,4 +1,4 @@
-[English](./README_en.md) | [官网](https://atayun.net)  | [社区](xxxxx) · [论坛](xxxxx) | [设计文档](docs/design.md) | [使用文档](https://wqtester.github.io/ata-cloudwhitepaper/) | [安装文档](docs/install_local_cluster.md) | [版本更新](docs/releasenodes/)
+[English](./README_en.md) | [官网](https://atayun.net)  | [社区](docs/to_do.md) · [论坛](docs/to_do.md) | [设计文档](docs/design.md) | [使用文档](https://wqtester.github.io/ata-cloudwhitepaper/) | [安装文档](docs/install_local_cluster.md) | [版本更新](docs/releasenodes/)
 
 开源社区欢迎您的参与！如果有任何反馈，您可以通过邮件或者QQ等方式联系我们
 
@@ -54,7 +54,7 @@ Bazooka自动化开发运维平台，在[Docker](https://www.docker.com/)，[Mes
 
 # BUG与建议反馈
 
-若您安装使用时有任何建议问题、反馈或发现的 Bug，欢迎在 [GitHub Issue](xxxxx) 提交 Issue。
+若您安装使用时有任何建议问题、反馈或发现的 Bug，欢迎在 [GitHub Issue](docs/to_do.md) 提交 Issue。
 
 邮件交流：893145247@qq.com
 
