@@ -1,4 +1,4 @@
-[English](./README_en.md) | [官网](https://atayun.net)  | [社区](xxxxx) · [论坛](xxxxx) | [设计文档](docs/design.md) | [使用文档](https://wqtester.github.io/ata-cloudwhitepaper/) | [安装文档](docs/install_local_cluster.md) | [版本更新](./releases.md)
+[English](./README_en.md) | [官网](https://atayun.net)  | [社区](xxxxx) · [论坛](xxxxx) | [设计文档](docs/design.md) | [使用文档](https://wqtester.github.io/ata-cloudwhitepaper/) | [安装文档](docs/install_local_cluster.md) | [版本更新](docs/releasenodes)
 
 开源社区欢迎您的参与！如果有任何反馈，您[可以通过这些方式联系我们](xxxxx)<br/><br/>
 
