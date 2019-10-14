@@ -60,4 +60,4 @@ Bazooka自动化开发运维平台，在[Docker](https://www.docker.com/)，[Mes
 
 QQ交流：
 
-<img src="docs/img/qq.png"  height="302" width="220">
+<img src="docs/img/qq.jpg"  height="302" width="220">
