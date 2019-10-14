@@ -1,4 +1,4 @@
-[English](./README_en.md) | [官网](https://atayun.net)  | [社区](xxxxx) · [论坛](xxxxx) | [设计文档](docs/design.md) | [使用文档](https://wqtester.github.io/ata-cloudwhitepaper/) | [安装文档](install.md) | [版本更新](./releases.md)
+[English](./README_en.md) | [官网](https://atayun.net)  | [社区](xxxxx) · [论坛](xxxxx) | [设计文档](docs/design.md) | [使用文档](https://wqtester.github.io/ata-cloudwhitepaper/) | [安装文档](docs/install_local_cluster.md) | [版本更新](./releases.md)
 
 开源社区欢迎您的参与！如果有任何反馈，您[可以通过这些方式联系我们](xxxxx)<br/><br/>
 
@@ -38,9 +38,7 @@ Bazooka自动化开发运维平台，在[Docker](https://www.docker.com/)，[Mes
 
 # 使用Bazooka进行开发
 
-Bazooka前后端分离，请分别查看[后端开发文档](./development_backend.md)和[前端开发文档](./development_frontend.md)
-
-Bazooka的核心是发布调度引擎，包括了各个独立开发的插件，如果您对插件开发有兴趣，请查看[发布调度引擎和插件文档](./development_schedule_engine.md)
+您可以参考[设计文档](docs/design.md)中的架构设计、领域模型设计、发布流程图、发布状态机和用例图
 
 # 开源地址
 
