@@ -54,7 +54,7 @@ Bazooka自动化开发运维平台，在[Docker](https://www.docker.com/)，[Mes
 
 # BUG与建议反馈
 
-若您安装使用时有任何建议问题、反馈或发现的 Bug，欢迎在 [GitHub Issue](docs/to_do.md) 提交 Issue。
+若您安装使用时有任何建议问题、反馈或发现的 Bug，欢迎在 [GitHub Issue](https://github.com/ata-cloud/bazooka/issues) 提交 Issue。
 
 邮件交流：893145247@qq.com
 
