@@ -22,9 +22,6 @@ Bazooka 从本质上解决的问题如下：<br/>
 #### [发布状态机]
 ![logo](./img/Bazooka_Deploy_Status.png)
 
-#### [发布活动图]
-![logo](./img/Bazooka_Deploy_Activity.png)
-
 #### [用例图]
 ![logo](./img/Bazooka_User_Case.png)
 
