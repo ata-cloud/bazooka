@@ -24,7 +24,7 @@ Bazooka自动化开发运维平台，在[Docker](https://www.docker.com/)，[Mes
 
 # 安装和部署
 
-可以访问[安装文档](./install_local_cluster.md)，获得详细的安装说明。
+可以访问[安装文档](docs/install_local_cluster.md)，获得详细的安装说明。
 
 # 开始使用Bazooka
 
