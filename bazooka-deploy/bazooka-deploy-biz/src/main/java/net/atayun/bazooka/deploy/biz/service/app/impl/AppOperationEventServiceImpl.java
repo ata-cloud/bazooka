@@ -458,7 +458,7 @@ public class AppOperationEventServiceImpl
                         .anyMatch(app -> Objects.equals(marathonTaskFailureCallbackParam.getMarathonServiceId(), app)))
                 .forEach(deployment -> {
                     try {
-                        instance.cancelDeployment(deployment.getId());
+                        instance.cancelDeploymentAndRollback(deployment.getId());
                     } catch (Throwable throwable) {
                         log.warn("cancel deployment error: [" + deployment.toString() + "]", throwable);
                     }

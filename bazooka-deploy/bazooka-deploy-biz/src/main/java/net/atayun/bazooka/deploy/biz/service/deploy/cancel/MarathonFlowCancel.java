@@ -48,6 +48,6 @@ public class MarathonFlowCancel implements FlowCancel {
         ClusterConfigDto cluster = envApi.getEnvConfiguration(deployEntity.getEnvId()).ifNotSuccessThrowException().getData();
         String dcosUrl = CommonConstants.PROTOCOL + cluster.getDcosEndpoint() + CommonConstants.MARATHON_PORT;
         Marathon marathon = MarathonClient.getInstance(dcosUrl);
-        marathon.cancelDeployment(entity.getMarathonDeploymentId());
+        marathon.cancelDeploymentAndRollback(entity.getMarathonDeploymentId());
     }
 }
