@@ -62,6 +62,15 @@ public class AppOperationEventMarathonServiceImpl
         return getMapper().selectOneByExample(example);
     }
 
+    @Override
+    public AppOperationEventMarathonEntity selectByServiceIdAndVersion(String marathonServiceId, String marathonDeploymentVersion) {
+        Example example = new Example(AppOperationEventMarathonEntity.class);
+        example.createCriteria()
+                .andEqualTo("marathonServiceId", marathonServiceId)
+                .andEqualTo("marathonDeploymentVersion", marathonDeploymentVersion);
+        return getMapper().selectOneByExample(example);
+    }
+
     /**
      * 通过eventId查询
      *

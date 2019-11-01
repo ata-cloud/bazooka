@@ -20,6 +20,7 @@ import net.atayun.bazooka.deploy.api.dto.AppEventOperateDto;
 import net.atayun.bazooka.deploy.api.dto.AppRunningEventDto;
 import net.atayun.bazooka.deploy.api.param.AppOperationEventParam;
 import net.atayun.bazooka.deploy.api.param.MarathonCallbackParam;
+import net.atayun.bazooka.deploy.api.param.MarathonTaskFailureCallbackParam;
 import net.atayun.bazooka.deploy.biz.dto.app.AppEventOperateWithStatusDto;
 import net.atayun.bazooka.deploy.biz.dto.app.AppOperateEventHistoryDto;
 import net.atayun.bazooka.deploy.biz.dto.app.AppOperateEventHistoryMarathonDto;
@@ -88,6 +89,12 @@ public class AppOperationEventController implements AppOperationEventApi {
         appOperationEventService.marathonCallback(marathonCallbackParam.getMarathonDeploymentId(),
                 marathonCallbackParam.getMarathonDeploymentVersion(),
                 marathonCallbackParam.getFinishStatus());
+        return Result.ok();
+    }
+
+    @Override
+    public Result marathonTaskFailureCallback(MarathonTaskFailureCallbackParam marathonTaskFailureCallbackParam) {
+        appOperationEventService.marathonTaskFailureCallback(marathonTaskFailureCallbackParam);
         return Result.ok();
     }
 

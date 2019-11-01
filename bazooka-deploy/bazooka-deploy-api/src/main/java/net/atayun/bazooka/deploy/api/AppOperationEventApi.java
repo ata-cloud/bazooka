@@ -15,13 +15,14 @@
  */
 package net.atayun.bazooka.deploy.api;
 
+import com.youyu.common.api.Result;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import net.atayun.bazooka.deploy.api.dto.AppEventOperateDto;
 import net.atayun.bazooka.deploy.api.dto.AppRunningEventDto;
 import net.atayun.bazooka.deploy.api.param.AppOperationEventParam;
 import net.atayun.bazooka.deploy.api.param.MarathonCallbackParam;
-import com.youyu.common.api.Result;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import net.atayun.bazooka.deploy.api.param.MarathonTaskFailureCallbackParam;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -96,6 +97,16 @@ public interface AppOperationEventApi {
     @ApiOperation(value = "处理marathon回调")
     @PostMapping("/marathon/callback")
     Result marathonCallback(@Validated @RequestBody MarathonCallbackParam marathonCallbackParam);
+
+    /**
+     * 处理marathon回调
+     *
+     * @param marathonTaskFailureCallbackParam 参数
+     * @return result
+     */
+    @ApiOperation(value = "处理marathon回调")
+    @PostMapping("/marathon/task/failure/callback")
+    Result marathonTaskFailureCallback(@Validated @RequestBody MarathonTaskFailureCallbackParam marathonTaskFailureCallbackParam);
 
     /**
      * 服务正在运行的事件

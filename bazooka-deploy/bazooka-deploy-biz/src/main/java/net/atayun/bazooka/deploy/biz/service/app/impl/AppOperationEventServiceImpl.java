@@ -16,12 +16,25 @@
 package net.atayun.bazooka.deploy.biz.service.app.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.youyu.common.api.PageData;
+import com.youyu.common.enums.IsDeleted;
+import com.youyu.common.exception.BizException;
+import com.youyu.common.service.AbstractService;
+import com.youyu.common.utils.YyBeanUtils;
+import lombok.extern.slf4j.Slf4j;
+import mesosphere.client.common.ModelUtils;
+import mesosphere.marathon.client.Marathon;
+import mesosphere.marathon.client.MarathonClient;
+import mesosphere.marathon.client.model.v2.App;
+import mesosphere.marathon.client.model.v2.Deployment;
 import net.atayun.bazooka.base.bean.StrategyNumBean;
+import net.atayun.bazooka.base.constant.CommonConstants;
 import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
 import net.atayun.bazooka.base.enums.deploy.AppOperationEventLogTypeEnum;
 import net.atayun.bazooka.base.enums.status.FinishStatusEnum;
 import net.atayun.bazooka.deploy.api.dto.AppRunningEventDto;
 import net.atayun.bazooka.deploy.api.param.AppOperationEventParam;
+import net.atayun.bazooka.deploy.api.param.MarathonTaskFailureCallbackParam;
 import net.atayun.bazooka.deploy.biz.dal.dao.app.AppOperationEventMapper;
 import net.atayun.bazooka.deploy.biz.dal.entity.app.AppOperateEventHistoryEntity;
 import net.atayun.bazooka.deploy.biz.dal.entity.app.AppOperationEventEntity;
@@ -53,15 +66,6 @@ import net.atayun.bazooka.rms.api.RmsDockerImageApi;
 import net.atayun.bazooka.rms.api.api.EnvApi;
 import net.atayun.bazooka.rms.api.dto.ClusterConfigDto;
 import net.atayun.bazooka.rms.api.dto.RmsDockerImageDto;
-import com.youyu.common.api.PageData;
-import com.youyu.common.enums.IsDeleted;
-import com.youyu.common.exception.BizException;
-import com.youyu.common.service.AbstractService;
-import com.youyu.common.utils.YyBeanUtils;
-import lombok.extern.slf4j.Slf4j;
-import mesosphere.client.common.ModelUtils;
-import mesosphere.marathon.client.model.v2.App;
-import net.atayun.bazooka.deploy.biz.dto.app.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -422,6 +426,43 @@ public class AppOperationEventServiceImpl
                     return dto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void marathonTaskFailureCallback(MarathonTaskFailureCallbackParam marathonTaskFailureCallbackParam) {
+        String marathonServiceId = marathonTaskFailureCallbackParam.getMarathonServiceId();
+        AppOperationEventMarathonEntity appOperationEventMarathonEntity = appOperationEventMarathonService.selectByServiceIdAndVersion(marathonServiceId,
+                marathonTaskFailureCallbackParam.getMarathonDeploymentVersion());
+        if (appOperationEventMarathonEntity == null) {
+            return;
+        }
+        Long eventId = appOperationEventMarathonEntity.getEventId();
+        AppOperationEventEntity appOperationEventEntity = getMapper().selectByPrimaryKey(eventId);
+        if (appOperationEventEntity.getStatus() == AppOperationEventStatusEnum.PROCESS) {
+            AppOperationEventLog eventLog = getBean(AppOperationEventLog.class);
+            AppOperationEnum event = appOperationEventEntity.getEvent();
+            String content = "当前操作失败:\n" + marathonTaskFailureCallbackParam.getMessage();
+            if (event == AppOperationEnum.DEPLOY) {
+                eventLog.save(eventId, AppOperationEventLogTypeEnum.APP_DEPLOY_FLOW_HEALTH_CHECK, 2, content);
+            } else {
+                eventLog.save(eventId, event.getLogType(), content);
+            }
+            log.warn("MarathonTask失败: serviceId: [{}], message: [{}]", marathonServiceId, content);
+        }
+        ClusterConfigDto clusterConf = getBean(EnvApi.class).getEnvConfiguration(appOperationEventEntity.getEnvId()).ifNotSuccessThrowException().getData();
+        String dcosUrl = CommonConstants.PROTOCOL + clusterConf.getDcosEndpoint() + CommonConstants.MARATHON_PORT;
+        Marathon instance = MarathonClient.getInstance(dcosUrl);
+        List<Deployment> deployments = instance.getDeployments();
+        deployments.stream()
+                .filter(deployment -> deployment.getAffectedApps().stream()
+                        .anyMatch(app -> Objects.equals(marathonTaskFailureCallbackParam.getMarathonServiceId(), app)))
+                .forEach(deployment -> {
+                    try {
+                        instance.cancelDeploymentAndRollback(deployment.getId());
+                    } catch (Throwable throwable) {
+                        log.warn("cancel deployment error: [" + deployment.toString() + "]", throwable);
+                    }
+                });
     }
 
     private AppOperationEventEntity getRollbackEntity(Long appId, Long envId) {

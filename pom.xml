@@ -29,7 +29,7 @@
         <marathon-client.version>0.6.2</marathon-client.version>
         <jenkins-client.version>0.3.8</jenkins-client.version>
         <gitlab-api.version>4.1.0</gitlab-api.version>
-        <netty.version>4.1.24.Final</netty.version>
+        <netty.version>4.1.42.Final</netty.version>
     </properties>
     <dependencyManagement>
         <dependencies>
