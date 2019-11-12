@@ -686,20 +686,33 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
         //镜像库
         RmsClusterConfigEntity rmsClusterConfigImage = new RmsClusterConfigEntity();
         rmsClusterConfigImage.setClusterId((long) id);
-        rmsClusterConfigImage.setType(createClusterReq.getImageUrlType().getType());
-        rmsClusterConfigImage.setUrl(createClusterReq.getImageUrlType().getUrl());
+        rmsClusterConfigImage.setType("2");
+        rmsClusterConfigImage.setUrl(createClusterReq.getImageUrl());
         rmsClusterConfigImage.setCredentialId(createClusterReq.getCredentialId());
         rmsClusterConfigImage.setStatus(NORMAL.getCode());
         rmsClusterConfigMapper.insertSelective(rmsClusterConfigImage);
 
-        //其他
-        List<CreateClusterReq.UrlType> urlTypeList = createClusterReq.getUrls();
-        if (null != urlTypeList && urlTypeList.size() > 0) {
-            for (CreateClusterReq.UrlType urlType : urlTypeList) {
+        //master
+        List<String> masterUrls = createClusterReq.getMasterUrls();
+        if (null != masterUrls && masterUrls.size() > 0) {
+            for (String url : masterUrls) {
                 RmsClusterConfigEntity rmsClusterConfigEntity = new RmsClusterConfigEntity();
                 rmsClusterConfigEntity.setClusterId((long) id);
-                rmsClusterConfigEntity.setType(urlType.getType());
-                rmsClusterConfigEntity.setUrl(urlType.getUrl());
+                rmsClusterConfigEntity.setType("0");
+                rmsClusterConfigEntity.setUrl(url);
+                rmsClusterConfigImage.setStatus(NORMAL.getCode());
+                rmsClusterConfigMapper.insertSelective(rmsClusterConfigEntity);
+            }
+        }
+
+        //mlb
+        List<String> mlbUrls = createClusterReq.getMlbUrls();
+        if (null != masterUrls && masterUrls.size() > 0) {
+            for (String url : masterUrls) {
+                RmsClusterConfigEntity rmsClusterConfigEntity = new RmsClusterConfigEntity();
+                rmsClusterConfigEntity.setClusterId((long) id);
+                rmsClusterConfigEntity.setType("1");
+                rmsClusterConfigEntity.setUrl(url);
                 rmsClusterConfigImage.setStatus(NORMAL.getCode());
                 rmsClusterConfigMapper.insertSelective(rmsClusterConfigEntity);
             }

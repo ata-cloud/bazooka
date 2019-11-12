@@ -22,9 +22,9 @@ public class CreateClusterReq {
     @NotNull
     private String type;
 
-    @ApiModelProperty("镜像库,type:2")
+    @ApiModelProperty("镜像库url")
     @NotNull
-    private UrlType imageUrlType;
+    private String imageUrl;
 
     @ApiModelProperty("镜像库凭据ID")
     private Long credentialId;
@@ -35,22 +35,14 @@ public class CreateClusterReq {
     @ApiModelProperty("集群版本号")
     private String version;
 
-    @ApiModelProperty("0、Master节点ip列表;1、集群mlb")
-    private List<UrlType> urls;
+    @ApiModelProperty("Master节点ip列表集合")
+    private List<String> masterUrls;
+
+    @ApiModelProperty("集群mlb ip列表集合")
+    private List<String> mlbUrls;
 
     @ApiModelProperty("节点集合")
     private List<SingleNode> nodeList;
-
-
-    @Data
-    public class UrlType {
-
-        @ApiModelProperty("类型: 0:集群master 1:集群mlb 2:镜像库")
-        private String type;
-
-        @ApiModelProperty("url")
-        private String url;
-    }
 
     @Data
     public class SingleNode {
