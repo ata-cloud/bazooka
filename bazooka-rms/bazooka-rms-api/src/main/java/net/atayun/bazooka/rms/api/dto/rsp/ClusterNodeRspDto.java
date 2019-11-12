@@ -71,4 +71,7 @@ public class ClusterNodeRspDto implements Serializable {
 
     @ApiModelProperty("已使用磁盘信息")
     private BigDecimal usedDisk;
+
+    @ApiModelProperty("凭据ID")
+    private Long credentialId;
 }
