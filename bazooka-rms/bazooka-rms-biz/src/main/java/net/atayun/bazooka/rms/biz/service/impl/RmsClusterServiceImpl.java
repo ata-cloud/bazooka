@@ -707,8 +707,8 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
 
         //mlb
         List<String> mlbUrls = createClusterReq.getMlbUrls();
-        if (null != masterUrls && masterUrls.size() > 0) {
-            for (String url : masterUrls) {
+        if (null != mlbUrls && mlbUrls.size() > 0) {
+            for (String url : mlbUrls) {
                 RmsClusterConfigEntity rmsClusterConfigEntity = new RmsClusterConfigEntity();
                 rmsClusterConfigEntity.setClusterId((long) id);
                 rmsClusterConfigEntity.setType("1");
