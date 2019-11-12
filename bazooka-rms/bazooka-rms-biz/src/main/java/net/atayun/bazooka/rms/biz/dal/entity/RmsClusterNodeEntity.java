@@ -111,6 +111,12 @@ public class RmsClusterNodeEntity extends JdbcMysqlEntity<Long> {
     @Column(name = "used_disk")
     private BigDecimal usedDisk;
 
+    /**
+     * 凭据ID
+     */
+    @Column(name = "credential_id")
+    private Long credentialId;
+
     public RmsClusterNodeEntity() {
     }
 

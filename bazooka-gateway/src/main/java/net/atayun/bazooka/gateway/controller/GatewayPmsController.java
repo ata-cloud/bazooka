@@ -24,6 +24,7 @@ import net.atayun.bazooka.pms.api.ProjectApi;
 import net.atayun.bazooka.pms.api.dto.EnvDto;
 import net.atayun.bazooka.pms.api.vo.DevUserResponse;
 import net.atayun.bazooka.pms.api.vo.ProjectResponse;
+import net.atayun.bazooka.rms.api.api.RmsClusterApi;
 import net.atayun.bazooka.rms.api.param.EnvQueryReq;
 import net.atayun.bazooka.upms.api.dto.req.UserAddReqDTO;
 import net.atayun.bazooka.upms.api.dto.req.UserQueryReqDTO;
@@ -62,6 +63,8 @@ public class GatewayPmsController {
     private OpsEnvService envService;
     @Autowired
     private GitLabProperties gitLabProperties;
+    @Autowired
+    private RmsClusterApi rmsClusterApi;
     /**
      * 添加用户
      *
@@ -82,7 +85,7 @@ public class GatewayPmsController {
 
     @ApiOperation(value = "根据项目id获取包含环境")
     @PostMapping("/queryEnvInfoByProjectId/{projectId}")
-    public Result queryEnvInfoByProjectId(@PathVariable Long projectId) {
+    public Result<List<EnvDto>> queryEnvInfoByProjectId(@PathVariable Long projectId) {
         EnvQueryReq envQueryReq=new EnvQueryReq();
         List<EnvVo> envVos= envService.list(envQueryReq);
         List<EnvDto> pmsEnvList= projectApi.queryEnvPortList(projectId).ifNotSuccessThrowException().getData();
@@ -91,6 +94,9 @@ public class GatewayPmsController {
            Optional<EnvVo> envVo=  envVos.stream().filter(m->m.getId().equals(item.getEnvId())).findFirst();
            if(envVo.isPresent()) {
                item.setEnvName(envVo.get().getName());
+               item.setClusterId(envVo.get().getClusterId());
+               String clusterType = rmsClusterApi.getClusterInfo(envVo.get().getClusterId()).getData().getType();
+               item.setClusterType(clusterType);
            }
         }
         return ok(pmsEnvList);

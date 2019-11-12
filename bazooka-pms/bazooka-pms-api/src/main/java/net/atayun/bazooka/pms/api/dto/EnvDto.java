@@ -42,4 +42,14 @@ public class EnvDto {
      */
     private Integer portEnd;
 
+    /**
+     * 集群id
+     */
+    private Long clusterId;
+
+    /**
+     * 集群类型
+     */
+    private String clusterType;
+
 }

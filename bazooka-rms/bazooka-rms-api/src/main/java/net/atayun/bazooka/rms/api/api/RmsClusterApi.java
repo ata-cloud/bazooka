@@ -15,7 +15,9 @@
  */
 package net.atayun.bazooka.rms.api.api;
 
+import io.swagger.annotations.Api;
 import net.atayun.bazooka.rms.api.dto.ClusterAppResourceDto;
+import net.atayun.bazooka.rms.api.dto.RmsClusterDto;
 import net.atayun.bazooka.rms.api.dto.req.ClusterDetailReqDto;
 import net.atayun.bazooka.rms.api.dto.req.ClusterDockerInstanceLogReqDto;
 import net.atayun.bazooka.rms.api.dto.req.ClusterReqDto;
@@ -26,10 +28,8 @@ import net.atayun.bazooka.rms.api.dto.rsp.ClusterRspDto;
 import com.youyu.common.api.PageData;
 import com.youyu.common.api.Result;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import net.atayun.bazooka.rms.api.param.CreateClusterReq;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -41,6 +41,7 @@ import java.util.List;
  * @date 2019年7月17日 17:00:00
  * @work 资源集群 Api
  */
+@Api(value = "集群资源接口", description = "集群资源接口", protocols = "http")
 @RequestMapping("/cluster")
 public interface RmsClusterApi {
 
@@ -92,4 +93,31 @@ public interface RmsClusterApi {
     @ApiOperation("根据集群id和slaveId查询容器实例日志信息")
     @PostMapping("/getClusterDockerInstanceLog")
     Result<ClusterDockerInstanceLogRspDto> getClusterDockerInstanceLog(@Valid @RequestBody ClusterDockerInstanceLogReqDto clusterDockerInstanceLogReqDto);
+
+    /**
+     * @create: zhangyingbin 2019/11/8 0008 下午 2:27
+     * @Modifier:
+     * @Description: 创建单节点集群
+     */
+    @ApiOperation("新建单节点集群")
+    @PostMapping("/createSingleNodeCluster")
+    Result createSingleNodeCluster(CreateClusterReq createClusterReq);
+
+    /**
+     * @create: zhangyingbin 2019/11/8 0008 下午 5:16
+     * @Modifier:
+     * @Description: 创建mesos集群
+     */
+    @ApiOperation("新建mesos集群")
+    @PostMapping("/createMesosCluster")
+    Result createMesosCluster(CreateClusterReq createClusterReq);
+
+    /**
+     * @create: zhangyingbin 2019/11/11 0011 下午 5:32
+     * @Modifier:
+     * @Description: 根据id获取集群基本信息
+     */
+    @ApiOperation("根据id获取集群基本信息")
+    @PostMapping("/getClusterInfo")
+    Result<RmsClusterDto> getClusterInfo(@RequestParam("id")  Long id);
 }
