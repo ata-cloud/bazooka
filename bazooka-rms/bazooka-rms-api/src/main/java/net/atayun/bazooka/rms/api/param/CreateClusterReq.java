@@ -45,7 +45,7 @@ public class CreateClusterReq {
     @Data
     public class UrlType {
 
-        @ApiModelProperty("类型")
+        @ApiModelProperty("类型: 0:集群master 1:集群mlb 2:镜像库")
         private String type;
 
         @ApiModelProperty("url")

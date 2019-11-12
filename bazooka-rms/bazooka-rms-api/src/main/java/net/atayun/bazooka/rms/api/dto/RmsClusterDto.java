@@ -51,7 +51,7 @@ public class RmsClusterDto extends BaseDto<Long> {
     @ApiModelProperty("磁盘")
     private BigDecimal disk;
 
-    @ApiModelProperty("集群类型")
+    @ApiModelProperty("集群类型: 0:MESOS 1:KUBERNETES 2:SINGLENODE")
     private String type;
 
 }
