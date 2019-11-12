@@ -16,6 +16,7 @@
 package net.atayun.bazooka.pms.api.dto;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 /**
@@ -52,7 +53,7 @@ public class EnvDto {
     private Long clusterId;
 
     /**
-     * 集群类型
+     * 集群类型 0:MESOS 1:KUBERNETES 2:SINGLENODE
      */
     private String clusterType;
 
