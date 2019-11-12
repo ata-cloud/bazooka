@@ -30,5 +30,10 @@ public enum CredentialDomainEnum {
     /**
      * 镜像库
      */
-    DOCKER_REGISTRY
+    DOCKER_REGISTRY,
+
+    /**
+     * 节点登录
+     */
+    NODE_LOGIN
 }
