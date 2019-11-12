@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 /**
  * @author pqq
  * @version v1.0
@@ -42,4 +44,13 @@ public interface RmsClusterNodeApi {
     @ApiOperation("查询集群节点列表信息")
     @PostMapping("/getClusterNodePage")
     Result<PageData<ClusterNodeRspDto>> getClusterNodePage(@RequestBody ClusterNodeReqDto clusterNodeReqDto);
+
+    /**
+     * 根据节点ID查询节点信息
+     * @param nodeIds
+     * @return
+     */
+    @ApiOperation("查询集群节点列表信息")
+    @PostMapping("/getClusterNodeInfoByNodeIds")
+    Result<List<ClusterNodeRspDto>> getClusterNodeInfoByNodeIds(@RequestBody List<Long> nodeIds);
 }

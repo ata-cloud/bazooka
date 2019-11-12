@@ -25,10 +25,7 @@ import net.atayun.bazooka.pms.biz.dal.entity.AppDeployConfigEntity;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author WangSongJun
@@ -73,6 +70,7 @@ public class AppDeployConfigConverterTest {
                 0,
                 1,
                 "java -jar app.jar",
+                null,
                 portMappings,
                 env,
                 volumeMounts,

@@ -16,13 +16,17 @@
 package net.atayun.bazooka.pms.api.dto;
 
 import io.swagger.annotations.ApiModel;
-import lombok.Data;
+import lombok.*;
 
 /**
  * @author rache
  * @date 2019-07-12
  */
-@Data
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel(value = "PmsEnv")
 public class EnvDto {
     /**
