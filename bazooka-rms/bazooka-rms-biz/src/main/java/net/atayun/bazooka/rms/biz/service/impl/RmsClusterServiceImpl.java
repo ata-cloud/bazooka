@@ -700,7 +700,7 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
                 rmsClusterConfigEntity.setClusterId((long) id);
                 rmsClusterConfigEntity.setType("0");
                 rmsClusterConfigEntity.setUrl(url);
-                rmsClusterConfigImage.setStatus(NORMAL.getCode());
+                rmsClusterConfigEntity.setStatus(NORMAL.getCode());
                 rmsClusterConfigMapper.insertSelective(rmsClusterConfigEntity);
             }
         }
@@ -713,7 +713,7 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
                 rmsClusterConfigEntity.setClusterId((long) id);
                 rmsClusterConfigEntity.setType("1");
                 rmsClusterConfigEntity.setUrl(url);
-                rmsClusterConfigImage.setStatus(NORMAL.getCode());
+                rmsClusterConfigEntity.setStatus(NORMAL.getCode());
                 rmsClusterConfigMapper.insertSelective(rmsClusterConfigEntity);
             }
         }
