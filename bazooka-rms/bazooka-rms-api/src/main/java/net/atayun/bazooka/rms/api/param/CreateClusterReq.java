@@ -15,15 +15,15 @@ import java.util.List;
 public class CreateClusterReq {
 
     @ApiModelProperty("集群名称")
-    @NotNull
+    @NotNull(message = "集群名称不能为空")
     private String name;
 
     @ApiModelProperty("集群类型")
-    @NotNull
+    @NotNull(message = "集群类型不能为空")
     private String type;
 
     @ApiModelProperty("镜像库url")
-    @NotNull
+    @NotNull(message = "镜像库url不能为空")
     private String imageUrl;
 
     @ApiModelProperty("镜像库凭据ID")
@@ -42,22 +42,6 @@ public class CreateClusterReq {
     private List<String> mlbUrls;
 
     @ApiModelProperty("节点集合")
-    private List<SingleNode> nodeList;
-
-    @Data
-    public class SingleNode {
-
-        @ApiModelProperty("节点ip")
-        private String nodeIp;
-
-        @ApiModelProperty("cpu")
-        private BigDecimal cpu;
-
-        @ApiModelProperty("内存")
-        private BigDecimal memory;
-
-        @ApiModelProperty("节点登录凭据ID")
-        private Long credentialId;
-    }
+    private List<SingleNodeReq> nodeList;
 }
 

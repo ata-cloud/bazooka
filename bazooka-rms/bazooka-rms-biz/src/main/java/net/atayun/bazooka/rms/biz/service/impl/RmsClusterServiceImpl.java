@@ -33,6 +33,7 @@ import net.atayun.bazooka.rms.api.dto.req.ClusterReqDto;
 import net.atayun.bazooka.rms.api.dto.rsp.*;
 import net.atayun.bazooka.rms.api.enums.LogTypeEnum;
 import net.atayun.bazooka.rms.api.param.CreateClusterReq;
+import net.atayun.bazooka.rms.api.param.SingleNodeReq;
 import net.atayun.bazooka.rms.biz.component.strategy.cluster.ClusterComponentRefreshStrategy;
 import net.atayun.bazooka.rms.biz.dal.dao.RmsClusterAppMapper;
 import net.atayun.bazooka.rms.biz.dal.dao.RmsClusterConfigMapper;
@@ -44,6 +45,7 @@ import net.atayun.bazooka.rms.biz.dal.entity.RmsClusterNodeEntity;
 import net.atayun.bazooka.rms.biz.service.EnvService;
 import net.atayun.bazooka.rms.biz.service.RmsClusterConfigService;
 import net.atayun.bazooka.rms.biz.service.RmsClusterService;
+import org.apache.ibatis.annotations.Options;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 import org.springframework.stereotype.Service;
@@ -629,14 +631,14 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
      */
     public void createSingleNodeCluster(CreateClusterReq createClusterReq) {
 
-        int id = this.createClusterInfo(createClusterReq);
+        long id = this.createClusterInfo(createClusterReq);
         this.createClusterConfig(createClusterReq, id);
 
         if (!isEmpty(createClusterReq.getNodeList())) {
-            List<CreateClusterReq.SingleNode> list = createClusterReq.getNodeList();
-            for (CreateClusterReq.SingleNode node : list) {
+            List<SingleNodeReq> list = createClusterReq.getNodeList();
+            for (SingleNodeReq node : list) {
                 RmsClusterNodeEntity rmsClusterNodeEntity = new RmsClusterNodeEntity();
-                rmsClusterNodeEntity.setClusterId((long) id);
+                rmsClusterNodeEntity.setClusterId(id);
                 rmsClusterNodeEntity.setIp(node.getNodeIp());
                 rmsClusterNodeEntity.setCpu(node.getCpu());
                 rmsClusterNodeEntity.setMemory(node.getMemory());
@@ -653,7 +655,7 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
      */
     @Override
     public void createMesosCluster(CreateClusterReq createClusterReq) {
-        int id = this.createClusterInfo(createClusterReq);
+        long id = this.createClusterInfo(createClusterReq);
         this.createClusterConfig(createClusterReq, id);
     }
 
@@ -662,7 +664,8 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
      * @Modifier:
      * @Description: 创建集群基本信息
      */
-    private int createClusterInfo(CreateClusterReq createClusterReq) {
+    @Options(useGeneratedKeys = true)
+    private long createClusterInfo(CreateClusterReq createClusterReq) {
         RmsClusterEntity rmsClusterEntity = new RmsClusterEntity();
         rmsClusterEntity.setName(createClusterReq.getName());
         rmsClusterEntity.setType(createClusterReq.getType());
@@ -673,7 +676,8 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
         if (null == createClusterReq.getRoomType()) {
             rmsClusterEntity.setRoomType("本地机房");
         }
-        return rmsClusterMapper.insertSelective(rmsClusterEntity);
+
+        return rmsClusterMapper.insertSelectiveGetId(rmsClusterEntity);
     }
 
     /**
@@ -681,11 +685,11 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
      * @Modifier:
      * @Description: 创建集群配置信息
      */
-    private void createClusterConfig(CreateClusterReq createClusterReq, int id) {
+    private void createClusterConfig(CreateClusterReq createClusterReq, long id) {
 
         //镜像库
         RmsClusterConfigEntity rmsClusterConfigImage = new RmsClusterConfigEntity();
-        rmsClusterConfigImage.setClusterId((long) id);
+        rmsClusterConfigImage.setClusterId(id);
         rmsClusterConfigImage.setType("2");
         rmsClusterConfigImage.setUrl(createClusterReq.getImageUrl());
         rmsClusterConfigImage.setCredentialId(createClusterReq.getCredentialId());
@@ -697,7 +701,7 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
         if (null != masterUrls && masterUrls.size() > 0) {
             for (String url : masterUrls) {
                 RmsClusterConfigEntity rmsClusterConfigEntity = new RmsClusterConfigEntity();
-                rmsClusterConfigEntity.setClusterId((long) id);
+                rmsClusterConfigEntity.setClusterId(id);
                 rmsClusterConfigEntity.setType("0");
                 rmsClusterConfigEntity.setUrl(url);
                 rmsClusterConfigEntity.setStatus(NORMAL.getCode());
@@ -710,7 +714,7 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
         if (null != mlbUrls && mlbUrls.size() > 0) {
             for (String url : mlbUrls) {
                 RmsClusterConfigEntity rmsClusterConfigEntity = new RmsClusterConfigEntity();
-                rmsClusterConfigEntity.setClusterId((long) id);
+                rmsClusterConfigEntity.setClusterId(id);
                 rmsClusterConfigEntity.setType("1");
                 rmsClusterConfigEntity.setUrl(url);
                 rmsClusterConfigEntity.setStatus(NORMAL.getCode());
