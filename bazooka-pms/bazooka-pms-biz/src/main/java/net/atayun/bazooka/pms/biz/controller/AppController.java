@@ -136,6 +136,7 @@ public class AppController implements AppApi {
                 appEnvInfoVoList.add(appEnvInfoVo);
             }
             AppInfoWithEnv appInfoWithEnv = new AppInfoWithEnv(appInfoListByUser.get(i),appEnvInfoVoList);
+            appInfoWithEnv.setId(appInfoListByUser.get(i).getId());
             appInfoWithEnvs.add(appInfoWithEnv);
         }
 
