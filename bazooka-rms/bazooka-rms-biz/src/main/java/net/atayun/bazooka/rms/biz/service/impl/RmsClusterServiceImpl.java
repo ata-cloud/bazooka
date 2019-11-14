@@ -42,6 +42,7 @@ import net.atayun.bazooka.rms.biz.dal.dao.RmsClusterNodeMapper;
 import net.atayun.bazooka.rms.biz.dal.entity.RmsClusterConfigEntity;
 import net.atayun.bazooka.rms.biz.dal.entity.RmsClusterEntity;
 import net.atayun.bazooka.rms.biz.dal.entity.RmsClusterNodeEntity;
+import net.atayun.bazooka.rms.biz.enums.ClusterTypeEnum;
 import net.atayun.bazooka.rms.biz.service.EnvService;
 import net.atayun.bazooka.rms.biz.service.RmsClusterConfigService;
 import net.atayun.bazooka.rms.biz.service.RmsClusterService;
@@ -54,6 +55,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 import tk.mybatis.mapper.entity.Example;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -71,6 +74,7 @@ import static java.util.Objects.nonNull;
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.stream.Collectors.toList;
 import static net.atayun.bazooka.base.bean.StrategyNumBean.getBeanInstance;
+import static net.atayun.bazooka.base.constant.CommonConstants.MARATHON_PORT;
 import static net.atayun.bazooka.base.constant.CommonConstants.PROTOCOL;
 import static net.atayun.bazooka.base.utils.EnumUtil.getEnum;
 import static net.atayun.bazooka.base.utils.OrikaCopyUtil.copyProperty;
@@ -629,6 +633,7 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
      * @Modifier:
      * @Description: 创建单节点集群
      */
+    @Transactional
     public void createSingleNodeCluster(CreateClusterReq createClusterReq) {
 
         long id = this.createClusterInfo(createClusterReq);
@@ -653,8 +658,13 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
      * @Modifier:
      * @Description:
      */
-    @Override
+    @Transactional
     public void createMesosCluster(CreateClusterReq createClusterReq) {
+
+        //Get Version
+        DcosApi dcos = dcosServerBean.getInstance(PROTOCOL + createClusterReq.getMasterUrls().get(0));
+        createClusterReq.setVersion(dcos.getInfo().getVersion());
+
         long id = this.createClusterInfo(createClusterReq);
         this.createClusterConfig(createClusterReq, id);
     }
@@ -664,20 +674,32 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
      * @Modifier:
      * @Description: 创建集群基本信息
      */
-    @Options(useGeneratedKeys = true)
     private long createClusterInfo(CreateClusterReq createClusterReq) {
         RmsClusterEntity rmsClusterEntity = new RmsClusterEntity();
         rmsClusterEntity.setName(createClusterReq.getName());
         rmsClusterEntity.setType(createClusterReq.getType());
         rmsClusterEntity.setStatus(NORMAL.getCode());
+
         if (null == createClusterReq.getVersion()) {
             rmsClusterEntity.setVersion("1.0.0");
+        } else {
+            rmsClusterEntity.setVersion(createClusterReq.getVersion());
         }
+
         if (null == createClusterReq.getRoomType()) {
             rmsClusterEntity.setRoomType("本地机房");
         }
 
-        return rmsClusterMapper.insertSelectiveGetId(rmsClusterEntity);
+        if (ClusterTypeEnum.SINGLENODE.getCode().equals(createClusterReq.getType())) {
+            BigDecimal cpu = new BigDecimal(0);
+            for (SingleNodeReq singleNode : createClusterReq.getNodeList()) {
+                cpu = cpu.add(singleNode.getCpu());
+            }
+            rmsClusterEntity.setCpu(cpu);
+        }
+
+        rmsClusterMapper.insertSelective(rmsClusterEntity);
+        return rmsClusterEntity.getId();
     }
 
     /**

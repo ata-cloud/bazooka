@@ -15,7 +15,6 @@
  */
 package net.atayun.bazooka.rms.biz.dal.dao;
 
-import net.atayun.bazooka.rms.api.param.CreateClusterReq;
 import net.atayun.bazooka.rms.biz.dal.entity.RmsClusterEntity;
 import com.youyu.common.mapper.YyMapper;
 
@@ -26,8 +25,6 @@ import com.youyu.common.mapper.YyMapper;
  * @work 资源集群 mapper
  */
 public interface RmsClusterMapper extends YyMapper<RmsClusterEntity> {
-
-    long insertSelectiveGetId(RmsClusterEntity rmsClusterEntity);
 
 }
 
