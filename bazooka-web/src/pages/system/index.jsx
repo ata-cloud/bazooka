@@ -53,18 +53,18 @@ class System extends React.Component {
   }
   //修改凭据
   onAddGitCredentials = async (params) => {
-    const { currentItem } = this.state;
-    let currentParams = { credentialKey: params.credentialKey, credentialValue: params.credentialValue };
-    if (params.credentialValue == '******') {
-      currentParams = { credentialKey: params.credentialKey }
-    }
+    // const { currentItem } = this.state;
+    // let currentParams = { credentialKey: params.credentialKey, credentialValue: params.credentialValue };
+    // if (params.credentialValue == '******') {
+    //   currentParams = { credentialKey: params.credentialKey }
+    // }
 
-    let res = await system.credentialsUpdate({ id: currentItem.id, ...currentParams });
-    if (res && res.code == '1') {
-      message.success('修改成功');
+    // let res = await system.credentialsUpdate({ id: currentItem.id, ...currentParams });
+    // if (res && res.code == '1') {
+    //   message.success('修改成功');
       this.onGitCancel();
       this.onFetchCredentialsList()
-    }
+    // }
   }
   onToHref = (item) => {
     let href = toHref(item.url);
@@ -216,7 +216,7 @@ class System extends React.Component {
   render() {
     const { showGitModal, currentItem } = this.state;
     return (
-      <PageHeaderWrapper>
+      <PageHeaderWrapper content="系统基础信息、组件状态和凭据管理">
         {this.renderSystemInfo()}
         {this.renderComponent()}
         {this.renderCredentialsList()}

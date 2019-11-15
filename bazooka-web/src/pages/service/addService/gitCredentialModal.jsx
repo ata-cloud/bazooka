@@ -3,6 +3,8 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Modal, Form, Input, Radio, Button, Select, message } from 'antd';
 import { connect } from 'dva';
 import styles from '../../index.less';
+import { system } from '@/services/system';
+
 const FormItem = Form.Item;
 const { Option } = Select;
 const { TextArea } = Input;
@@ -14,6 +16,10 @@ const domains = [
   {
     value: 'DOCKER_REGISTRY',
     text: '镜像凭据'
+  },
+  {
+    value: 'NODE_LOGIN',
+    text: '节点登录凭据'
   },
 ];
 const formItemLayout = {
@@ -40,11 +46,32 @@ class GitModal extends React.Component {
 
   }
   onSubmit = (e) => {
-    const { onOk } = this.props;
+    const { onOk, currentItem } = this.props;
     e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
+    this.props.form.validateFieldsAndScroll(async (err, values) => {
       if (!err) {
-        onOk({ ...values, scope: 'GLOBAL' })
+        let params = { ...values, scope: 'GLOBAL' }
+        if (currentItem.id) {
+          //修改
+          let currentParams = { credentialKey: params.credentialKey, credentialValue: params.credentialValue };
+          if (params.credentialValue == '******') {
+            currentParams = { credentialKey: params.credentialKey }
+          }
+          let res = await system.credentialsUpdate({ id: currentItem.id, ...currentParams });
+          if (res && res.code == '1') {
+            message.success('修改成功');
+            onOk(res.data)
+          }
+        } else {
+          //新增
+          let res = await system.credentialsAdd({ ...params, credentialType: 'USERNAME_WITH_PASSWORD' });
+          if (res && res.code == '1') {
+            message.success('添加成功');
+            onOk(res.data)
+          }
+        }
+
+        // onOk({ ...values, scope: 'GLOBAL' })
       }
     });
   };

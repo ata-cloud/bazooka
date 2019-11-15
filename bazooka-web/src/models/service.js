@@ -29,7 +29,8 @@ const ServiceModel = {
     appDeployFlow: {},
     envWithPro: [],
     appOperate: {},
-    appDeployFlowInfo: {}
+    appDeployFlowInfo: {},
+    currentEnvO: {}
   },
   effects: {
     *appList({ payload }, { call, put }) {
@@ -356,6 +357,12 @@ const ServiceModel = {
       return {
         ...state,
         appOperate: payload.data || {}
+      };
+    },
+    setCurrentEnvO(state, { payload = {} }) {
+      return {
+        ...state,
+        currentEnvO : payload || {}
       };
     },
     clearData(state, { payload = {} }) {

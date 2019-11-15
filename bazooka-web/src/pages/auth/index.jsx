@@ -37,7 +37,7 @@ class Auth extends React.Component {
   render() {
     const { key, tabList } = this.state;
     return (
-      <PageHeaderWrapper tabList={tabList} onTabChange={this.onTabChange} tabActiveKey={key}>
+      <PageHeaderWrapper content="系统基础信息、组件状态和凭据管理" tabList={tabList} onTabChange={this.onTabChange} tabActiveKey={key}>
 
         {
           key === '1' && <User />

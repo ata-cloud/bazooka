@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { Card, Form, Input, Row, Col, Checkbox, Icon, Select, Divider, InputNumber } from 'antd';
 import styles from '@/pages/index.less';
+import { connect } from 'dva';
 const FormItem = Form.Item;
 const { Option } = Select;
 const formItemLayout = {
@@ -335,4 +336,7 @@ class ExtraSet extends React.Component {
     );
   }
 }
-export default ExtraSet;
+export default connect(({ service }) => ({
+  
+}))(ExtraSet);
+

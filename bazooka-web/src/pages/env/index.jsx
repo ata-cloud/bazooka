@@ -126,13 +126,14 @@ class Env extends React.Component {
       // </Row>
       <div>
         <p className={styles.marginB}>
-          <span>环境用于按功能分隔</span>
-          {
+          <span>用户根据开发场景划分，例如“测试环境”、“生产环境”等。环境通过资源切分，为各个项目中的服务提供透明、无感知的计算资源调度</span>
+          {/* {
             isAdmin() ?
             <Link to="/cluster">集群</Link>:
             <span>集群</span>
           }
-          <span>的计算资源，比如分为“测试环境”、“预发布环境”、“生产环境”等，各个服务将部署在所属项目已关联的环境中</span></p>
+          <span>的计算资源，比如分为“测试环境”、“预发布环境”、“生产环境”等，各个服务将部署在所属项目已关联的环境中</span> */}
+        </p>
         <Row type="flex" justify="space-between" align="middle">
           <Col>
             {
@@ -205,11 +206,11 @@ class Env extends React.Component {
                   <div className={styles.clusterItem}>
                     <p>所属集群</p>
                     {
-                      isAdmin() ? 
-                      <Link to={{ pathname: '/cluster/detail', query: { clusterId: item.clusterId } }}>{item.clusterName}</Link>:
-                      <span>{item.clusterName}</span>
+                      isAdmin() ?
+                        <Link to={{ pathname: '/cluster/detail', query: { clusterId: item.clusterId } }}>{item.clusterName}</Link> :
+                        <span>{item.clusterName}</span>
                     }
-                   
+
                   </div>
                   <div className={styles.clusterItem}>
                     <p>使用此环境的项目</p>

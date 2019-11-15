@@ -4,7 +4,7 @@ import { Card, Row, Col, Button, Icon, Typography, Progress, Form, Spin, Empty }
 import { connect } from 'dva';
 import Link from 'umi/link';
 import styles from '../index.less';
-import { CLUSTER_STATUS } from '@/common/constant';
+import { CLUSTER_STATUS, CLUSTER_TYPE_O } from '@/common/constant';
 import { MformG, isAdmin, Percent } from '@/utils/utils';
 import router from 'umi/router';
 const { Title, Text } = Typography;
@@ -32,7 +32,7 @@ class Cluster extends React.Component {
     };
   }
   componentDidMount() {
-    if(!isAdmin()) {
+    if (!isAdmin()) {
       router.replace('/exception403')
     }
     this.onFetchList()
@@ -53,16 +53,36 @@ class Cluster extends React.Component {
       query: data || {}
     })
   }
+  onAdd = () => {
+    router.push('/cluster/add')
+    // this.setState({
+    //   showAdd: true
+    // })
+  }
   //------------------------页面渲染-------------------------------------
   renderTitle() {
     return (
-      <Row type="flex" justify="space-between" align="middle">
-        <Col>通过Mesos集群、Kubernetes集群或者独立节点的方式，管理物理机、虚拟机、云主机等各类计算资源</Col>
-        {/* <Col className={styles.flexCenter}>
-          <Button type="primary" onClick={this.onAdd}>+ 导入集群</Button>
-          <Button type="primary" className={styles.marginL} onClick={this.onAdd}>+ 新建集群</Button>
+      <div>
+        <p className={styles.marginB}>通过Mesos集群、Kubernetes集群或者独立节点的方式，管理物理机、虚拟机、云主机等各类计算资源</p>
+        <Row type="flex" justify="space-between" align="middle">
+          <Col>
+            {
+              (isAdmin() || projectListAdmin.length) ?
+                <Button type="primary" onClick={this.onAdd}>+ 新增资源</Button> : null
+            }
+          </Col>
+          {/* <Col>
+          <Search placeholder="搜索服务" onSearch={this.onSearch} />
         </Col> */}
-      </Row>
+        </Row>
+      </div>
+      // <Row type="flex" justify="space-between" align="middle">
+      //   <Col>通过Mesos集群、Kubernetes集群或者独立节点的方式，管理物理机、虚拟机、云主机等各类计算资源</Col>
+      //   <Col className={styles.flexCenter}>
+      //     <Button type="primary" onClick={this.onAdd}>+ 导入集群</Button>
+      //     <Button type="primary" className={styles.marginL} onClick={this.onAdd}>+ 新建集群</Button>
+      //   </Col>
+      // </Row>
     )
   }
   renderResource(item) {
@@ -91,7 +111,7 @@ class Cluster extends React.Component {
 
             <Col md={12} key={i} className={styles.marginB} sm={24}>
               <Card title={
-                <strong>{item.name}<Text type="secondary">（本地）</Text></strong>
+                <strong>{item.name}<Text type="secondary">（{CLUSTER_TYPE_O[item.type]}）</Text></strong>
               } hoverable extra={
                 <Icon type="reload" onClick={() => this.onRaload(item)} />
               }>
@@ -139,14 +159,14 @@ class Cluster extends React.Component {
                     <div className={`${styles.flexCenter}`} style={{ margin: '10px 20px' }}>
                       <div>CPU</div>
                       <div className={`${styles.flex1} ${styles.processLR}`}>
-                        <Progress percent={Percent(item.envCpu, item.cpu)} showInfo={false} strokeColor="#1890ff"/>
+                        <Progress percent={Percent(item.envCpu, item.cpu)} showInfo={false} strokeColor="#1890ff" />
                       </div>
-                      <div className={styles.rightBlock}>{`${Percent(item.envCpu, item.cpu)}%（${item.envCpu} / ${item.cpu} Core）`}</div>
+                      <div className={styles.rightBlock}>{`${Percent(item.envCpu, item.cpu)}%（${item.envCpu} / ${item.cpu || 0} Core）`}</div>
                     </div>
                     <div className={`${styles.flexCenter}`} style={{ margin: '10px 20px' }}>
                       <div>内存</div>
                       <div className={`${styles.flex1} ${styles.processLR}`}>
-                        <Progress percent={Percent(item.envMemory, item.memory)} showInfo={false} strokeColor="#1890ff"/>
+                        <Progress percent={Percent(item.envMemory, item.memory)} showInfo={false} strokeColor="#1890ff" />
                       </div>
                       <div className={styles.rightBlock}>{`${Percent(item.envMemory, item.memory)}%（${MformG(item.envMemory)} / ${MformG(item.memory)} GiB）`}</div>
                     </div>

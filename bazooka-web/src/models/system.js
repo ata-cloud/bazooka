@@ -13,6 +13,13 @@ const SystemModel = {
         payload: response,
       });
     },
+    *credentialsListTypes({ payload }, { call, put }) {
+      const response = yield call(system.credentialsList, payload);
+      yield put({
+        type: 'getCredentialsListTypes',
+        payload: {...response, ...payload},
+      });
+    },
     *clusterComponents({ payload }, { call, put }) {
       const response = yield call(system.clusterComponents, payload);
       yield put({
@@ -26,6 +33,12 @@ const SystemModel = {
       return {
         ...state,
         credentialsList: payload.data || [],
+      };
+    },
+    getCredentialsListTypes(state, { payload = {} }) {
+      return {
+        ...state,
+        ['credentialsList'+payload.domain]: payload.data || [],
       };
     },
     getClusterComponents(state, { payload = {} }) {

@@ -4,7 +4,9 @@ const CARD_TITLE_BG = {
 };
 //集群类型
 const CLUSTER_TYPE_O = {
-  '0': '本地DC/OS集群'
+  '0': 'Mesos集群',
+  '1': 'Kubernetes集群',
+  '2': 'Bazooka单节点集群'
 };
 const CLUSTER_STATUS = {
   '0': {
@@ -76,7 +78,8 @@ const APP_STATUS = {
     color: 'successColor'
   },
 }
-const COLOR_SHOW = ['#b1d5a1', '#abcbf2', '#e19999', '#f4c988', '#e3e1e1'];
+const COLOR_SHOW_OLD = ['#b1d5a1', '#abcbf2', '#e19999', '#f4c988', '#e3e1e1'];
+const COLOR_SHOW = ['#f5f5fe', '#f7ded3', '#f3fff6', '#ffeaeb', '#def5fe'];
 const SCALE_CPU = [0.1, 0.3, 0.5, 1, 2, 3, 4, 8, 16];
 const SCALE_MEN = [128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768];
 const SCALE_CASE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
@@ -158,7 +161,7 @@ const APP_KINDS_O = {
     text: 'Git代码仓库',
     icon: IMAGE.GIT
   }
-}
+};
 export {
   CARD_TITLE_BG,
   SCALE_CPU,

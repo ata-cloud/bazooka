@@ -30,15 +30,20 @@ class Detail extends React.Component {
         },
         {
           key: '4',
-          tab: <Icon type="tool" theme="filled" style={{ fontSize: 20 }} />
+          tab: '服务配置'
         }
+        // {
+        //   key: '4',
+        //   tab: <Icon type="tool" theme="filled" style={{ fontSize: 20 }} />
+        // }
       ],
       projectId: undefined,
       appId: undefined,
       currentEnv: '',
       loading: false,
       deployType: '',
-      showStartModal: false
+      showStartModal: false,
+      currentEnvO: {}
     };
   }
   // -------------------------------------------------生命周期--------------------------------------------------
@@ -82,8 +87,10 @@ class Detail extends React.Component {
     const { envWithPro, appDeployStatus, appOperate } = nextProps;
     if (envWithPro && this.props.envWithPro !== envWithPro) {
       this.setState({
-        currentEnv: envWithPro && envWithPro[0] ? envWithPro[0].envId : ''
+        currentEnv: envWithPro && envWithPro[0] ? envWithPro[0].envId : '',
       })
+      let currentEnvO = envWithPro && envWithPro[0] ? envWithPro[0] : {}
+      this.onSetCurrentEnvO(currentEnvO)
     }
     // if (this.props.appDeployStatus !== appDeployStatus && (appDeployStatus.deployType == "DELETE_IMAGE" || appDeployStatus.deployType == "PUSH_IMAGE")) {
     //   clearInterval(this.timmer);
@@ -147,7 +154,8 @@ class Detail extends React.Component {
         appDeployFlow: {},
         envWithPro: [],
         dockerListAll: [],
-        appDeployFlowInfo: {}
+        appDeployFlowInfo: {},
+        currentEnvO: {}
       }
     })
   }
@@ -159,6 +167,14 @@ class Detail extends React.Component {
     })
   }
   // -------------------------------------------------事件--------------------------------------------------
+  //设置当前选中的环境
+  onSetCurrentEnvO = (payload) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'service/setCurrentEnvO',
+      payload
+    })
+  }
   onFetchEnvWithPro = async () => {
     const { projectId } = this.state;
     const { dispatch } = this.props;
@@ -191,10 +207,12 @@ class Detail extends React.Component {
       }
     })
   }
-  onEnvChange = (key) => {
+  onEnvChange = (key, label) => {
+    let currentEnvO = label.props.label || {}
     this.setState({
-      currentEnv: key
+      currentEnv: key,
     })
+    this.onSetCurrentEnvO(currentEnvO)
   }
   onOparaChange = async (e) => {
     let deployType = e.target.value;
@@ -284,7 +302,7 @@ class Detail extends React.Component {
             <Select onChange={this.onEnvChange} value={currentEnv} style={{ minWidth: 150 }}>
               {
                 envWithPro && envWithPro.map((item) => (
-                  <Option value={item.envId} key={item.envId}>{item.envName}</Option>
+                  <Option value={item.envId} key={item.envId} label={item}>{item.envName}</Option>
                 ))
               }
             </Select>

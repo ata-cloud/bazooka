@@ -52,17 +52,17 @@ class GitItem extends React.Component {
   }
   onAddGitCredentials = async (params) => {
     const { setFieldsValue } = this.props.form;
-    let res = await system.credentialsAdd({ ...params, credentialType: 'USERNAME_WITH_PASSWORD' });
-    if (res && res.code == '1') {
-      message.success('添加成功');
+    // let res = await system.credentialsAdd({ ...params, credentialType: 'USERNAME_WITH_PASSWORD' });
+    // if (res && res.code == '1') {
+    //   message.success('添加成功');
       this.setState({
         showGitModal: false
       })
       this.onFetchCredentialsList();
       setFieldsValue({
-        gitCredentialId: res.data.id
+        gitCredentialId: params.id
       })
-    }
+    // }
   }
   renderTitle() {
     return (

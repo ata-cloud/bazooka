@@ -463,7 +463,7 @@ class ServiceWorkInfo extends React.Component {
     )
   }
   renderTop() {
-    const { appRunCurrentImage, appRunEndpoint } = this.props;
+    const { appRunCurrentImage, appRunEndpoint, currentEnvO } = this.props;
     return (
       <Row gutter={48}>
         <Col md={12} sm={24}>
@@ -529,7 +529,7 @@ class ServiceWorkInfo extends React.Component {
                         <td className={styles.gridItem}>{item.containerPort}</td>
                         <td className={styles.gridItem}>
                           {
-                            item && item.mlbHosts ? item.mlbHosts.map((vo) => (
+                            item && item.mlbHosts && currentEnvO.clusterType !== '2' ? item.mlbHosts.map((vo) => (
                               <div key={vo} onClick={() => { this.onHref(vo) }}><a>{vo};</a></div>
                             )) : '—'
                           }
@@ -546,7 +546,7 @@ class ServiceWorkInfo extends React.Component {
     )
   }
   renderList() {
-    const { appRunContainers } = this.props;
+    const { appRunContainers, currentEnvO } = this.props;
     const { currentContainers } = this.state;
     const columns = [
       {
@@ -559,6 +559,7 @@ class ServiceWorkInfo extends React.Component {
       {
         title: '状态',
         dataIndex: 'status',
+        className: currentEnvO.clusterType === '2' ? styles.hidden : null,
         render: (text, record) => (
           <Fragment>
             {
@@ -620,6 +621,7 @@ class ServiceWorkInfo extends React.Component {
         title: '日志',
         dataIndex: 'log',
         key: 'log',
+        className: currentEnvO.clusterType === '2' ? styles.hidden : null,
         render: (text, record) => (
           <a onClick={() => { this.onShowLogDetail(record) }}>查看日志</a>
         )
@@ -774,11 +776,12 @@ class ServiceWorkInfo extends React.Component {
   }
   render() {
     const { showPushModal, showLogModal } = this.state;
+    const { currentEnvO } = this.props;
     return (
       <div>
         {this.renderTop()}
         {this.renderList()}
-        {this.renderScale()}
+        {currentEnvO.clusterType !== '2' && this.renderScale()}
         {showPushModal && this.renderPushModal()}
         {showLogModal && this.renderLogModal()}
       </div>
@@ -793,5 +796,6 @@ export default Form.create()(connect(({ service, loading }) => ({
   deployTypes: service.deployTypes,
   appOperate: service.appOperate,
   appDeployStatus: service.appDeployStatus,
+  currentEnvO: service.currentEnvO
   // containetListLoading: loading.effects["service/appRunContainers"]
 }))(ServiceWorkInfo));

@@ -107,7 +107,7 @@ class AddService extends React.Component {
   }
   onAdd = (item) => {
     if (item.isDev) {
-      message.info('规划中...');
+      // message.info('规划中...');
       return
     }
     this.setState({

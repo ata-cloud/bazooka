@@ -60,6 +60,7 @@ export default {
   'menu.clusterDetail': '集群详情',
   'menu.system': '系统',
   'menu.exception403': '403',
-  "menu.serviceAdd":'新增服务'
+  "menu.serviceAdd":'新增服务',
+  "menu.clusterAdd":'新增资源'
   
 };

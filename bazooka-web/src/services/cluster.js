@@ -12,6 +12,12 @@ const cluster = {
   getAvailableResource: async function (params = {}) {
     return requestPost(`/cluster/${params.clusterId}/available-resource`, params);
   },
+  createMesosCluster: async function (params = {}) {
+    return requestPost(`/cluster/createMesosCluster`, params);
+  },
+  createSingleNodeCluster: async function (params = {}) {
+    return requestPost(`/cluster/createSingleNodeCluster`, params);
+  },
 }
 export {
   cluster

@@ -1,0 +1,13 @@
+.clusterTitleBox img {
+  margin-right: 10px;
+  width: 60px;
+}
+.clusterTitle {
+  font-size: 20px;
+  color: #333;
+  font-weight: 500;
+}
+.titleSub {
+  font-size: 18px;
+  color: #333;
+}

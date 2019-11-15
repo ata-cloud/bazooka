@@ -36,18 +36,24 @@
 .marginB {
   margin-bottom: 25px;
 }
-:global {
-  table .ant-table-thead > tr > th,
-  .ant-table-tbody > tr > td {
-    text-align: center;
-  }
-}
+// :global {
+//   table .ant-table-thead > tr > th,
+//   .ant-table-tbody > tr > td {
+//     text-align: center;
+//   }
+// }
 .commomForm {
   margin: 0 auto;
   width: 600px;
 }
 .subBox {
   text-align: center;
+}
+.nodeProcess {
+  display: inline-block;
+  width: 35px;
+  height: 4px;
+  .marginR;
 }
 @media screen and (max-width: 750px) {
   .commomForm {
@@ -84,6 +90,8 @@
   width: 100%;
   min-height: 180px;
   position: relative;
+  border-radius: 4px;
+  overflow: hidden;
 }
 .moreOprea {
   position: absolute;
@@ -104,6 +112,22 @@
     word-break: break-all;
   }
 
+}
+.itemDetailPro {
+  background-color: #fff;
+  border-radius: 4px;
+  border: 1px solid #bbb;
+  p {
+    margin: 0;
+    padding: 0;
+  }
+  .itemDetailProItem {
+    .textC;
+    margin: 20px 0;
+  }
+  .itemDetailProItem:not(:last-child) {
+    border-right: 1px solid #bbb;
+  }
 }
 .appName {
   color: #333;
@@ -189,19 +213,19 @@
     .ant-tabs-nav {
       width: 100%;
     }
-    .ant-tabs-nav .ant-tabs-tab:last-child {
-      position: absolute;
-      right: 0;
-    }
+    // .ant-tabs-nav .ant-tabs-tab:last-child {
+    //   position: absolute;
+    //   right: 0;
+    // }
     
   }
 }
 .serviceDetailBox2 {
-  :global {
-    .ant-tabs-ink-bar.ant-tabs-ink-bar-animated {
-      transform: translate3d(calc(~"1200px - 100px"), 0px, 0px)!important;
-    }
-  }
+  // :global {
+  //   .ant-tabs-ink-bar.ant-tabs-ink-bar-animated {
+  //     transform: translate3d(calc(~"1200px - 100px"), 0px, 0px)!important;
+  //   }
+  // }
 }
 .setScroll {
   max-height: 500px;
@@ -369,6 +393,10 @@
   width: 130px;
   text-align: right;
   color: #000;
+}
+.textBlackRight {
+  min-width: 90px;
+  text-align: right;
 }
 @media (max-width: 1199px) {
   .serviceDetailBox2 {

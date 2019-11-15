@@ -9,6 +9,9 @@ import ZOOKEEPER from './zookeeper.svg';
 import MYSQL from './mysql.svg';
 import SPRINGCLOUD from './springcloud.svg';
 import PINPOINT from './pinpoint.svg';
+import KUBERNETES from './kubernetes.png';
+import MESOS from './mesos.png';
+import BAZOOKA from './bzooka.png';
 
 const IMAGE = {
   GITLAB,
@@ -21,7 +24,10 @@ const IMAGE = {
   ZOOKEEPER,
   MYSQL,
   SPRINGCLOUD,
-  PINPOINT
+  PINPOINT,
+  KUBERNETES,
+  MESOS,
+  BAZOOKA
 }
 export {
   IMAGE
