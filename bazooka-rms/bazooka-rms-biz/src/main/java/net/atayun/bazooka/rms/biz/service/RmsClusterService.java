@@ -23,6 +23,7 @@ import net.atayun.bazooka.rms.api.dto.RmsClusterDto;
 import net.atayun.bazooka.rms.api.dto.req.ClusterDetailReqDto;
 import net.atayun.bazooka.rms.api.dto.req.ClusterDockerInstanceLogReqDto;
 import net.atayun.bazooka.rms.api.dto.req.ClusterReqDto;
+import net.atayun.bazooka.rms.api.param.CreateClusterReq;
 import net.atayun.bazooka.rms.biz.dal.entity.RmsClusterEntity;
 import com.youyu.common.api.PageData;
 import com.youyu.common.service.IService;
@@ -123,6 +124,27 @@ public interface RmsClusterService extends IService<RmsClusterDto, RmsClusterEnt
      * @return
      */
     ClusterComponentsDto getClusterComponentsInfo(String clusterName);
+
+    /**
+     * @create: zhangyingbin 2019/11/8 0008 下午 2:27
+     * @Modifier:
+     * @Description: 创建单节点集群
+     */
+    void createSingleNodeCluster(CreateClusterReq createClusterReq);
+
+    /**
+     * @create: zhangyingbin 2019/11/8 0008 下午 5:16
+     * @Modifier:
+     * @Description: 创建mesos集群
+     */
+    void createMesosCluster(CreateClusterReq createClusterReq);
+
+    /**
+     * @create: zhangyingbin 2019/11/11 0011 下午 5:37
+     * @Modifier:
+     * @Description: 根据id获取集群基本信息
+     */
+    RmsClusterEntity getClusterInfo(Long id);
 }
 
 

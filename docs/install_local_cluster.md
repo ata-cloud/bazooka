@@ -1,8 +1,8 @@
 ![logo](./img/logo160x160.png)
-# 阿塔云-sword 本地集群安装方案
+# 阿塔云-Bazooka 本地集群安装方案
 
 # <br/><br/><br/>资源需求
-使用本地集群安装方案时，ATA sword建立在本地[DC/OS](https://docs.d2iq.com/mesosphere/dcos)集群上，所以，需要先安装定制的本地DC/OS集群。
+使用本地集群安装方案时，ATA Bazooka建立在本地[DC/OS](https://docs.d2iq.com/mesosphere/dcos)集群上，所以，需要先安装定制的本地DC/OS集群。
 
 DC/OS集群由三种类型的节点（master节点、public agent节点和private agent节点）组成。master节点负责调度和管理集群，public agent节点通过负载均衡器（默认使用Haproxy）为集群内容器提供集群外部到集群内部的负载均衡访问，private agent用于部署所有的具体业务容器。
 除了集群内节点之外，每个DC/OS安装还需要一个额外的安装引导节点，用于生成DC/OS安装文件。

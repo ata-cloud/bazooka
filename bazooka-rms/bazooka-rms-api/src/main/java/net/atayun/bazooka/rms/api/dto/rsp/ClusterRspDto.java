@@ -42,6 +42,9 @@ public class ClusterRspDto implements Serializable {
     @ApiModelProperty("集群名称")
     private String name;
 
+    @ApiModelProperty("集群类型: 0:MESOS集群 1:KUBERNETES集群 2:单节点集群")
+    private String type;
+
     @ApiModelProperty("集群状态: 0:正常(绿色) 1:可用(黄色) 2:异常(红色)")
     private String status;
 

@@ -50,17 +50,18 @@ import com.youyu.common.utils.YyAssert;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import net.atayun.bazooka.pms.biz.service.*;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Branch;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Example;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -104,15 +105,42 @@ public class AppController implements AppApi {
     @Autowired
     private GitServiceHelp gitServiceHelp;
 
+    @Autowired
+    @Lazy
+    private ProjectController projectController;
+
     //region 服务信息
 
     @ApiOperation(value = "查询用户服务列表")
     @GetMapping("/list")
-    public Result<List<AppInfoDto>> getAppInfoListByUser(@RequestParam(required = false) Long projectId, @RequestParam(required = false) String keyword) {
+    public Result<List<AppInfoWithEnv>> getAppInfoListByUser(@RequestParam(required = false) Long projectId, @RequestParam(required = false) String keyword) {
         Long currentUserId = YyRequestInfoHelper.getCurrentUserId();
         List<AppInfoDto> appInfoListByUser = this.appService.getAppInfoListByUser(currentUserId, projectId, keyword);
 
-        return Result.ok(appInfoListByUser);
+        List<net.atayun.bazooka.pms.api.dto.EnvDto> pmsEnvList = new ArrayList<>();
+
+        List<AppInfoWithEnv> appInfoWithEnvs = new ArrayList<>();
+
+        for (int i = 0; i < appInfoListByUser.size(); i++) {
+            if (i == 0) {
+                pmsEnvList = projectController.queryEnvPortList(appInfoListByUser.get(i).getProjectId()).ifNotSuccessThrowException().getData();
+            }
+            if (i > 0 && !appInfoListByUser.get(i).getProjectId().equals(appInfoListByUser.get(i - 1).getProjectId())) {
+                pmsEnvList.clear();
+                pmsEnvList = projectController.queryEnvPortList(appInfoListByUser.get(i).getProjectId()).ifNotSuccessThrowException().getData();
+            }
+
+            List<AppEnvInfoVo> appEnvInfoVoList = new ArrayList<>();
+            for (net.atayun.bazooka.pms.api.dto.EnvDto envDto : pmsEnvList) {
+                AppEnvInfoVo appEnvInfoVo = getAppRuntimeInfo(appInfoListByUser.get(i).getId(), envDto.getEnvId()).getData();
+                appEnvInfoVoList.add(appEnvInfoVo);
+            }
+            AppInfoWithEnv appInfoWithEnv = new AppInfoWithEnv(appInfoListByUser.get(i), appEnvInfoVoList);
+            appInfoWithEnv.setId(appInfoListByUser.get(i).getId());
+            appInfoWithEnvs.add(appInfoWithEnv);
+        }
+
+        return Result.ok(appInfoWithEnvs);
     }
 
     @PmsAuth

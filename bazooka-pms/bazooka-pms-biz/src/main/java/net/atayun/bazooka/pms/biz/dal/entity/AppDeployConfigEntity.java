@@ -15,13 +15,13 @@
  */
 package net.atayun.bazooka.pms.biz.dal.entity;
 
-import net.atayun.bazooka.base.enums.deploy.DeployModeEnum;
 import com.youyu.common.entity.JdbcMysqlEntity;
 import com.youyu.common.enums.IsDeleted;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.atayun.bazooka.base.enums.deploy.DeployModeEnum;
 
 import javax.persistence.Column;
 import javax.persistence.Table;
@@ -38,7 +38,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Table(name = "pms_app_deploy_config")
 public class AppDeployConfigEntity extends JdbcMysqlEntity<Long> {
-    public AppDeployConfigEntity(Long id, Long appId, Long envId, String configName, String configDescription, DeployModeEnum deployMode, String gitBranchAllow, String gitBranchDeny, String compileCommand, String dockerfilePath, Double cpus, Integer memory, Integer disk, Integer instance, String startCommand, String portMappings, String environmentVariable, String volumes, String healthChecks, IsDeleted isDeleted) {
+    public AppDeployConfigEntity(Long id, Long appId, Long envId, String configName, String configDescription, DeployModeEnum deployMode, String gitBranchAllow, String gitBranchDeny, String compileCommand, String dockerfilePath, Double cpus, Integer memory, Integer disk, Integer instance, String startCommand, String portMappings, String environmentVariable, String volumes, String healthChecks, IsDeleted isDeleted, String clusterNodes) {
         super(id);
         this.appId = appId;
         this.envId = envId;
@@ -59,6 +59,7 @@ public class AppDeployConfigEntity extends JdbcMysqlEntity<Long> {
         this.volumes = volumes;
         this.healthChecks = healthChecks;
         this.isDeleted = isDeleted;
+        this.clusterNodes = clusterNodes;
     }
 
     public AppDeployConfigEntity(Long id, IsDeleted isDeleted) {
@@ -193,4 +194,10 @@ public class AppDeployConfigEntity extends JdbcMysqlEntity<Long> {
      */
     @Column(name = "is_deleted")
     private IsDeleted isDeleted;
+
+    /**
+     * 发布节点
+     */
+    @Column(name = "cluster_nodes")
+    private String clusterNodes;
 }

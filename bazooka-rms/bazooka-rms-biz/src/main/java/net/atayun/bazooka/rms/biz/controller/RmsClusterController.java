@@ -18,9 +18,12 @@ package net.atayun.bazooka.rms.biz.controller;
 
 import net.atayun.bazooka.rms.api.api.RmsClusterApi;
 import net.atayun.bazooka.rms.api.dto.ClusterAppResourceDto;
+import net.atayun.bazooka.rms.api.dto.RmsClusterDto;
 import net.atayun.bazooka.rms.api.dto.req.ClusterDetailReqDto;
 import net.atayun.bazooka.rms.api.dto.req.ClusterDockerInstanceLogReqDto;
 import net.atayun.bazooka.rms.api.dto.req.ClusterReqDto;
+import net.atayun.bazooka.rms.api.param.CreateClusterReq;
+import net.atayun.bazooka.rms.biz.dal.entity.RmsClusterEntity;
 import net.atayun.bazooka.rms.biz.service.RmsClusterService;
 import com.youyu.common.api.PageData;
 import com.youyu.common.api.Result;
@@ -33,6 +36,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static com.youyu.common.api.Result.ok;
+import static net.atayun.bazooka.base.utils.OrikaCopyUtil.copyProperty;
 
 /**
  * @author pqq
@@ -84,4 +88,25 @@ public class RmsClusterController implements RmsClusterApi {
         return Result.ok(clusterComponents);
     }
 
+    @ApiOperation("新建单节点集群")
+    @PostMapping("/createSingleNodeCluster")
+    public Result createSingleNodeCluster(@RequestBody @Valid CreateClusterReq createClusterReq){
+        rmsClusterService.createSingleNodeCluster(createClusterReq);
+        return ok();
+    }
+
+    @ApiOperation("新建mesos集群")
+    @PostMapping("/createMesosCluster")
+    public Result createMesosCluster(@RequestBody @Valid CreateClusterReq createClusterReq){
+        rmsClusterService.createMesosCluster(createClusterReq);
+        return ok();
+    }
+
+    @ApiOperation("根据id获取集群基本信息")
+    @PostMapping("/getClusterInfo")
+    public Result<RmsClusterDto> getClusterInfo(@RequestParam("id") Long id) {
+        RmsClusterEntity rmsClusterEntity = rmsClusterService.getClusterInfo(id);
+        RmsClusterDto rmsClusterDto = copyProperty(rmsClusterEntity,RmsClusterDto.class);
+        return Result.ok(rmsClusterDto);
+    }
 }

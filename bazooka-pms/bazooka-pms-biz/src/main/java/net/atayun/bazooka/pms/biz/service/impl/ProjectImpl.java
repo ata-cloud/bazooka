@@ -15,24 +15,24 @@
  */
 package net.atayun.bazooka.pms.biz.service.impl;
 
+import com.youyu.common.enums.IsDeleted;
+import com.youyu.common.exception.BizException;
+import com.youyu.common.transfer.BaseBeanUtils;
+import lombok.extern.slf4j.Slf4j;
 import net.atayun.bazooka.pms.api.dto.*;
-import net.atayun.bazooka.pms.api.enums.*;
+import net.atayun.bazooka.pms.api.enums.UserTypeEnum;
 import net.atayun.bazooka.pms.api.vo.ProjectRequest;
 import net.atayun.bazooka.pms.api.vo.UpdateProjectReq;
 import net.atayun.bazooka.pms.biz.constant.PmsConstant;
-;
 import net.atayun.bazooka.pms.biz.dal.entity.AppInfoEntity;
 import net.atayun.bazooka.pms.biz.dal.entity.PmsProjectEnvRelationEntity;
 import net.atayun.bazooka.pms.biz.dal.entity.PmsProjectInfoEntity;
 import net.atayun.bazooka.pms.biz.dal.entity.PmsUserProjectRelationEntity;
 import net.atayun.bazooka.pms.biz.service.*;
 import net.atayun.bazooka.rms.api.api.EnvApi;
+import net.atayun.bazooka.rms.api.api.RmsClusterApi;
+import net.atayun.bazooka.rms.api.dto.RmsClusterDto;
 import net.atayun.bazooka.upms.api.feign.UserApi;
-import com.youyu.common.enums.IsDeleted;
-import com.youyu.common.exception.BizException;
-import com.youyu.common.transfer.BaseBeanUtils;
-import lombok.extern.slf4j.Slf4j;
-import net.atayun.bazooka.pms.biz.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +42,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static net.atayun.bazooka.pms.api.enums.PmsResultCode.*;
+
+;
 
 
 /**
@@ -66,11 +68,15 @@ public class ProjectImpl implements ProjectService {
     @Autowired
     private EnvApi envApi;
     @Autowired
+    private RmsClusterApi rmsClusterApi;
+    @Autowired
     private AppService appService;
     @Autowired
     private AppInfoService appInfoService;
+
     /**
      * 创建项目基础信息
+     *
      * @param projectName
      * @param projectCode
      * @param description
@@ -79,8 +85,8 @@ public class ProjectImpl implements ProjectService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public PmsProjectInfoEntity createProject(String projectName, String projectCode, String description) {
-        checkIsRepeat(projectName, projectCode,0L);
-        Integer gitlabGroupId= projectExtra.createProject(projectCode);
+        checkIsRepeat(projectName, projectCode, 0L);
+        Integer gitlabGroupId = projectExtra.createProject(projectCode);
         PmsProjectInfoEntity entity = new PmsProjectInfoEntity();
         entity.setProjectName(projectName);
         entity.setProjectCode(projectCode);
@@ -96,8 +102,8 @@ public class ProjectImpl implements ProjectService {
      * @param name
      * @param projectCode
      */
-    private void checkIsRepeat(String name, String projectCode,Long projectId) {
-        Integer count = pmsProjectInfoService.countProjectInfo(name, projectCode,projectId);
+    private void checkIsRepeat(String name, String projectCode, Long projectId) {
+        Integer count = pmsProjectInfoService.countProjectInfo(name, projectCode, projectId);
         if (count > 0) {
             throw new BizException(PROJECT_SAME_INFO.getCode(), PROJECT_SAME_INFO.getDesc());
         }
@@ -105,43 +111,44 @@ public class ProjectImpl implements ProjectService {
 
     /**
      * 创建项目前端业务
+     *
      * @param req
      */
     @Override
     public void createProjectForWeb(ProjectRequest req) {
         PmsProjectInfoEntity project = createProject(req.getProjectName(), req.getProjectCode(), req.getDescription());
         //添加项目负责人
-        if (req.getMasterUserId() == null||req.getMasterUserId()==0) {
+        if (req.getMasterUserId() == null || req.getMasterUserId() == 0) {
             throw new BizException(PROJECT_MASTER_ERROR.getCode(), PROJECT_MASTER_ERROR.getDesc());
         }
         //master添加异常回滚gitlab
         try {
-            createUserProjectRelationMaster(project.getId(),req.getMasterUserId(),project.getGitlabGroupId());
-        }catch (Exception e){
-            deleteProject(project.getId(),project.getGitlabGroupId());
+            createUserProjectRelationMaster(project.getId(), req.getMasterUserId(), project.getGitlabGroupId());
+        } catch (Exception e) {
+            deleteProject(project.getId(), project.getGitlabGroupId());
             throw new BizException(PROJECT_MASTER_INTO_ERROR.getCode(), PROJECT_MASTER_INTO_ERROR.getDesc());
         }
         //添加项目环境相关信息
         try {
 
-            if (req.getEnvList()!=null&&req.getEnvList().size() > 0) {
+            if (req.getEnvList() != null && req.getEnvList().size() > 0) {
                 for (EnvDto envDto : req.getEnvList()) {
                     //查询环境所在集群
-                    Long clusterId= envApi.get(envDto.getEnvId()).ifNotSuccessThrowException().getData().getClusterId();
-                    EnvDto insertEnvInfo= queryDistributePort(envDto.getEnvId(),clusterId);
+                    Long clusterId = envApi.get(envDto.getEnvId()).ifNotSuccessThrowException().getData().getClusterId();
+                    EnvDto insertEnvInfo = queryDistributePort(envDto.getEnvId(), clusterId);
                     createEnvProjectRelation(project.getId(), insertEnvInfo.getEnvId(),
-                            insertEnvInfo.getPortStart(), insertEnvInfo.getPortEnd(),clusterId);
+                            insertEnvInfo.getPortStart(), insertEnvInfo.getPortEnd(), clusterId);
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new BizException(PROJECT_SKIP_ERROR.getCode(), "环境添加失败");
         }
         //添加项目参与人
         try {
-            if (req.getDevUserIds() != null&&req.getDevUserIds().size()>0) {
-                bathInsertDev(req.getDevUserIds(),project.getId(),project.getGitlabGroupId());
+            if (req.getDevUserIds() != null && req.getDevUserIds().size() > 0) {
+                bathInsertDev(req.getDevUserIds(), project.getId(), project.getGitlabGroupId());
             }
-        }catch (BizException e){
+        } catch (BizException e) {
             throw new BizException(PROJECT_SKIP_ERROR.getCode(), e.getDesc());
         }
 
@@ -150,35 +157,35 @@ public class ProjectImpl implements ProjectService {
     @Override
     public void bathInsertDev(List<DevUserInfo> devIds, Long projectId, Integer gitlabGroupId) {
 
-        StringBuilder devInfo=new StringBuilder();
+        StringBuilder devInfo = new StringBuilder();
         //todo 后期性能问题再修改
-        for(DevUserInfo item:devIds){
-            if(item.getUserId()>0){
-                String ids=item.getUserName();
+        for (DevUserInfo item : devIds) {
+            if (item.getUserId() > 0) {
+                String ids = item.getUserName();
                 try {
-                    pmsUserProjectRelationService.addUserForProject(item.getUserId(),projectId,UserTypeEnum.USER_PROJECT_DEV,gitlabGroupId);
-                }catch (Exception e){
+                    pmsUserProjectRelationService.addUserForProject(item.getUserId(), projectId, UserTypeEnum.USER_PROJECT_DEV, gitlabGroupId);
+                } catch (Exception e) {
                     devInfo.append(ids);
                     devInfo.append(",");
                 }
             }
         }
-        if(!devInfo.toString().equals("")) {
-            throw new BizException(PROJRDCT_DEV_ERROR.getCode(),devInfo.toString()+PROJRDCT_DEV_ERROR.getDesc());
+        if (!devInfo.toString().equals("")) {
+            throw new BizException(PROJRDCT_DEV_ERROR.getCode(), devInfo.toString() + PROJRDCT_DEV_ERROR.getDesc());
         }
     }
 
     @Override
     public UserTypeEnum queryUserInProject(Long projectId, Long userId) {
-        PmsUserProjectRelationEntity entity=new PmsUserProjectRelationEntity();
+        PmsUserProjectRelationEntity entity = new PmsUserProjectRelationEntity();
         entity.setProjectId(projectId);
         entity.setUserId(userId);
-        List<PmsUserProjectRelationDto> dto= pmsUserProjectRelationService.select(entity);
-        if(dto==null||dto.size()==0){
+        List<PmsUserProjectRelationDto> dto = pmsUserProjectRelationService.select(entity);
+        if (dto == null || dto.size() == 0) {
             return null;
-        }else {
-          PmsUserProjectRelationDto firstRole= dto.stream().sorted(Comparator.comparing(PmsUserProjectRelationDto::getRoleType).reversed()).findFirst().get();
-          return firstRole.getRoleType();
+        } else {
+            PmsUserProjectRelationDto firstRole = dto.stream().sorted(Comparator.comparing(PmsUserProjectRelationDto::getRoleType).reversed()).findFirst().get();
+            return firstRole.getRoleType();
 
         }
     }
@@ -188,27 +195,28 @@ public class ProjectImpl implements ProjectService {
     public List<PmsProjectInfoDto> queryProjectListForAdmin(Long userId) {
         //是否是管理人员
         if (userApi.isAdmin(userId).ifNotSuccessThrowException().getData()) {
-            PmsProjectInfoEntity entity=new PmsProjectInfoEntity();
+            PmsProjectInfoEntity entity = new PmsProjectInfoEntity();
             entity.setIsDeleted(IsDeleted.NOT_DELETED);
             return pmsProjectInfoService.select(entity);
-        }else {
-           return pmsProjectInfoService.queryProjectListForAdmin(userId);
+        } else {
+            return pmsProjectInfoService.queryProjectListForAdmin(userId);
         }
     }
 
     /**
      * 删除项目逻辑删除
+     *
      * @param projectId
      */
     @Override
     @Transactional
     public void deleteProjectNotReal(Long projectId) {
-        AppInfoEntity entity= new AppInfoEntity();
+        AppInfoEntity entity = new AppInfoEntity();
         entity.setProjectId(projectId);
         entity.setIsDeleted(IsDeleted.NOT_DELETED);
-        List<AppInfoDto> appList= appInfoService.select(entity);
-        if(appList!=null&& appList.size()>0) {
-            for (AppInfoDto item:appList){
+        List<AppInfoDto> appList = appInfoService.select(entity);
+        if (appList != null && appList.size() > 0) {
+            for (AppInfoDto item : appList) {
                 appService.deleteAppInfo(item.getId());
             }
         }
@@ -217,47 +225,48 @@ public class ProjectImpl implements ProjectService {
 
     /**
      * 更新项目信息,减少多次查库操作
+     *
      * @param req
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateProjectForWeb(UpdateProjectReq req){
-        checkIsRepeat(req.getProjectName(),"",req.getProjectId());
-        PmsProjectInfoEntity projectInfoEntity=new PmsProjectInfoEntity();
+    public void updateProjectForWeb(UpdateProjectReq req) {
+        checkIsRepeat(req.getProjectName(), "", req.getProjectId());
+        PmsProjectInfoEntity projectInfoEntity = new PmsProjectInfoEntity();
         projectInfoEntity.setId(req.getProjectId());
         projectInfoEntity.setDescription(req.getDescription());
         projectInfoEntity.setProjectName(req.getProjectName());
         pmsProjectInfoService.updateByPrimaryKeySelective(projectInfoEntity);
-        projectInfoEntity=pmsProjectInfoService.selectEntityByPrimaryKey(req.getProjectId());
-        PmsUserProjectRelationEntity masterInfo=  pmsUserProjectRelationService.queryProjectMaster(req.getProjectId());
+        projectInfoEntity = pmsProjectInfoService.selectEntityByPrimaryKey(req.getProjectId());
+        PmsUserProjectRelationEntity masterInfo = pmsUserProjectRelationService.queryProjectMaster(req.getProjectId());
         //master变化
-        if(req.getMasterUserId()!=null&&req.getMasterUserId()>0) {
+        if (req.getMasterUserId() != null && req.getMasterUserId() > 0) {
             //master没有添加用户
-            if(masterInfo==null) {
-                pmsUserProjectRelationService.addUserForProject(req.getMasterUserId(),req.getProjectId()
-                        ,UserTypeEnum.USER_PROJECT_MASTER,projectInfoEntity.getGitlabGroupId());
+            if (masterInfo == null) {
+                pmsUserProjectRelationService.addUserForProject(req.getMasterUserId(), req.getProjectId()
+                        , UserTypeEnum.USER_PROJECT_MASTER, projectInfoEntity.getGitlabGroupId());
             }
             //master变化执行相关操作
-            else if(!masterInfo.getUserId().equals(req.getMasterUserId())) {
+            else if (!masterInfo.getUserId().equals(req.getMasterUserId())) {
                 pmsUserProjectRelationService.changeUserForProjectSameRole(masterInfo.getUserId(),
-                        req.getMasterUserId(),req.getProjectId(),UserTypeEnum.USER_PROJECT_MASTER,
+                        req.getMasterUserId(), req.getProjectId(), UserTypeEnum.USER_PROJECT_MASTER,
                         projectInfoEntity.getGitlabGroupId());
             }
         }
 
         //env变化
-        if(req.getEnvList()!=null&&req.getEnvList().size()>0){
-            List<Long> oldEnvIds= pmsProjectEnvRelationService.queryEnvListForProject(req.getProjectId());
+        if (req.getEnvList() != null && req.getEnvList().size() > 0) {
+            List<Long> oldEnvIds = pmsProjectEnvRelationService.queryEnvListForProject(req.getProjectId());
             for (EnvDto envDto : req.getEnvList()) {
-                if(oldEnvIds.size()>0){
-                   if(oldEnvIds.contains(envDto.getEnvId())){
-                       throw new BizException(ENV_NOT_CHANGE.getCode(),ENV_NOT_CHANGE.getDesc());
-                   }
+                if (oldEnvIds.size() > 0) {
+                    if (oldEnvIds.contains(envDto.getEnvId())) {
+                        throw new BizException(ENV_NOT_CHANGE.getCode(), ENV_NOT_CHANGE.getDesc());
+                    }
                 }
-                Long clusterId= envApi.get(envDto.getEnvId()).ifNotSuccessThrowException().getData().getClusterId();
-                EnvDto insertEnvInfo= queryDistributePort(envDto.getEnvId(),clusterId);
+                Long clusterId = envApi.get(envDto.getEnvId()).ifNotSuccessThrowException().getData().getClusterId();
+                EnvDto insertEnvInfo = queryDistributePort(envDto.getEnvId(), clusterId);
                 createEnvProjectRelation(req.getProjectId(), insertEnvInfo.getEnvId(), insertEnvInfo.getPortStart(),
-                        insertEnvInfo.getPortEnd(),clusterId);
+                        insertEnvInfo.getPortEnd(), clusterId);
             }
         }
     }
@@ -265,13 +274,14 @@ public class ProjectImpl implements ProjectService {
 
     /**
      * 关联项目用户信息
+     *
      * @param projectId
      * @param userId
      */
 
-    private void createUserProjectRelationMaster(Long projectId, Long userId,Integer gitlabGroupId) {
+    private void createUserProjectRelationMaster(Long projectId, Long userId, Integer gitlabGroupId) {
         //checkProjectMaster(projectId, userId);
-        pmsUserProjectRelationService.addUserForProject(userId, projectId, UserTypeEnum.USER_PROJECT_MASTER,gitlabGroupId);
+        pmsUserProjectRelationService.addUserForProject(userId, projectId, UserTypeEnum.USER_PROJECT_MASTER, gitlabGroupId);
     }
 
     /**
@@ -293,7 +303,7 @@ public class ProjectImpl implements ProjectService {
 
 
     @Override
-    public void createEnvProjectRelation(Long projectId, Long envId, int startPort, int endPort,Long clusterId) {
+    public void createEnvProjectRelation(Long projectId, Long envId, int startPort, int endPort, Long clusterId) {
         //checkEnvPort(envId, startPort, endPort);
         PmsProjectEnvRelationEntity envRelationEntity = new PmsProjectEnvRelationEntity();
         envRelationEntity.setEnvId(envId);
@@ -311,23 +321,25 @@ public class ProjectImpl implements ProjectService {
 
     /**
      * 获取项目相关统计
+     *
      * @param userId
      * @param keyWord
      * @return
      */
     @Override
-    public List<ProjectCountDto> queryProjectCount(Long userId,String keyWord) {
-        List<ProjectCountDto> projectCountDtos=  pmsProjectInfoService.queryProjectCount(keyWord);
+    public List<ProjectCountDto> queryProjectCount(Long userId, String keyWord) {
+        List<ProjectCountDto> projectCountDtos = pmsProjectInfoService.queryProjectCount(keyWord);
         if (userApi.isAdmin(userId).ifNotSuccessThrowException().getData()) {
             log.info("用户是管理员");
             return projectCountDtos;
 
         }
-        List<PmsUserProjectRelationEntity>  projectListEntity= pmsUserProjectRelationService.queryProjectByUser(userId);
-        List<Long> projectList=projectListEntity.stream().map(m->m.getProjectId()).collect(Collectors.toList());
-        projectCountDtos=projectCountDtos.stream().filter(m->projectList.contains(m.getProjectId())).collect(Collectors.toList());
+        List<PmsUserProjectRelationEntity> projectListEntity = pmsUserProjectRelationService.queryProjectByUser(userId);
+        List<Long> projectList = projectListEntity.stream().map(m -> m.getProjectId()).collect(Collectors.toList());
+        projectCountDtos = projectCountDtos.stream().filter(m -> projectList.contains(m.getProjectId())).collect(Collectors.toList());
         return projectCountDtos;
     }
+
     /**
      * 检查环境mlb端口分配
      *
@@ -348,23 +360,25 @@ public class ProjectImpl implements ProjectService {
     }
 
     @Override
-    public void deleteProject(Long Id,Integer gitlabGroupId) {
+    public void deleteProject(Long Id, Integer gitlabGroupId) {
         pmsProjectInfoService.deleteByPrimaryKey(Id);
         projectExtra.deleteProject(gitlabGroupId);
     }
 
     /**
      * 根据项目id获取项目信息
+     *
      * @param id
      * @return
      */
     @Override
     public ProjectInfoDto queryProjectById(long id) {
-      return pmsProjectInfoService.queryProjectById(id);
+        return pmsProjectInfoService.queryProjectById(id);
     }
 
     /**
      * 获取项目列表
+     *
      * @return
      */
     @Override
@@ -376,14 +390,16 @@ public class ProjectImpl implements ProjectService {
         List<ProjectInfoDto> dtos = BaseBeanUtils.copy(entities, ProjectInfoDto.class);
         return dtos;
     }
+
     /**
      * 根据用户id获取参与已经负责项目
+     *
      * @param userId
      * @return
      */
     @Override
     public List<ProjectUserDto> queryProjectLitByUser(Long userId) {
-        PmsUserProjectRelationEntity entity=new PmsUserProjectRelationEntity();
+        PmsUserProjectRelationEntity entity = new PmsUserProjectRelationEntity();
         entity.setUserId(userId);
         List<PmsUserProjectRelationEntity> entities = pmsUserProjectRelationService.selectEntity(entity);
         if (entities.size() == 0) {
@@ -395,29 +411,29 @@ public class ProjectImpl implements ProjectService {
 
     @Override
     public List<PmsProjectEnvRelationEntity> queryProjectEnvInfo(Long projectId) {
-        PmsProjectEnvRelationEntity envEntity=new PmsProjectEnvRelationEntity();
+        PmsProjectEnvRelationEntity envEntity = new PmsProjectEnvRelationEntity();
         envEntity.setProjectId(projectId);
-        List<PmsProjectEnvRelationEntity> envList= pmsProjectEnvRelationService.selectEntity(envEntity);
+        List<PmsProjectEnvRelationEntity> envList = pmsProjectEnvRelationService.selectEntity(envEntity);
         return envList;
     }
 
     @Override
     public List<PmsProjectEnvRelationEntity> queryProjectByCluster(Long clusterId) {
-        PmsProjectEnvRelationEntity envRelationEntity=new PmsProjectEnvRelationEntity();
+        PmsProjectEnvRelationEntity envRelationEntity = new PmsProjectEnvRelationEntity();
         envRelationEntity.setClusterId(clusterId);
-        List<PmsProjectEnvRelationEntity> envList= pmsProjectEnvRelationService.selectEntity(envRelationEntity);
+        List<PmsProjectEnvRelationEntity> envList = pmsProjectEnvRelationService.selectEntity(envRelationEntity);
         return envList;
     }
 
     @Override
     public List<PmsProjectEnvRelationEntity> queryProjectByEnvNotDelete(Long envId) {
-        List<PmsProjectEnvRelationEntity> envList= pmsProjectEnvRelationService.selectProjectNotDelete(envId);
+        List<PmsProjectEnvRelationEntity> envList = pmsProjectEnvRelationService.selectProjectNotDelete(envId);
         return envList;
     }
 
     @Override
     public PmsProjectEnvRelationEntity queryProjectEnvInfo(Long projectId, Long envId) {
-        PmsProjectEnvRelationEntity envEntity=new PmsProjectEnvRelationEntity();
+        PmsProjectEnvRelationEntity envEntity = new PmsProjectEnvRelationEntity();
         envEntity.setProjectId(projectId);
         envEntity.setEnvId(envId);
         return this.pmsProjectEnvRelationService.selectOneEntity(envEntity);
@@ -425,29 +441,38 @@ public class ProjectImpl implements ProjectService {
 
     /**
      * 根据环境获取可分配端口
+     *
      * @param envId
      * @return
      */
     @Override
-    public EnvDto queryDistributePort(Long envId,Long clusterId){
-        EnvDto envDto =new EnvDto();
-        List<PmsProjectEnvRelationEntity> envList= queryProjectByCluster(clusterId);
+    public EnvDto queryDistributePort(Long envId, Long clusterId) {
+        //如果是 bazooka 单节点集群，那么端口范围就是30000-60000
+        RmsClusterDto rmsClusterDto = rmsClusterApi.getClusterInfo(clusterId).ifNotSuccessThrowException().getData();
+        if ("2".equals(rmsClusterDto.getType())) {
+            return new EnvDto(envId, null, PmsConstant.BAZOOKA_SINGLE_NODE_PORT_START, PmsConstant.BAZOOKA_SINGLE_NODE_PORT_END, clusterId, rmsClusterDto.getType());
+        }
+
+        EnvDto envDto = new EnvDto();
+
+        List<PmsProjectEnvRelationEntity> envList = queryProjectByCluster(clusterId);
         //库里没有为初始值
-        if(envList.size()==0){
+        if (envList.size() == 0) {
             envDto.setEnvId(envId);
             envDto.setPortStart(PmsConstant.START_PORT);
-            envDto.setPortEnd(PmsConstant.START_PORT+PmsConstant.PORT_STEP);
+            envDto.setPortEnd(PmsConstant.START_PORT + PmsConstant.PORT_STEP);
             return envDto;
-        }else {
-            int startPort= getStartPort(envList);
+        } else {
+            int startPort = getStartPort(envList);
             envDto.setEnvId(envId);
             envDto.setPortStart(startPort);
-            envDto.setPortEnd(startPort+PmsConstant.PORT_STEP);
+            envDto.setPortEnd(startPort + PmsConstant.PORT_STEP);
         }
         return envDto;
     }
-    private Integer getStartPort(List<PmsProjectEnvRelationEntity> envList){
-       int maxEndPort= envList.stream().max(Comparator.comparing(PmsProjectEnvRelationEntity::getPortEnd)).get().getPortEnd();
-       return maxEndPort+1;
+
+    private Integer getStartPort(List<PmsProjectEnvRelationEntity> envList) {
+        int maxEndPort = envList.stream().max(Comparator.comparing(PmsProjectEnvRelationEntity::getPortEnd)).get().getPortEnd();
+        return maxEndPort + 1;
     }
 }

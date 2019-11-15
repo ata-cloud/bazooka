@@ -16,19 +16,24 @@
 package net.atayun.bazooka.rms.biz.controller;
 
 
+import com.youyu.common.api.PageData;
+import com.youyu.common.api.Result;
 import net.atayun.bazooka.rms.api.api.RmsClusterNodeApi;
 import net.atayun.bazooka.rms.api.dto.req.ClusterNodeReqDto;
 import net.atayun.bazooka.rms.api.dto.rsp.ClusterNodeRspDto;
+import net.atayun.bazooka.rms.biz.dal.entity.RmsClusterNodeEntity;
 import net.atayun.bazooka.rms.biz.service.RmsClusterNodeService;
-import com.youyu.common.api.PageData;
-import com.youyu.common.api.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import tk.mybatis.mapper.entity.Example;
+
+import java.util.List;
 
 import static com.youyu.common.api.Result.ok;
+import static net.atayun.bazooka.base.utils.OrikaCopyUtil.copyProperty4List;
 
 /**
  * @author pqq
@@ -47,5 +52,17 @@ public class RmsClusterNodeController implements RmsClusterNodeApi {
     @PostMapping("/getClusterNodePage")
     public Result<PageData<ClusterNodeRspDto>> getClusterNodePage(@RequestBody ClusterNodeReqDto clusterNodeReqDto) {
         return ok(rmsClusterNodeService.getClusterNodePage(clusterNodeReqDto));
+    }
+
+    @Override
+    @PostMapping("/getClusterNodeInfoByNodeIds")
+    public Result<List<ClusterNodeRspDto>> getClusterNodeInfoByNodeIds(@RequestBody List<Long> nodeIds) {
+        Example example = new Example(RmsClusterNodeEntity.class);
+        example.createCriteria()
+                .andIn("id", nodeIds);
+        List<RmsClusterNodeEntity> rmsClusterNodeEntities = this.rmsClusterNodeService.selectEntityByExample(example);
+        List<ClusterNodeRspDto> clusterNodeRspDtos = copyProperty4List(rmsClusterNodeEntities, ClusterNodeRspDto.class);
+
+        return Result.ok(clusterNodeRspDtos);
     }
 }
