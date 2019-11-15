@@ -122,7 +122,7 @@ public class AppController implements AppApi {
         List<AppInfoWithEnv> appInfoWithEnvs = new ArrayList<>();
 
         for (int i = 0; i < appInfoListByUser.size(); i++) {
-            if (i==0){
+            if (i == 0) {
                 pmsEnvList = projectController.queryEnvPortList(appInfoListByUser.get(i).getProjectId()).ifNotSuccessThrowException().getData();
             }
             if (i > 0 && !appInfoListByUser.get(i).getProjectId().equals(appInfoListByUser.get(i - 1).getProjectId())) {
@@ -132,10 +132,10 @@ public class AppController implements AppApi {
 
             List<AppEnvInfoVo> appEnvInfoVoList = new ArrayList<>();
             for (net.atayun.bazooka.pms.api.dto.EnvDto envDto : pmsEnvList) {
-                AppEnvInfoVo appEnvInfoVo = getAppRuntimeInfo(appInfoListByUser.get(0).getId(), envDto.getEnvId()).getData();
+                AppEnvInfoVo appEnvInfoVo = getAppRuntimeInfo(appInfoListByUser.get(i).getId(), envDto.getEnvId()).getData();
                 appEnvInfoVoList.add(appEnvInfoVo);
             }
-            AppInfoWithEnv appInfoWithEnv = new AppInfoWithEnv(appInfoListByUser.get(i),appEnvInfoVoList);
+            AppInfoWithEnv appInfoWithEnv = new AppInfoWithEnv(appInfoListByUser.get(i), appEnvInfoVoList);
             appInfoWithEnv.setId(appInfoListByUser.get(i).getId());
             appInfoWithEnvs.add(appInfoWithEnv);
         }
