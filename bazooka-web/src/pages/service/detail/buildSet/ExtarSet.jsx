@@ -318,6 +318,7 @@ class ExtraSet extends React.Component {
     )
   }
   render() {
+    const { currentEnvO } = this.props;
     return (
       <Fragment>
         <div className={`${styles.marginT} ${styles.marginB}`}>
@@ -329,7 +330,7 @@ class ExtraSet extends React.Component {
             this.renderEnv()
           }
           {this.renderMountVolume()}
-          {this.renderHealth()}
+          { currentEnvO.clusterType !== '2' && this.renderHealth()}
         </div>
 
       </Fragment>
@@ -337,6 +338,6 @@ class ExtraSet extends React.Component {
   }
 }
 export default connect(({ service }) => ({
-  
+  currentEnvO: service.currentEnvO
 }))(ExtraSet);
 

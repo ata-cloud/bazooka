@@ -84,13 +84,13 @@ class BuildSet extends React.Component {
         let gitBranchs = branch == '2' ? {
           gitBranchAllow: gitBranch,
           gitBranchDeny: undefined
-        } : branch=='3' ? {
-            gitBranchAllow: undefined,
-            gitBranchDeny: gitBranch
-          }: {
-            gitBranchAllow: undefined,
-            gitBranchDeny: undefined
-          }
+        } : branch == '3' ? {
+          gitBranchAllow: undefined,
+          gitBranchDeny: gitBranch
+        } : {
+              gitBranchAllow: undefined,
+              gitBranchDeny: undefined
+            }
         this.setState({
           data: {
             ...data,
@@ -120,7 +120,7 @@ class BuildSet extends React.Component {
   }
   onSave = async () => {
     const { data } = this.state;
-    const { info, deployMode, onCancel, onSavaSuccess, currentItem } = this.props;
+    const { info, deployMode, onCancel, onSavaSuccess, currentItem, currentEnvO } = this.props;
     let params = {}, environmentVariable = {}, volumes = [];
     if (data.environmentVariable && data.environmentVariable.length) {
       data.environmentVariable.map((item) => {
@@ -135,6 +135,7 @@ class BuildSet extends React.Component {
       appId: info.appId,
       envId: info.envId,
       deployMode: deployMode,
+      instance: currentEnvO.clusterType !== '2' ? data.instance : data.clusterNodes.length
     }
     if (currentItem.type && currentItem.type == 'edit') {
       let res = await service.appDeployConfigUpdate({ ...params, configId: currentItem.id });
@@ -204,6 +205,7 @@ class BuildSet extends React.Component {
     );
   }
 }
-export default Form.create()(connect(({ }) => ({
+export default Form.create()(connect(({ service }) => ({
+  currentEnvO: service.currentEnvO,
 }))(BuildSet));
 

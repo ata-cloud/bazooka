@@ -9,6 +9,9 @@ const cluster = {
   getClusterNodePage: async function (params = {}) {
     return requestPost('/clusterNode/getClusterNodePage', params);
   },
+  getClusterNodeAll: async function (params = {}) {
+    return requestPost('/clusterNode/getAllClusterNodes', params);
+  },
   getAvailableResource: async function (params = {}) {
     return requestPost(`/cluster/${params.clusterId}/available-resource`, params);
   },

@@ -31,6 +31,19 @@ class Container extends React.Component {
     // this.setState({
     //   ports: data.keys ? [...data.keys] : []
     // })
+    this.onFetchNodeAll();
+  }
+  onFetchNodeAll = async () => {
+    const { currentEnvO, dispatch } = this.props;
+    if(currentEnvO.clusterType !== '2') {
+      return
+    }
+    dispatch({
+      type: 'cluster/clusterNodeAll',
+      payload: {
+        clusterId: currentEnvO.clusterId
+      }
+    })
   }
   onGetPorts = () => {
     const { data } = this.props;
@@ -62,6 +75,14 @@ class Container extends React.Component {
     setFieldsValue({
       [type]: nextKeys,
     });
+  }
+  //单节点类型获取宿主机映射端口
+  onPortInputChange = (k, e) => {
+    const { currentEnvO } = this.props;
+    if (currentEnvO.clusterType !== '2') {
+      return
+    }
+    this.onPortChange(true, k, e)
   }
   onPortChange = (value, k, containerPort) => {
     if (!containerPort) {
@@ -106,7 +127,7 @@ class Container extends React.Component {
   }
   renderPort() {
     const { ports } = this.state;
-    const { data, appDeployServicePort } = this.props;
+    const { data, appDeployServicePort, currentEnvO } = this.props;
     const { getFieldDecorator, getFieldValue } = this.props.formParent;
     getFieldDecorator('keys', { initialValue: data.keys || [0] });
     let keys = getFieldValue('keys');
@@ -121,20 +142,24 @@ class Container extends React.Component {
                   {getFieldDecorator(`portMappings.${k}.containerPort`, {
                     initialValue: portMappings[k] ? portMappings[k].containerPort : undefined,
                     rules: [
-                    { required: true, message: '格式错误', pattern: /^[0-9]*$/ }
+                      { required: true, message: '格式错误', pattern: /^[0-9]*$/ }
                     ]
-                  })(<Input placeholder="请输入" />)}
+                  })(<Input placeholder="请输入" onBlur={(e) => this.onPortInputChange(k, e.target.value)} />)}
                 </FormItem>
               </Col>
-              <Col span={9}>
-                <Checkbox onChange={(e) => { this.onPortChange(e.target.checked, k, getFieldValue(`portMappings.${k}.containerPort`)) }} checked={ports.indexOf(k) > -1 ? true : false}>
-                  {
-                    ports.indexOf(k) > -1 ? "LB分配端口" : "提供集群外访问"
-                  }
-                </Checkbox>
+              <Col>
+                {
+                  currentEnvO.clusterType !== '2' ?
+                    <Checkbox onChange={(e) => { this.onPortChange(e.target.checked, k, getFieldValue(`portMappings.${k}.containerPort`)) }} checked={ports.indexOf(k) > -1 ? true : false}>
+                      {
+                        ports.indexOf(k) > -1 ? "LB分配端口" : "提供集群外访问"
+                      }
+                    </Checkbox> :
+                    <div>宿主机映射端口:</div>
+                }
               </Col>
               {
-                ports.indexOf(k) > -1 &&
+                (ports.indexOf(k) > -1 || currentEnvO.clusterType == '2') &&
                 <Col span={5}>
                   <FormItem>
                     {getFieldDecorator(`portMappings.${k}.servicePort`, {
@@ -162,7 +187,7 @@ class Container extends React.Component {
   }
   render() {
     const { getFieldDecorator, getFieldValue } = this.props.formParent;
-    const { data } = this.props;
+    const { data, currentEnvO, clusterNodeAll } = this.props;
     return (
       <Fragment>
         <div className={`${styles.marginT} ${styles.marginB}`}>
@@ -214,29 +239,54 @@ class Container extends React.Component {
                   </Select>
                 )}
               </FormItem>
-              <FormItem label="容器个数"  {...formItemLayout}>
-                {getFieldDecorator('instance', {
-                  initialValue: data.instance || 1,
-                  rules: [
-                    { required: true, message: "请选择容器个数" }
-                  ]
-                })(
-                  <Select>
-                    {
-                      SCALE_CASE.map((item) => (
-                        <Option value={item} key={item}>{item}</Option>
-                      ))
-                    }
-                  </Select>
-                )}
-              </FormItem>
+              {
+                currentEnvO.clusterType !== '2' ?
+                  <FormItem label="容器个数"  {...formItemLayout}>
+                    {getFieldDecorator('instance', {
+                      initialValue: data.instance || 1,
+                      rules: [
+                        { required: true, message: "请选择容器个数" }
+                      ]
+                    })(
+                      <Select>
+                        {
+                          SCALE_CASE.map((item) => (
+                            <Option value={item} key={item}>{item}</Option>
+                          ))
+                        }
+                      </Select>
+                    )}
+                  </FormItem> :
+                  <FormItem label="发布节点"  {...formItemLayout}>
+                    {getFieldDecorator('clusterNodes', {
+                      initialValue: data.clusterNodes,
+                      rules: [
+                        { required: true, message: "请选择发布节点" }
+                      ]
+                    })(
+                      <Select allowClear mode="multiple" showSearch optionFilterProp="children" placeholder="请选择发布节点">
+                        {
+                          clusterNodeAll && clusterNodeAll.map((item) => (
+                            <Option value={item.id} key={item.id}>{item.ip}</Option>
+                          ))
+                        }
+                      </Select>
+                    )}
+                  </FormItem>
+              }
+
             </FormItem>
           </Col>
           <Col span={12}>
             <FormItem label="服务端口" required={true} help={
               <Fragment>
                 <div>设置服务运行时端口，例如tomcat端口：8080</div>
-                <div>如果此端口需要被集群外访问，可以勾选“提供集群外访问”，将根据项目和环境自动为此端口在Marathon-LB上分配端口，您也可以自行指定</div>
+                {
+                  currentEnvO.clusterType !== '2' ?
+                    <div>如果此端口需要被集群外访问，可以勾选“提供集群外访问”，将根据项目和环境自动为此端口在Marathon-LB上分配端口，您也可以自行指定</div>
+                    :
+                    <div>将根据项目和环境自动为此端口在节点上分配端口，您也可以自行指定</div>
+                }
                 <div>如果服务需要多个端口，请使用“新增服务端口</div>
               </Fragment>
             }>
@@ -250,6 +300,8 @@ class Container extends React.Component {
     );
   }
 }
-export default connect(({ service }) => ({
+export default connect(({ service, cluster }) => ({
   appDeployServicePort: service.appDeployServicePort,
+  currentEnvO: service.currentEnvO,
+  clusterNodeAll: cluster.clusterNodeAll
 }))(Container);

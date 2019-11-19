@@ -44,7 +44,8 @@ class Cluster extends React.Component {
       payload
     })
   }
-  onRaload = (item) => {
+  onRaload = (e) => {
+    e && e.stopPropagation();
     this.onFetchList()
   }
   onRouteTo = (href, data) => {
@@ -113,9 +114,9 @@ class Cluster extends React.Component {
               <Card title={
                 <strong>{item.name}<Text type="secondary">（{CLUSTER_TYPE_O[item.type]}）</Text></strong>
               } hoverable extra={
-                <Icon type="reload" onClick={() => this.onRaload(item)} />
-              }>
-                <div onClick={() => { this.onRouteTo('/cluster/detail', { clusterId: item.clusterId }) }}>
+                <Icon type="reload" onClick={(e) => this.onRaload(e)} />
+              } onClick={() => { this.onRouteTo('/cluster/detail', { clusterId: item.clusterId }) }}>
+                <div>
                   <div className={styles.flex}>
                     <div className={styles.clusterItem}>
                       <Text strong>状态</Text>
