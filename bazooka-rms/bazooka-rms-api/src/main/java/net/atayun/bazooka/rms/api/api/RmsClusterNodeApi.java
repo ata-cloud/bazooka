@@ -46,6 +46,15 @@ public interface RmsClusterNodeApi {
     Result<PageData<ClusterNodeRspDto>> getClusterNodePage(@RequestBody ClusterNodeReqDto clusterNodeReqDto);
 
     /**
+     * @create: zhangyingbin 2019/11/19 0019 下午 2:28
+     * @Modifier:
+     * @Description: 查询集群所有节点列表信息
+     */
+    @ApiOperation("查询集群所有节点列表信息")
+    @PostMapping("/getAllClusterNodePage")
+    Result<List<ClusterNodeRspDto>> getAllClusterNodePage(@RequestBody ClusterNodeReqDto clusterNodeReqDto);
+
+    /**
      * 根据节点ID查询节点信息
      * @param nodeIds
      * @return

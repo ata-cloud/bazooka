@@ -33,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +79,17 @@ public class RmsClusterNodeServiceImpl extends AbstractService<Long, RmsClusterN
             log.error("刷新集群地址:[{}]对应节点异常信息:[{}]", rmsClusterConfigEntity.getUrl(), getFullStackTrace(ex));
             return null;
         }
+    }
+
+    @Override
+    public List<ClusterNodeRspDto> getAllClusterNodePage(ClusterNodeReqDto clusterNodeReqDto) {
+        List<ClusterNodeRspDto> list = new ArrayList<>();
+        Example example = new Example(RmsClusterNodeEntity.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("clusterId",clusterNodeReqDto.getClusterId());
+        List<RmsClusterNodeEntity> rmsClusterNodeEntities = rmsClusterNodeMapper.selectByExample(example);
+        list = copyProperty4List(rmsClusterNodeEntities, ClusterNodeRspDto.class);
+        return list;
     }
 
     @Override
