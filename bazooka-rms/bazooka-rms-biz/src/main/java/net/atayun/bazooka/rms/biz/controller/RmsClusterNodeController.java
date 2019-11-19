@@ -55,9 +55,9 @@ public class RmsClusterNodeController implements RmsClusterNodeApi {
     }
 
     @Override
-    @PostMapping("/getAllClusterNodePage")
-    public Result<List<ClusterNodeRspDto>> getAllClusterNodePage(@RequestBody ClusterNodeReqDto clusterNodeReqDto) {
-        return ok(rmsClusterNodeService.getAllClusterNodePage(clusterNodeReqDto));
+    @PostMapping("/getAllClusterNodes")
+    public Result<List<ClusterNodeRspDto>> getAllClusterNodes(@RequestBody ClusterNodeReqDto clusterNodeReqDto) {
+        return ok(rmsClusterNodeService.getAllClusterNodes(clusterNodeReqDto));
     }
 
     @Override

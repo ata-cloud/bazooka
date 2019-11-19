@@ -51,8 +51,8 @@ public interface RmsClusterNodeApi {
      * @Description: 查询集群所有节点列表信息
      */
     @ApiOperation("查询集群所有节点列表信息")
-    @PostMapping("/getAllClusterNodePage")
-    Result<List<ClusterNodeRspDto>> getAllClusterNodePage(@RequestBody ClusterNodeReqDto clusterNodeReqDto);
+    @PostMapping("/getAllClusterNodes")
+    Result<List<ClusterNodeRspDto>> getAllClusterNodes(@RequestBody ClusterNodeReqDto clusterNodeReqDto);
 
     /**
      * 根据节点ID查询节点信息
