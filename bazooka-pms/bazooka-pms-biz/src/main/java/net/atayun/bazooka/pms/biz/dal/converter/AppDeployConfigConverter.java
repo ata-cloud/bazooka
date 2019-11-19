@@ -95,6 +95,9 @@ public class AppDeployConfigConverter {
                 source.getDisk(),
                 source.getInstance(),
                 source.getStartCommand(),
+                StringUtils.hasText(source.getClusterNodes()) ? JsonUtil.fromJson(source.getClusterNodes(),
+                        new TypeToken<List<Long>>() {
+                        }.getType()) : null,
                 StringUtils.hasText(source.getPortMappings()) ? JsonUtil.fromJson(source.getPortMappings(),
                         new TypeToken<List<PortMapping>>() {
                         }.getType()) : null,
@@ -107,8 +110,6 @@ public class AppDeployConfigConverter {
                 StringUtils.hasText(source.getHealthChecks()) ? JsonUtil.fromJson(source.getHealthChecks(),
                         new TypeToken<List<HealthCheck>>() {
                         }.getType()) : null,
-                StringUtils.hasText(source.getClusterNodes()) ? JsonUtil.fromJson(source.getClusterNodes(), new TypeToken<List<Long>>() {
-                }.getType()) : null,
                 source.getUpdateAuthor(),
                 source.getUpdateTime()
         );
