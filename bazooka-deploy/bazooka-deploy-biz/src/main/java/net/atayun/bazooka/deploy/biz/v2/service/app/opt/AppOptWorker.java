@@ -39,9 +39,8 @@ public class AppOptWorker {
                         .build())
                 .collect(Collectors.toList());
         FlowStepService flowStepService = SpringContextBean.getBean(FlowStepService.class);
-        flowStepService.saveFlowStep(flowSteps);
+        flowStepService.saveFlowSteps(flowSteps);
 
-        StepWorker stepWorker = new StepWorker(appOpt, flowSteps.get(0));
-        SpringApplicationEventPublisher.publish(new FlowDispatcherEvent(this, stepWorker));
+        SpringApplicationEventPublisher.publish(new FlowDispatcherEvent(this, new StepWorker(appOpt, flowSteps.get(0))));
     }
 }

@@ -31,7 +31,7 @@ public class StepWorker {
             status = FlowStepStatusEnum.FAILURE;
         } finally {
             if (status == FlowStepStatusEnum.SUCCESS) {
-                if (step instanceof SinglePhaseStep) {
+                if (step instanceof SinglePhase) {
                     step.notification(appOpt, appOptFlowStep, status);
                 }
             } else {

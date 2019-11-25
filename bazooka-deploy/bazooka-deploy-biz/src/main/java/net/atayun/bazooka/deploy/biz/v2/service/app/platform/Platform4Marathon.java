@@ -5,6 +5,7 @@ import mesosphere.marathon.client.Marathon;
 import mesosphere.marathon.client.MarathonClient;
 import mesosphere.marathon.client.model.v2.App;
 import mesosphere.marathon.client.model.v2.Result;
+import net.atayun.bazooka.base.annotation.StrategyNum;
 import net.atayun.bazooka.base.constant.CommonConstants;
 import net.atayun.bazooka.deploy.biz.constants.MarathonAppConfigConstants;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
@@ -15,12 +16,15 @@ import net.atayun.bazooka.pms.api.feign.AppApi;
 import net.atayun.bazooka.rms.api.api.EnvApi;
 import net.atayun.bazooka.rms.api.dto.ClusterConfigDto;
 import net.atayun.bazooka.rms.api.dto.EnvDto;
+import org.springframework.stereotype.Component;
 
 import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
 
 /**
  * @author Ping
  */
+@Component
+@StrategyNum(superClass = Platform.class, number = "MESOS")
 public class Platform4Marathon implements Platform {
 
     @Override
@@ -55,5 +59,35 @@ public class Platform4Marathon implements Platform {
         appOpt.setAppDeployUuid(dcosResult.getDeploymentId());
         appOpt.setAppDeployVersion(dcosResult.getVersion());
         appOpt.setAppRunServiceId(dcosServiceId);
+    }
+
+    @Override
+    public void stopApp(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
+
+    }
+
+    @Override
+    public void restartApp(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
+
+    }
+
+    @Override
+    public void scaleApp(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
+
+    }
+
+    @Override
+    public void rollback(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
+
+    }
+
+    @Override
+    public void deploy(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
+
+    }
+
+    @Override
+    public void healthCheck(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
+
     }
 }

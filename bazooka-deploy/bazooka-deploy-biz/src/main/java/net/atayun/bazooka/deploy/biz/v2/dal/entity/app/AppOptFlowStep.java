@@ -28,15 +28,4 @@ public class AppOptFlowStep extends JdbcMysqlEntity<Long> implements Cloneable {
 
     private String logPath;
 
-    @Override
-    public AppOptFlowStep clone() {
-        AppOptFlowStep clone = null;
-        try {
-            clone = (AppOptFlowStep) super.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        return clone;
-    }
-
 }

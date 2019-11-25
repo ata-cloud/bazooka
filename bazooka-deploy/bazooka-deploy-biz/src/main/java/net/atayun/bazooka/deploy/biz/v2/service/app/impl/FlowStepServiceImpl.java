@@ -13,7 +13,17 @@ import java.util.List;
 public class FlowStepServiceImpl implements FlowStepService {
 
     @Override
-    public void saveFlowStep(List<AppOptFlowStep> flowSteps) {
+    public void saveFlowSteps(List<AppOptFlowStep> flowSteps) {
 
+    }
+
+    @Override
+    public AppOptFlowStep selectById(Long stepId) {
+        return null;
+    }
+
+    @Override
+    public AppOptFlowStep selectByOptIdAndStep(Long optId, String healthCheck) {
+        return null;
     }
 }

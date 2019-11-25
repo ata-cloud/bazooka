@@ -1,6 +1,5 @@
 package net.atayun.bazooka.deploy.biz.v2.service.app.impl;
 
-import mesosphere.marathon.client.model.v2.App;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.param.AppActionParam;
 import net.atayun.bazooka.deploy.biz.v2.service.app.AppOptService;
@@ -30,5 +29,10 @@ public class AppOptServiceImpl implements AppOptService {
     @Override
     public void updateById(AppOpt appopt) {
 
+    }
+
+    @Override
+    public AppOpt selectByAppDeployUuidAndVersion(String marathonDeploymentId, String marathonDeploymentVersion) {
+        return null;
     }
 }

@@ -9,14 +9,13 @@ import net.atayun.bazooka.deploy.biz.v2.service.app.flow.FlowDispatcherEvent;
 /**
  * @author Ping
  */
-public interface Step {
+public abstract class Step {
 
-    void doWork(AppOpt appOpt, AppOptFlowStep appOptFlowStep);
+    protected abstract void doWork(AppOpt appOpt, AppOptFlowStep appOptFlowStep);
 
-    default void notification(AppOpt appOpt, AppOptFlowStep appOptFlowStep, FlowStepStatusEnum stepStatus) {
-        AppOptFlowStep clone = appOptFlowStep.clone();
-        clone.setStatus(stepStatus);
-        SpringApplicationEventPublisher.publish(new FlowDispatcherEvent(this, new StepWorker(appOpt, clone)));
+    public void notification(AppOpt appOpt, AppOptFlowStep appOptFlowStep, FlowStepStatusEnum stepStatus) {
+        appOptFlowStep.setStatus(stepStatus);
+        SpringApplicationEventPublisher.publish(new FlowDispatcherEvent(this, new StepWorker(appOpt, appOptFlowStep)));
     }
 
 }

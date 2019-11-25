@@ -15,4 +15,16 @@ public interface Platform {
      * @param appOptFlowStep appOptFlowStep
      */
     void startApp(AppOpt appOpt, AppOptFlowStep appOptFlowStep);
+
+    void stopApp(AppOpt appOpt, AppOptFlowStep appOptFlowStep);
+
+    void restartApp(AppOpt appOpt, AppOptFlowStep appOptFlowStep);
+
+    void scaleApp(AppOpt appOpt, AppOptFlowStep appOptFlowStep);
+
+    void rollback(AppOpt appOpt, AppOptFlowStep appOptFlowStep);
+
+    void deploy(AppOpt appOpt, AppOptFlowStep appOptFlowStep);
+
+    void healthCheck(AppOpt appOpt, AppOptFlowStep appOptFlowStep);
 }

@@ -21,4 +21,6 @@ public interface AppOptService {
     AppOpt selectLastSuccessByAppIdAndEnv(Long appId, Long envId);
 
     void updateById(AppOpt appopt);
+
+    AppOpt selectByAppDeployUuidAndVersion(String marathonDeploymentId, String marathonDeploymentVersion);
 }
