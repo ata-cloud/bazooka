@@ -111,8 +111,11 @@ health:
 请注意
 
 > 此服务将使用Marathon-LB的5000端口（由servicePort设置）已提供LB访问
+
 > volumes中分别是第一步中创建的镜像文件保存目录挂载，和第二步中的镜像服务配置文件挂载
+
 > cpus和mem分别是此镜像服务单个容器的cpu和内存资源限制，通常0.5 cpu、1024 MiB内存即可，也可按照实际使用情况调整
+
 > 如果其他配置项也需要调整，请先参考[Marathon配置项](https://docs.d2iq.com/mesosphere/dcos/1.11/deploying-services/marathon-parameters/)
 
 + **4、验证服务**
