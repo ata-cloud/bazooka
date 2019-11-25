@@ -14,6 +14,7 @@ import MESOS from './mesos.png';
 import BAZOOKA from './bzooka.png';
 import KUBERNETES_JG from './kubernetes_jg.png';
 import MESOS_JG from './mesos_marathon_jg.png';
+import BAZOOKA_JG from './bazooka_jg.png';
 
 const IMAGE = {
   GITLAB,
@@ -31,7 +32,8 @@ const IMAGE = {
   MESOS,
   BAZOOKA,
   KUBERNETES_JG,
-  MESOS_JG
+  MESOS_JG,
+  BAZOOKA_JG
 }
 export {
   IMAGE

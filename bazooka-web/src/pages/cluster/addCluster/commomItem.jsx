@@ -26,7 +26,7 @@ class CommomItem extends React.Component {
       }
     })
   }
-  onShowGitModal=()=>{
+  onShowGitModal = () => {
     this.setState({
       showGitModal: true
     })
@@ -36,7 +36,7 @@ class CommomItem extends React.Component {
       showGitModal: false
     })
   }
-  onAddGitCredentials=(params)=>{
+  onAddGitCredentials = (params) => {
     const { setFieldsValue } = this.props.formItem;
     this.onGitCancel();
     this.onFetchCredentialsList();
@@ -45,7 +45,7 @@ class CommomItem extends React.Component {
     })
   }
   renderForm() {
-    const { credentialsList, formItem, children } = this.props;
+    const { credentialsList, formItem, children, type } = this.props;
     const { getFieldDecorator } = formItem;
     return (
       <Fragment>
@@ -62,7 +62,10 @@ class CommomItem extends React.Component {
           <FormItem label="镜像库" extra={
             <div>
               <p>此集群内容器部署时将使用此镜像库，请保证此镜像库能够被Bazooka服务和集群内slave节点访问</p>
-              <p>推荐在<a href="https://github.com/ata-cloud/bazooka" target="_black">Mesos集群内部自建镜像库</a></p>
+              {
+                type && type == "mesos" &&
+                <p>推荐在<a href="https://github.com/ata-cloud/bazooka/blob/master/docs/install_docker_registry_in_mesos_cluster.md" target="_black">Mesos集群内部自建镜像库</a></p>
+              }
             </div>
           }>
             {getFieldDecorator('imageUrl', {
@@ -107,7 +110,7 @@ class CommomItem extends React.Component {
           <Button onClick={onCancel} className={styles.marginR30}>上一步</Button>
           <Button type="primary" onClick={onSave}>保存</Button>
         </Col>
-        {showGitModal && <GITMODAL visible={showGitModal} onCancel={this.onGitCancel} credentialType="DOCKER_REGISTRY" onOk={this.onAddGitCredentials}/>}
+        {showGitModal && <GITMODAL visible={showGitModal} onCancel={this.onGitCancel} credentialType="DOCKER_REGISTRY" onOk={this.onAddGitCredentials} />}
       </Fragment>
     );
   }

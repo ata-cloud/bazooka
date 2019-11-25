@@ -94,7 +94,7 @@ class AddCluster extends React.Component {
         <div>
           <Row type="flex">
             <Col span={10}>
-              <img src={IMAGE.MESOS_JG} className={stylesAddCluster.jgImg}/>
+              <img src={IMAGE.BAZOOKA_JG} className={stylesAddCluster.jgImg}/>
             </Col>
             <Col span={12}>
               <p><span className={stylesAddCluster.titleSub}>Bazooka单节点集群</span>是阿塔云Bazooka自行实现的资源管理插件，所有节点将不安装任何agent，而是通过ssh来部署容器。</p>

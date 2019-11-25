@@ -66,7 +66,7 @@ class Mesos extends React.Component {
     return (
       <Form onSubmit={this.onSubmit} colon={false} className={styles.marginT}>
         <Row type="flex" align="top" gutter={48}>
-          <CommomItem onCancel={onCancel} onSave={this.onSubmit} formItem={form}>
+          <CommomItem onCancel={onCancel} onSave={this.onSubmit} formItem={form} type="mesos">
             <Col md={8} sm={24}>
               <FormItem label={
                 <Fragment>
@@ -86,7 +86,7 @@ class Mesos extends React.Component {
                   <span className={styles.marginL10}><Icon type="plus" style={{ color: '#1890ff' }} onClick={() => this.addKey('keys1')} /></span>
                 </Fragment>
               } required={true} help={
-                <span>请填写Mesos集群所有public agent节点列表，请在public agent节点上<a href="https://github.com/ata-cloud/bazooka" target="_black">部署marathon-lb容器</a>并保证此节点ip能被Bazooka服务访问</span>
+                <span>请填写Mesos集群所有public agent节点列表，请在public agent节点上<a href="https://github.com/ata-cloud/bazooka/blob/master/docs/install_marathon_lb_in_mesos_cluster.md" target="_black">部署marathon-lb容器</a>并保证此节点ip能被Bazooka服务访问</span>
               }>
                 {
                   this.renderPublicIp()
