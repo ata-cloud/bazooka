@@ -62,7 +62,7 @@ class CommomItem extends React.Component {
           <FormItem label="镜像库" extra={
             <div>
               <p>此集群内容器部署时将使用此镜像库，请保证此镜像库能够被Bazooka服务和集群内slave节点访问</p>
-              <p>推荐在<a>Mesos集群内部自建镜像库</a></p>
+              <p>推荐在<a href="https://github.com/ata-cloud/bazooka" target="_black">Mesos集群内部自建镜像库</a></p>
             </div>
           }>
             {getFieldDecorator('imageUrl', {

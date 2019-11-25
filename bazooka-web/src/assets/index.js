@@ -12,6 +12,8 @@ import PINPOINT from './pinpoint.svg';
 import KUBERNETES from './kubernetes.png';
 import MESOS from './mesos.png';
 import BAZOOKA from './bzooka.png';
+import KUBERNETES_JG from './kubernetes_jg.png';
+import MESOS_JG from './mesos_marathon_jg.png';
 
 const IMAGE = {
   GITLAB,
@@ -27,7 +29,9 @@ const IMAGE = {
   PINPOINT,
   KUBERNETES,
   MESOS,
-  BAZOOKA
+  BAZOOKA,
+  KUBERNETES_JG,
+  MESOS_JG
 }
 export {
   IMAGE

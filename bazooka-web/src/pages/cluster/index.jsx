@@ -37,7 +37,7 @@ class Cluster extends React.Component {
     }
     this.onFetchList()
   }
-  onFetchList = (payload = {}) => {
+  onFetchList = (payload = { pageSize: 100 }) => {
     const { dispatch } = this.props;
     dispatch({
       type: 'cluster/clusterList',
