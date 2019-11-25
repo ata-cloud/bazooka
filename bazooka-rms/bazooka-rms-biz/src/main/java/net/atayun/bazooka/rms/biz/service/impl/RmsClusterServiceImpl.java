@@ -692,10 +692,14 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
 
         if (ClusterTypeEnum.SINGLENODE.getCode().equals(createClusterReq.getType())) {
             BigDecimal cpu = new BigDecimal(0);
+            BigDecimal memory = new BigDecimal(0);
             for (SingleNodeReq singleNode : createClusterReq.getNodeList()) {
                 cpu = cpu.add(singleNode.getCpu());
+                memory = memory.add(singleNode.getMemory());
             }
             rmsClusterEntity.setCpu(cpu);
+            rmsClusterEntity.setMemory(memory);
+            rmsClusterEntity.setDisk(new BigDecimal(0));
         }
 
         rmsClusterMapper.insertSelective(rmsClusterEntity);
