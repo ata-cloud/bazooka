@@ -1,10 +1,10 @@
-package net.atayun.bazooka.deploy.biz.v2.service.app.step;
+package net.atayun.bazooka.deploy.biz.v2.service.app.step.deploymode;
 
 import net.atayun.bazooka.base.bean.StrategyNumBean;
 import net.atayun.bazooka.base.enums.deploy.DeployModeEnum;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
-import net.atayun.bazooka.deploy.biz.v2.service.app.deploymode.DeployMode;
+import net.atayun.bazooka.deploy.biz.v2.service.app.step.Step;
 import net.atayun.bazooka.pms.api.dto.AppDeployConfigDto;
 import net.atayun.bazooka.pms.api.feign.AppApi;
 

@@ -1,4 +1,4 @@
-package net.atayun.bazooka.deploy.biz.v2.service.app.deploymode;
+package net.atayun.bazooka.deploy.biz.v2.service.app.step.deploymode;
 
 import net.atayun.bazooka.base.annotation.StrategyNum;
 import net.atayun.bazooka.base.enums.deploy.DeployModeEnum;

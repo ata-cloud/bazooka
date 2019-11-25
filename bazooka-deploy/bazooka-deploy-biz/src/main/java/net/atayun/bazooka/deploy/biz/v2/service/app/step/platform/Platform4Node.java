@@ -1,4 +1,4 @@
-package net.atayun.bazooka.deploy.biz.v2.service.app.platform;
+package net.atayun.bazooka.deploy.biz.v2.service.app.step.platform;
 
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;

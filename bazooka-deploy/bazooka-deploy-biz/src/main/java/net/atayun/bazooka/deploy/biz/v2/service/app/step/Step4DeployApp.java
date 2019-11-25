@@ -4,7 +4,8 @@ import net.atayun.bazooka.base.annotation.StrategyNum;
 import net.atayun.bazooka.deploy.biz.v2.constant.FlowStepConstants;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
-import net.atayun.bazooka.deploy.biz.v2.service.app.platform.Platform;
+import net.atayun.bazooka.deploy.biz.v2.service.app.step.platform.Platform;
+import net.atayun.bazooka.deploy.biz.v2.service.app.step.platform.Step4Platform;
 import org.springframework.stereotype.Component;
 
 /**
