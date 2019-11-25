@@ -2,6 +2,7 @@
 
 你可以按照一下步骤创建自己的镜像库
 > 请注意，需要已经创建好的DC/OS集群（Version 1.11.6）
+
 > 如果还未完成安装，请参考[阿塔云-Bazooka 本地集群安装方案](https://github.com/ata-cloud/bazooka/blob/master/docs/install_local_cluster.md)
 
 + **1、创建自己的镜像文件目录**
