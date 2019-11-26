@@ -38,6 +38,7 @@ public enum RmsResultCode implements IBaseResultCode {
     ENV_DISK_LESS_THAN_USED("0011", "分配磁盘资源不能低于本环境已使用资源数"),
     ENV_NOT_EXISTS("0012", "环境信息不存在"),
     GET_INSTANCE_LOG_EXCEPTION("0013", "获取实例日志信息异常"),
+    CLUSTER_NAME_HAVE_IN_DB("0014", "集群名称已经存在"),
     ;
 
     private static final String RMS_PREFIX = "0106";
