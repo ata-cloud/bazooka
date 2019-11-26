@@ -117,6 +117,10 @@ public class AppController implements AppApi {
         Long currentUserId = YyRequestInfoHelper.getCurrentUserId();
         List<AppInfoDto> appInfoListByUser = this.appService.getAppInfoListByUser(currentUserId, projectId, keyword);
 
+        if (appInfoListByUser == null || appInfoListByUser.size()<=0){
+            return Result.ok();
+        }
+
         List<net.atayun.bazooka.pms.api.dto.EnvDto> pmsEnvList = new ArrayList<>();
 
         List<AppInfoWithEnv> appInfoWithEnvs = new ArrayList<>();

@@ -216,6 +216,8 @@ public class EnvServiceImpl extends AbstractService<Long, EnvDto, RmsEnvEntity, 
         env.setClusterId(cluster.getId());
         env.setClusterName(cluster.getName());
         env.setState(getEnvState(env.getState(), cluster.getStatus()));
+        String clusterType = clusterService.getClusterInfo(cluster.getId()).getType();
+        env.setClusterType(clusterType);
         // get env used resource from container service
         Optional<ClusterAppResourceDto> envUsedOptional = ofNullable(clusterAppService.getClusterAppResource(record.getCode(), cluster.getId()));
         if (envUsedOptional.isPresent()) {

@@ -447,21 +447,19 @@ public class ProjectImpl implements ProjectService {
      */
     @Override
     public EnvDto queryDistributePort(Long envId, Long clusterId) {
-        //如果是 bazooka 单节点集群，那么端口范围就是30000-60000
-        RmsClusterDto rmsClusterDto = rmsClusterApi.getClusterInfo(clusterId).ifNotSuccessThrowException().getData();
-        if ("2".equals(rmsClusterDto.getType())) {
-            return new EnvDto(envId, null, PmsConstant.BAZOOKA_SINGLE_NODE_PORT_START, PmsConstant.BAZOOKA_SINGLE_NODE_PORT_END, clusterId, rmsClusterDto.getType());
-        }
 
         EnvDto envDto = new EnvDto();
 
         List<PmsProjectEnvRelationEntity> envList = queryProjectByCluster(clusterId);
         //库里没有为初始值
         if (envList.size() == 0) {
-            envDto.setEnvId(envId);
-            envDto.setPortStart(PmsConstant.START_PORT);
-            envDto.setPortEnd(PmsConstant.START_PORT + PmsConstant.PORT_STEP);
-            return envDto;
+            //如果是 bazooka 单节点集群，那么端口范围就是30000-60000
+            RmsClusterDto rmsClusterDto = rmsClusterApi.getClusterInfo(clusterId).ifNotSuccessThrowException().getData();
+            if ("2".equals(rmsClusterDto.getType())) {
+                return new EnvDto(envId, null, PmsConstant.BAZOOKA_SINGLE_NODE_PORT_START, PmsConstant.BAZOOKA_SINGLE_NODE_PORT_START + PmsConstant.PORT_STEP, clusterId, rmsClusterDto.getType());
+            } else {
+                return new EnvDto(envId, null, PmsConstant.START_PORT, PmsConstant.START_PORT + PmsConstant.PORT_STEP, clusterId, rmsClusterDto.getType());
+            }
         } else {
             int startPort = getStartPort(envList);
             envDto.setEnvId(envId);
