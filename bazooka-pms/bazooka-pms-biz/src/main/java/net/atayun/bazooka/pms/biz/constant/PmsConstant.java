@@ -24,5 +24,4 @@ public class PmsConstant {
     public static int PORT_STEP=999;
 
     public static int BAZOOKA_SINGLE_NODE_PORT_START = 30000;
-    public static int BAZOOKA_SINGLE_NODE_PORT_END = 36000;
 }
