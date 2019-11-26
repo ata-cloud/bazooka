@@ -278,17 +278,34 @@ class ClusterDetail extends React.Component {
     let envResources = detail.envResources || [];
     return (
       <Card title="使用情况" className={styles.marginB}>
-        <Row>
-          <Col md={8} sm={24}>
-            {this.renderChart(envResources, dvCpu, 'cpus', 'CPU', 'cpu', 'Core')}
-          </Col>
-          <Col md={8} sm={24}>
-            {this.renderChart(envResources, dvMemory, 'memory', '内存', 'memory', 'GiB')}
-          </Col>
-          <Col md={8} sm={24}>
+        {
+          detail.type !== '2' ?
+            <Row>
+              <Col md={8} sm={24}>
+                {this.renderChart(envResources, dvCpu, 'cpus', 'CPU', 'cpu', 'Core')}
+              </Col>
+              <Col md={8} sm={24}>
+                {this.renderChart(envResources, dvMemory, 'memory', '内存', 'memory', 'GiB')}
+              </Col>
+              <Col md={8} sm={24}>
+                {this.renderChart(envResources, dvDist, 'disk', '磁盘', 'disk', 'GiB')}
+              </Col>
+            </Row>
+            :
+            <Row>
+              <Col md={12} sm={24}>
+                {this.renderChart(envResources, dvCpu, 'cpus', 'CPU', 'cpu', 'Core')}
+              </Col>
+              <Col md={12} sm={24}>
+                {this.renderChart(envResources, dvMemory, 'memory', '内存', 'memory', 'GiB')}
+              </Col>
+              {/* <Col md={8} sm={24}>
             {this.renderChart(envResources, dvDist, 'disk', '磁盘', 'disk', 'GiB')}
-          </Col>
-        </Row>
+          </Col> */}
+            </Row>
+
+        }
+
       </Card>
     )
   }
@@ -314,7 +331,7 @@ class ClusterDetail extends React.Component {
     )
   }
   renderNode() {
-    const { nodeList, nodeListLoading, showAddNode } = this.state;
+    const { nodeList, nodeListLoading, showAddNode, detail } = this.state;
     const columns = [
       {
         title: 'IP',
@@ -323,13 +340,23 @@ class ClusterDetail extends React.Component {
       {
         title: '类型',
         dataIndex: 'nodeType',
+        className: detail.type === '2' ? styles.hidden : null,
         render: (nodeType) => (
-          <span style={nodeType && nodeType.indexOf("public") > -1 ? { color: '#aa6704' } : {}}>{nodeType}</span>
+          <Fragment>
+            {
+              nodeType && nodeType.indexOf("public") > -1 ?
+                <span style={{ color: '#aa6704' }}>public</span>:
+                <span>private</span>
+            }
+          </Fragment>
+
+
         )
       },
       {
         title: '健康',
         dataIndex: 'status',
+        className: detail.type === '2' ? styles.hidden : null,
         render: (text, record) => (
           <span>
             <Badge status={text === '0' ? 'success' : text === "-1" ? 'default' : 'error'} />
@@ -348,7 +375,13 @@ class ClusterDetail extends React.Component {
             <div className={styles.nodeProcess}>
               <Progress percent={Math.round(record.usedCpu / text * 100)} size="small" showInfo={false} strokeColor="#7d58ff" />
             </div>
-            <span>{`${record.usedCpu}/${text} (${Math.round(record.usedCpu / text * 100)}%)`}</span>
+            {
+              detail.type === '2' ?
+                <span>{`-% / (-/${text})`}</span>
+                :
+                <span>{`${record.usedCpu || 0}/${text} (${Math.round(record.usedCpu / text * 100) || 0}%)`}</span>
+            }
+
           </div>
         )
       },
@@ -360,13 +393,19 @@ class ClusterDetail extends React.Component {
             <div className={styles.nodeProcess}>
               <Progress percent={Math.round(record.usedMemory / text * 100)} size="small" showInfo={false} strokeColor="#ff007d" />
             </div>
-            <span>{`${MformG(record.usedMemory)}/${MformG(text)} (${Math.round(record.usedMemory / text * 100)}%)`}</span>
+            {
+              detail.type === '2' ?
+                <span>{`-% / (-/${MformG(text)})`}</span> :
+                <span>{`${MformG(record.usedMemory)}/${MformG(text)} (${Math.round(record.usedMemory / text * 100) || 0}%)`}</span>
+            }
+
           </div>
         )
       },
       {
         title: '磁盘(GiB)',
         dataIndex: 'disk',
+        className: detail.type === '2' ? styles.hidden : null,
         render: (text, record) => (
           <div>
             <div className={styles.nodeProcess}>

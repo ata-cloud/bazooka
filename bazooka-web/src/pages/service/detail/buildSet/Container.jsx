@@ -287,7 +287,7 @@ class Container extends React.Component {
                     :
                     <div>将根据项目和环境自动为此端口在节点上分配端口，您也可以自行指定</div>
                 }
-                <div>如果服务需要多个端口，请使用“新增服务端口</div>
+                <div>如果服务需要多个端口，请使用“新增服务端口”</div>
               </Fragment>
             }>
               {

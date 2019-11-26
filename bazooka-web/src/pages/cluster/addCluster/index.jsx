@@ -114,7 +114,6 @@ class AddCluster extends React.Component {
                 <div>
                   <p><span className={stylesAddCluster.titleSub}>Bazooka单节点集群</span>是阿塔云Bazooka自行实现的资源管理插件，所有节点将不安装任何agent，而是通过ssh来部署容器。</p>
                   <p>单节点集群只是将一系列分配给此业务的节点记录为一个集群，实际上节点间互不访问</p>
-                  <p>Kubeket安装在所有slave节点上，接收Kubernetes Master的容器任务，并管理容器以pod的方式在各个slave节点上正确运行。</p>
                   <p>请注意，此方案可以管理单台物理机或者虚拟机，但是没有容器调度、负载均衡、健康检查和容器自愈等功能</p>
                   <p><a href="https://github.com/ata-cloud/bazooka" target="_black">了解更多</a></p>
                 </div>

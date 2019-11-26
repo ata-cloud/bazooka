@@ -102,7 +102,7 @@ class Cluster extends React.Component {
     const { resourceType } = this.state;
     const { list, loading } = this.props;
     return (
-      <Row gutter={24}>
+      <Row gutter={24} type="flex">
         {
           list && list.rows && !list.rows.length && !loading &&
           <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
@@ -171,22 +171,23 @@ class Cluster extends React.Component {
                       </div>
                       <div className={styles.rightBlock}>{`${Percent(item.envMemory, item.memory)}%（${MformG(item.envMemory)} / ${MformG(item.memory)} GiB）`}</div>
                     </div>
+
                     <div className={`${styles.flexCenter}`} style={{ margin: '10px 20px' }}>
-                      <div>磁盘</div>
-                      <div className={`${styles.flex1} ${styles.processLR}`}>
-                        <Progress percent={Percent(item.envDisk, item.disk)} showInfo={false} strokeColor="#1890ff" />
-                      </div>
-                      <div className={styles.rightBlock}>{`${Percent(item.envDisk, item.disk)}%（${MformG(item.envDisk)} / ${MformG(item.disk)} GiB）`}</div>
+
+                      {
+                        item.type !== '2' ?
+                          <Fragment>
+                            <div>磁盘</div>
+                            <div className={`${styles.flex1} ${styles.processLR}`}>
+                              <Progress percent={Percent(item.envDisk, item.disk)} showInfo={false} strokeColor="#1890ff" />
+                            </div>
+                            <div className={styles.rightBlock}>{`${Percent(item.envDisk, item.disk)}%（${MformG(item.envDisk)} / ${MformG(item.disk)} GiB）`}</div>
+                          </Fragment> :
+                          <div className={`${styles.flex1} ${styles.processLR}`} style={{ visibility: 'hidden' }}>
+                            <Progress percent={0} />
+                          </div>
+                      }
                     </div>
-                    {/* {
-                        resourceType.map((item, i) => (
-                          <Fragment key={i}>
-                            {this.renderResource(item)}
-                          </Fragment>
-
-                        ))
-                      } */}
-
                   </div>
                 </div>
 

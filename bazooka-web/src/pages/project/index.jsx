@@ -80,10 +80,10 @@ class Project extends React.Component {
       showAdd: false
     })
   }
-  //新建服务
+  //新建项目
   onSubmit = (e) => {
     const { searchObj } = this.state;
-    e.preventDefault();
+    e && e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         let envList = [], devUserIds = [];
@@ -203,7 +203,7 @@ class Project extends React.Component {
           <FormItem label="项目名">
             {getFieldDecorator('projectName', {
               rules: [
-                { required: true, message: "请输入项目名", message: "请输入20位以内中文数字字母中横线的组合", pattern: /^[A-Za-z0-9-\u4E00-\u9FA5]{1,20}$/ }
+                { required: true, message: "请输入20位以内中文数字字母中横线的组合", pattern: /^[A-Za-z0-9-\u4E00-\u9FA5]{1,20}$/ }
               ]
             })(<Input placeholder="请输入项目名" />)}
           </FormItem>
@@ -219,11 +219,16 @@ class Project extends React.Component {
               rules: [
                 {
                   validator(rule, value, callback) {
-                    if (value.length > 500) {
-                      callback('最多500个字符')
-                    } else {
+                    try {
+                      if (value.length > 10) {
+                        callback('最多500个字符')
+                      } else {
+                        callback()
+                      }
+                    } catch (err) {
                       callback()
                     }
+
                   }
                 }
               ]

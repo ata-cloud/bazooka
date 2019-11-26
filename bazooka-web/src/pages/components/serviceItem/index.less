@@ -20,22 +20,31 @@
   min-height: 80px;
   border: 1px solid #bbb;
   border-radius: 4px;
+  overflow: hidden;
+  width: 100%;
   .listItemEnv {
     display: flex;
-    position: absolute; 
-    overflow-x: auto;
-    min-width: 100%;
-    &::-webkit-scrollbar {
-      width: 0;
-      display: none;
-    }
+    position: absolute;
+    width: 100%;
+    left: 0;
+    // overflow: hidden;
+    // overflow-x: auto;
+    // min-width: 100%;
+    // &::-webkit-scrollbar {
+    //   width: 0;
+    //   display: none;
+    // }
   }
   .envItem {
     flex: 1;
+    // width: 33.33%;
     min-width: 33.5%;
-    flex-shrink: 0;
+    // max-width: 33.5%;
+    // flex-shrink: 0;
+    // flex-grow: 0;
     text-align: center;
     margin: 10px 0;
+    overflow: hidden;
   }
   .envItem:not(:last-child) {
     border-right: 1px solid #bbbbbb;
@@ -52,7 +61,14 @@
     right: 5px;
     transform: translate(0, -50%);
   }
+  .envItemNameWrap {
+    width: 100%;
+    // overflow: hidden;
+    white-space: nowrap;
+  }
   .envItemName {
     margin-bottom: 10px;
+    // white-space: nowrap;
+   
   }
 }

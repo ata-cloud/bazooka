@@ -20,23 +20,21 @@
   min-height: 80px;
   border: 1px solid #bbb;
   border-radius: 4px;
+  overflow: hidden;
+  width: 100%;
 }
 .listItemEnvBox .listItemEnv {
   display: flex;
   position: absolute;
-  overflow-x: auto;
-  min-width: 100%;
-}
-.listItemEnvBox .listItemEnv::-webkit-scrollbar {
-  width: 0;
-  display: none;
+  width: 100%;
+  left: 0;
 }
 .listItemEnvBox .envItem {
   flex: 1;
   min-width: 33.5%;
-  flex-shrink: 0;
   text-align: center;
   margin: 10px 0;
+  overflow: hidden;
 }
 .listItemEnvBox .envItem:not(:last-child) {
   border-right: 1px solid #bbbbbb;
@@ -52,6 +50,10 @@
   top: 50%;
   right: 5px;
   transform: translate(0, -50%);
+}
+.listItemEnvBox .envItemNameWrap {
+  width: 100%;
+  white-space: nowrap;
 }
 .listItemEnvBox .envItemName {
   margin-bottom: 10px;

@@ -199,7 +199,7 @@ class Service extends React.Component {
               rules: [
                 {
                   message: "最多输入100个字符",
-                  validator(rule, value, callback) {
+                  validator: async (rule, value, callback) => {
                     if (value.length > 100) {
                       callback('最多输入100个字符')
                     } else {

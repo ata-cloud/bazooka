@@ -110,6 +110,9 @@ class Mesos extends React.Component {
             <div className={styles.flex} key={k}>
               <FormItem className={styles.flex1}>
                 {getFieldDecorator(`masterUrls.${k}`, {
+                  rules:[
+                    {required: true, message: '请输入master节点ip'}
+                  ]
                 })(<Input placeholder="请输入master节点ip" />)}
               </FormItem>
               <FormItem className={styles.marginL10}>
@@ -132,6 +135,9 @@ class Mesos extends React.Component {
             <div className={styles.flex} key={k}>
               <FormItem className={styles.flex1}>
                 {getFieldDecorator(`mlbUrls.${k}`, {
+                  rules:[
+                    {required: true, message: '请输入public agent节点ip'}
+                  ]
                 })(<Input placeholder="请输入public agent节点ip" />)}
               </FormItem>
               <FormItem className={styles.marginL10}>

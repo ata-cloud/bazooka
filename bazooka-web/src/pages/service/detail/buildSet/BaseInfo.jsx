@@ -35,7 +35,8 @@ class BaseInfo extends React.Component {
                 initialValue: data.configDescription,
                 rules: [
                   {
-                    message: "最大长度100", validator(rule, value, callback) {
+                    message: "最大长度100", 
+                    validator: async(rule, value, callback)=> {
                       if (value && value.length > 100) {
                         callback('最大长度100')
                       } else {

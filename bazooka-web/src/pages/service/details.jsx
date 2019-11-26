@@ -216,17 +216,20 @@ class Detail extends React.Component {
   }
   onOparaChange = async (e) => {
     let deployType = e.target.value;
-    this.onSetDeployTypes(deployType);
+   
     if (deployType == "START") {
       this.setState({
         showStartModal: true
       })
+      return
     } else {
-      this.onFetchAppOperate(deployType)
+      this.onSetDeployTypes(deployType);
+      this.onFetchAppOperate(deployType);
+      this.setState({
+        deployType
+      })
     }
-    this.setState({
-      deployType
-    })
+    
 
   }
   onFetchAppOperate = async (deployType, detail = {}) => {
@@ -282,6 +285,10 @@ class Detail extends React.Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        this.onSetDeployTypes('START');
+        this.setState({
+          deployType: 'START'
+        })
         this.onFetchAppOperate('START', values)
       }
     });
@@ -347,6 +354,7 @@ class Detail extends React.Component {
   renderStartModal() {
     const { showStartModal } = this.state;
     const { getFieldDecorator } = this.props.form;
+    const { currentEnvO, appRunStatus }= this.props;
     return (
       <Modal
         title="启动服务"
@@ -354,17 +362,26 @@ class Detail extends React.Component {
         onCancel={this.onStartModalCancel}
         onOk={this.onOk}
       >
-        <p className={styles.disabledColor}>服务当前为已关闭状态，重启服务时请设置容器实例个数</p>
-        <Form onSubmit={this.onOk} autoComplete="off">
-          <FormItem>
-            {getFieldDecorator('instance', {
-              initialValue: 1,
-              rules: [{ required: true, message: '请输入大于0的正整数', pattern: /^[1-9][0-9]*$/ }]
-            })(
-              <InputNumber style={{ width: '90%' }} />
-            )}
-          </FormItem>
-        </Form>
+        <Fragment>
+          {
+            currentEnvO.clusterType !== '2' ?
+              <Fragment>
+                <p className={styles.disabledColor}>服务当前为已关闭状态，重启服务时请设置容器实例个数</p>
+                <Form onSubmit={this.onOk} autoComplete="off">
+                  <FormItem>
+                    {getFieldDecorator('instance', {
+                      initialValue: 1,
+                      rules: [{ required: true, message: '请输入大于0的正整数', pattern: /^[1-9][0-9]*$/ }]
+                    })(
+                      <InputNumber style={{ width: '90%' }} />
+                    )}
+                  </FormItem>
+                </Form>
+              </Fragment> :
+              <p>服务当前为已关闭状态，启动服务后容器实例个数将恢复为<span className={styles.textError}> {appRunStatus.instances}</span></p>
+          }
+        </Fragment>
+
       </Modal>
     )
   }
@@ -417,5 +434,6 @@ export default Form.create()(connect(({ service }) => ({
   deployTypes: service.deployTypes,
   envWithPro: service.envWithPro,
   appDeployStatus: service.appDeployStatus,
-  appOperate: service.appOperate
+  appOperate: service.appOperate,
+  currentEnvO: service.currentEnvO
 }))(Detail));

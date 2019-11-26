@@ -24,23 +24,26 @@ class ServiceItem extends React.Component {
   onArrowClick = (type) => {
     const { item } = this.props;
     let ele = document.getElementById(item.id);
-    let scrollW = ele.scrollWidth, scrollL = ele.scrollLeft;
+    let positionLeft = ele.style.left || '0';
     let list = item.appEnvInfoVoList && item.appEnvInfoVoList.length > 0 ? item.appEnvInfoVoList : [];
-    if (!list.length) {
+    if (!list.length || list.length <= 3) {
       return
     }
+    let moveNumber = parseInt(list.length / 3);
     switch (type) {
       case 'left': {
-        if (scrollL === 0) {
+        let left = Number(positionLeft.split('%')[0]);
+        if (left === 0) {
           return
         }
-        ele.scrollLeft = scrollL - scrollW / list.length;
+        ele.style.left = `${left + 33.5}%`;
       } break;
       case 'right': {
-        if (scrollL === scrollW / list.length * 3) {
+        let left = Math.abs(Number(positionLeft.split('%')[0]));
+        if (left === moveNumber * 33.5) {
           return
         }
-        ele.scrollLeft = scrollL + scrollW / list.length;
+        ele.style.left = `-${left + 33.5}%`;
       } break;
     }
 
@@ -77,7 +80,9 @@ class ServiceItem extends React.Component {
               {
                 item.appEnvInfoVoList && item.appEnvInfoVoList.map((vo, i) => (
                   <div key={i} className={stylesService.envItem}>
-                    <div className={stylesService.envItemName}>{vo.envName}</div>
+                    <div className={stylesService.envItemNameWrap}>
+                      <div className={stylesService.envItemName} title={vo.envName}>{vo.envName}</div>
+                    </div>
                     <p className={`${styles[APP_STATUS[vo.status].color]} ${stylesService.textStatus}`}>
                       {APP_STATUS[vo.status].text}
                     </p>

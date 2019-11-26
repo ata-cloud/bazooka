@@ -15,7 +15,7 @@ const domains = [
   },
   {
     value: 'DOCKER_REGISTRY',
-    text: '镜像凭据'
+    text: '镜像库凭据'
   },
   {
     value: 'NODE_LOGIN',

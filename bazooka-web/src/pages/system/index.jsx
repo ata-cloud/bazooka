@@ -154,27 +154,27 @@ class System extends React.Component {
         <Row type="flex" align="middle">
           <Col md={7} sm={24}>
             <div className={styles.flexCenter}>
-              <p className={styles.textBlack}>公司：</p>
+              <p className={`${styles.textBlack} ${styles.stystemInfoTitle}`}>项目：</p>
               <p>上海彩亿信息技术有限公司</p>
             </div>
 
           </Col>
           <Col md={7} sm={24}>
             <div className={styles.flexCenter}>
-              <p className={styles.textBlack}>ATA cloud版本：</p>
+              <p className={`${styles.textBlack} ${styles.stystemInfoTitle}`}>版本：</p>
               <p>0.2.1</p>
             </div>
           </Col>
           <Col md={7} sm={0}></Col>
           <Col md={7} sm={24}>
             <div className={styles.flexCenter}>
-              <p className={styles.textBlack}>安装方案：</p>
+              <p className={`${styles.textBlack} ${styles.stystemInfoTitle}`}>安装方案：</p>
               <p>本地集群安装</p>
             </div>
           </Col>
           <Col md={7} sm={24}>
             <div className={styles.flexCenter}>
-              <p className={styles.textBlack}>安装时间：</p>
+              <p className={`${styles.textBlack} ${styles.stystemInfoTitle}`}>发布时间：</p>
               <p>2019-06-10</p>
             </div>
           </Col>

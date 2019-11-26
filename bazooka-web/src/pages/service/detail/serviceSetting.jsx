@@ -267,7 +267,7 @@ class ServiceSetting extends React.Component {
               initialValue: appBaseInfo.description,
               rules: [
                 {
-                  validator(rule, value, callback){
+                  validator: async(rule, value, callback)=>{
                     if(value.length > 500) {
                       callback('最多500个字符')
                     }else {

@@ -225,38 +225,59 @@ class Env extends React.Component {
 
                   </div>
                 </div>
-                <div className={styles.marginT}>
-                  <p>环境资源（服务使用中 / 环境总资源）</p>
-                  <div className={`${styles.flexCenter}`} style={{ margin: '10px 20px' }}>
-                    <div className={styles.leftBlock}>CPU</div>
-                    <div className={`${styles.flex1} ${styles.processLR}`}>
-                      <Progress percent={item.cpus ? parseInt(item.cpusUsed / item.cpus * 100) : 0} showInfo={false} />
+                {
+                  item.clusterType === '2' ?
+                    <div className={styles.marginT}>
+                      <p>环境资源（服务使用中 / 环境总资源）</p>
+                      <div className={`${styles.flexCenter}`} style={{ margin: '10px 20px' }}>
+                        <div className={styles.leftBlock}>CPU</div>
+                        <div className={`${styles.flex1} ${styles.processLR}`}>
+                          <Progress percent={0} showInfo={false} />
+                        </div>
+                        <div className={styles.rightBlock}>-%（-/ {item.cpus} Core）</div>
+                      </div>
+                      <div className={`${styles.flexCenter}`} style={{ margin: '10px 20px' }}>
+                        <div className={styles.leftBlock}>内存</div>
+                        <div className={`${styles.flex1} ${styles.processLR}`}>
+                          <Progress percent={0} showInfo={false} />
+                        </div>
+                        <div className={styles.rightBlock}>-%（-/ {MformG(item.memory)} GiB）</div>
+                      </div>
+                      <div className={`${styles.flexCenter}`} style={{ margin: '10px 20px' }}>
+                        <div className={styles.leftBlock}>磁盘</div>
+                        <div className={`${styles.flex1} ${styles.processLR}`}>
+                          <Progress percent={0} showInfo={false} />
+                        </div>
+                        <div className={styles.rightBlock}>-%（-/ {MformG(item.disk)} GiB）</div>
+                      </div>
                     </div>
-                    <div className={styles.rightBlock}>{`${item.cpus ? parseInt(item.cpusUsed / item.cpus * 100) : 0}`}%（{item.cpusUsed} / {item.cpus} Core）</div>
-                  </div>
-                  <div className={`${styles.flexCenter}`} style={{ margin: '10px 20px' }}>
-                    <div className={styles.leftBlock}>内存</div>
-                    <div className={`${styles.flex1} ${styles.processLR}`}>
-                      <Progress percent={item.memory ? parseInt(item.memoryUsed / item.memory * 100) : 0} showInfo={false} />
+                    :
+                    <div className={styles.marginT}>
+                      <p>环境资源（服务使用中 / 环境总资源）</p>
+                      <div className={`${styles.flexCenter}`} style={{ margin: '10px 20px' }}>
+                        <div className={styles.leftBlock}>CPU</div>
+                        <div className={`${styles.flex1} ${styles.processLR}`}>
+                          <Progress percent={item.cpus ? parseInt(item.cpusUsed / item.cpus * 100) : 0} showInfo={false} />
+                        </div>
+                        <div className={styles.rightBlock}>{`${item.cpus ? parseInt(item.cpusUsed / item.cpus * 100) : 0}`}%（{item.cpusUsed} / {item.cpus} Core）</div>
+                      </div>
+                      <div className={`${styles.flexCenter}`} style={{ margin: '10px 20px' }}>
+                        <div className={styles.leftBlock}>内存</div>
+                        <div className={`${styles.flex1} ${styles.processLR}`}>
+                          <Progress percent={item.memory ? parseInt(item.memoryUsed / item.memory * 100) : 0} showInfo={false} />
+                        </div>
+                        <div className={styles.rightBlock}>{`${item.memory ? parseInt(item.memoryUsed / item.memory * 100) : 0}`}%（{MformG(item.memoryUsed)} / {MformG(item.memory)} GiB）</div>
+                      </div>
+                      <div className={`${styles.flexCenter}`} style={{ margin: '10px 20px' }}>
+                        <div className={styles.leftBlock}>磁盘</div>
+                        <div className={`${styles.flex1} ${styles.processLR}`}>
+                          <Progress percent={item.disk ? parseInt(item.diskUsed / item.disk * 100) : 0} showInfo={false} />
+                        </div>
+                        <div className={styles.rightBlock}>{`${item.disk ? parseInt(item.diskUsed / item.disk * 100) : 0}`}%（{MformG(item.diskUsed)} / {MformG(item.disk)} GiB）</div>
+                      </div>
                     </div>
-                    <div className={styles.rightBlock}>{`${item.memory ? parseInt(item.memoryUsed / item.memory * 100) : 0}`}%（{MformG(item.memoryUsed)} / {MformG(item.memory)} GiB）</div>
-                  </div>
-                  <div className={`${styles.flexCenter}`} style={{ margin: '10px 20px' }}>
-                    <div className={styles.leftBlock}>磁盘</div>
-                    <div className={`${styles.flex1} ${styles.processLR}`}>
-                      <Progress percent={item.disk ? parseInt(item.diskUsed / item.disk * 100) : 0} showInfo={false} />
-                    </div>
-                    <div className={styles.rightBlock}>{`${item.disk ? parseInt(item.diskUsed / item.disk * 100) : 0}`}%（{MformG(item.diskUsed)} / {MformG(item.disk)} GiB）</div>
-                  </div>
-                  {/* {
-                    resourceType.map((item, i) => (
-                      <Fragment key={i}>
-                        {this.renderResource(item)}
-                      </Fragment>
+                }
 
-                    ))
-                  } */}
-                </div>
               </Card>
             </Col>
           ))

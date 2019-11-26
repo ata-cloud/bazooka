@@ -137,19 +137,27 @@ class Bazooka extends React.Component {
               <Col span={5}>
                 <FormItem label="节点ip" colon={false}>
                   {getFieldDecorator(`nodeList.${k}.nodeIp`, {
+                    rules:[
+                      {required: true, message: '请输入节点ip'}
+                    ]
                   })(<Input placeholder="请输入节点ip" />)}
                 </FormItem>
               </Col>
               <Col span={5}>
                 <FormItem label="CPU" colon={false}>
                   {getFieldDecorator(`nodeList.${k}.cpu`, {
-                   
+                   rules:[
+                    {required: true, message: '请输入CPU核数'}
+                  ]
                   })(<InputNumber placeholder="请输入CPU核数" style={{width: '100%'}}/>)}
                 </FormItem>
               </Col>
               <Col span={5}>
                 <FormItem label="内存" colon={false}>
                   {getFieldDecorator(`nodeList.${k}.memory`, {
+                     rules:[
+                      {required: true, message: '请输入内存大小（GiB）'}
+                    ]
                    
                   })(<InputNumber placeholder="请输入内存大小（GiB）" style={{width: '100%'}}/>)}
                 </FormItem>
@@ -157,6 +165,9 @@ class Bazooka extends React.Component {
               <Col span={5}>
                 <FormItem label="节点登录凭据" colon={false}>
                   {getFieldDecorator(`nodeList.${k}.credentialId`, {
+                     rules:[
+                      {required: true, message: '请选择节点登录凭据'}
+                    ]
                   })(
                     <Select placeholder="请选择节点登录凭据">
                       {
