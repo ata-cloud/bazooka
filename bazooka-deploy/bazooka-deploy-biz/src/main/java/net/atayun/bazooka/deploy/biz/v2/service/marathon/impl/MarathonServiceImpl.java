@@ -40,6 +40,12 @@ public class MarathonServiceImpl implements MarathonService {
 
         FlowStepStatusEnum stepStatusEnum = FlowStepStatusEnum.valueOf(finishStatus.name());
 
+        Map<String, Object> map = new HashMap<>();
+        map.put("appDeployUuid", marathonCallbackParam.getMarathonDeploymentId());
+        map.put("appDeployVersion", marathonCallbackParam.getMarathonDeploymentVersion());
+        map.put("finishStatus", marathonCallbackParam.getFinishStatus());
+        appOptFlowStep.setOutput(map);
+
         Step4HealthCheck step = (Step4HealthCheck) StrategyNumBean.getBeanInstance(Step.class, FlowStepConstants.HEALTH_CHECK);
         try {
             step.callback(appOpt, appOptFlowStep);
@@ -47,11 +53,6 @@ public class MarathonServiceImpl implements MarathonService {
             stepStatusEnum = FlowStepStatusEnum.FAILURE;
         }
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("appDeployUuid", marathonCallbackParam.getMarathonDeploymentId());
-        map.put("appDeployVersion", marathonCallbackParam.getMarathonDeploymentVersion());
-        map.put("finishStatus", marathonCallbackParam.getFinishStatus());
-        appOptFlowStep.setOutput(map);
         step.notification(appOpt, appOptFlowStep, stepStatusEnum);
     }
 }

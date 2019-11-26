@@ -16,14 +16,14 @@
 package net.atayun.bazooka.deploy.biz.service.app.event;
 
 import com.alibaba.fastjson.JSONObject;
-import net.atayun.bazooka.base.annotation.StrategyNum;
-import net.atayun.bazooka.deploy.api.param.AppOperationEventParam;
-import net.atayun.bazooka.deploy.biz.dal.entity.app.AppOperationEventMarathonEntity;
-import net.atayun.bazooka.deploy.biz.service.app.AppOperationEventMarathonService;
 import com.youyu.common.exception.BizException;
 import mesosphere.client.common.ModelUtils;
 import mesosphere.marathon.client.model.v2.App;
+import net.atayun.bazooka.base.annotation.StrategyNum;
 import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
+import net.atayun.bazooka.deploy.api.param.AppOperationEventParam;
+import net.atayun.bazooka.deploy.biz.dal.entity.app.AppOperationEventMarathonEntity;
+import net.atayun.bazooka.deploy.biz.service.app.AppOperationEventMarathonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -15,11 +15,11 @@
  */
 package net.atayun.bazooka.deploy.biz.dto.app;
 
-import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
-import net.atayun.bazooka.deploy.biz.enums.status.AppOperationEventStatusEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
+import net.atayun.bazooka.deploy.biz.enums.status.AppOperationEventStatusEnum;
 
 /**
  * @author Ping

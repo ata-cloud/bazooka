@@ -16,25 +16,14 @@
 package net.atayun.bazooka.deploy.biz.service.deploy.strategy.setup;
 
 import net.atayun.bazooka.base.annotation.StrategyNum;
-import net.atayun.bazooka.base.constant.CommonConstants;
 import net.atayun.bazooka.base.docker.DockerRegistryService;
-import net.atayun.bazooka.base.docker.domain.DockerImageTags;
-import net.atayun.bazooka.base.enums.deploy.AppOperationEventLogTypeEnum;
 import net.atayun.bazooka.base.enums.deploy.DeployModeEnum;
 import net.atayun.bazooka.deploy.biz.dal.entity.flow.DeployFlowImageEntity;
-import net.atayun.bazooka.deploy.biz.log.LogConcat;
 import net.atayun.bazooka.deploy.biz.service.deploy.strategy.WorkDetailPojo;
 import net.atayun.bazooka.deploy.biz.service.flow.DeployFlowImageService;
-import net.atayun.bazooka.pms.api.dto.AppInfoWithCredential;
 import net.atayun.bazooka.rms.api.api.EnvApi;
-import net.atayun.bazooka.rms.api.dto.ClusterConfigDto;
-import com.youyu.common.exception.BizException;
-import net.atayun.bazooka.deploy.biz.constants.DeployResultCodeConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
-
-import java.util.List;
 
 /**
  * @author Ping
@@ -64,35 +53,35 @@ public class DockerImageDeploySetUpStrategy extends AbstractSetUpFlowStrategy {
      */
     @Override
     public void setUpCheck(WorkDetailPojo workDetailPojo) {
-        AppInfoWithCredential appInfo = workDetailPojo.getAppInfo();
-        String dockerImageName = appInfo.getDockerImageName();
-        String dockerImageTag = workDetailPojo.getDeployEntity().getDockerImageTag();
-        final LogConcat logConcat = new LogConcat(">> 1. 检查镜像(" + dockerImageName + ":" + dockerImageTag + ")");
-        try {
-            ClusterConfigDto clusterConfig = envApi.getEnvConfiguration(workDetailPojo.getAppDeployConfig().getEnvId())
-                    .ifNotSuccessThrowException()
-                    .getData();
-
-            String dockerHubUrl = clusterConfig.getDockerHubUrl();
-            DockerImageTags dockerImageTags = dockerRegistryService.listImageTags(CommonConstants.PROTOCOL + dockerHubUrl, dockerImageName);
-            List<String> tags = dockerImageTags.getTags();
-            if (CollectionUtils.isEmpty(tags)) {
-                throw new BizException(DeployResultCodeConstants.IMAGE_EMPTY,
-                        String.format("镜像库[%s]中没有%s镜像", dockerHubUrl, dockerImageName));
-            }
-
-            if (!tags.contains(dockerImageTag)) {
-                throw new BizException(DeployResultCodeConstants.ILLEGAL_IMAGE_TAG,
-                        String.format("镜像库[%s]中没有镜像%s:%s", dockerHubUrl, dockerImageName, dockerImageTag));
-            }
-            logConcat.concat("镜像符合要求");
-        } catch (Throwable throwable) {
-            logConcat.concat(throwable);
-            throw throwable;
-        } finally {
-            getAppOperationEventLog().save(workDetailPojo.getDeployEntity().getEventId(),
-                    AppOperationEventLogTypeEnum.APP_DEPLOY_FLOW_SET_UP, 1, logConcat.get());
-        }
+//        AppInfoWithCredential appInfo = workDetailPojo.getAppInfo();
+//        String dockerImageName = appInfo.getDockerImageName();
+//        String dockerImageTag = workDetailPojo.getDeployEntity().getDockerImageTag();
+//        final LogConcat logConcat = new LogConcat(">> 1. 检查镜像(" + dockerImageName + ":" + dockerImageTag + ")");
+//        try {
+//            ClusterConfigDto clusterConfig = envApi.getEnvConfiguration(workDetailPojo.getAppDeployConfig().getEnvId())
+//                    .ifNotSuccessThrowException()
+//                    .getData();
+//
+//            String dockerHubUrl = clusterConfig.getDockerHubUrl();
+//            DockerImageTags dockerImageTags = dockerRegistryService.listImageTags(CommonConstants.PROTOCOL + dockerHubUrl, dockerImageName);
+//            List<String> tags = dockerImageTags.getTags();
+//            if (CollectionUtils.isEmpty(tags)) {
+//                throw new BizException(DeployResultCodeConstants.IMAGE_EMPTY,
+//                        String.format("镜像库[%s]中没有%s镜像", dockerHubUrl, dockerImageName));
+//            }
+//
+//            if (!tags.contains(dockerImageTag)) {
+//                throw new BizException(DeployResultCodeConstants.ILLEGAL_IMAGE_TAG,
+//                        String.format("镜像库[%s]中没有镜像%s:%s", dockerHubUrl, dockerImageName, dockerImageTag));
+//            }
+//            logConcat.concat("镜像符合要求");
+//        } catch (Throwable throwable) {
+//            logConcat.concat(throwable);
+//            throw throwable;
+//        } finally {
+//            getAppOperationEventLog().save(workDetailPojo.getDeployEntity().getEventId(),
+//                    AppOperationEventLogTypeEnum.APP_DEPLOY_FLOW_SET_UP, 1, logConcat.get());
+//        }
     }
 
     /**

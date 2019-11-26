@@ -15,9 +15,9 @@
  */
 package net.atayun.bazooka.deploy.biz.param.jenkins;
 
-import net.atayun.bazooka.deploy.biz.enums.flow.DeployFlowEnum;
 import lombok.Getter;
 import lombok.Setter;
+import net.atayun.bazooka.deploy.biz.enums.flow.DeployFlowEnum;
 
 /**
  * @author Ping

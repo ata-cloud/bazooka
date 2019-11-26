@@ -15,8 +15,8 @@
  */
 package net.atayun.bazooka.deploy.biz.dal.dao.flow;
 
-import net.atayun.bazooka.deploy.biz.dal.entity.flow.DeployFlowJenkinsEntity;
 import com.youyu.common.mapper.YyMapper;
+import net.atayun.bazooka.deploy.biz.dal.entity.flow.DeployFlowJenkinsEntity;
 
 /**
  * @author Ping

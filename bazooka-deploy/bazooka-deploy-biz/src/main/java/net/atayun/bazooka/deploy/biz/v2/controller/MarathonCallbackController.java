@@ -1,4 +1,4 @@
-package net.atayun.bazooka.deploy.biz.v2.controller.app;
+package net.atayun.bazooka.deploy.biz.v2.controller;
 
 import com.youyu.common.api.Result;
 import net.atayun.bazooka.deploy.biz.v2.param.MarathonCallbackParam;

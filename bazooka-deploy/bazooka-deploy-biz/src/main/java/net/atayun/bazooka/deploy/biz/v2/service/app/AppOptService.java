@@ -1,6 +1,7 @@
 package net.atayun.bazooka.deploy.biz.v2.service.app;
 
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
+import net.atayun.bazooka.deploy.biz.v2.enums.AppOptStatusEnum;
 import net.atayun.bazooka.deploy.biz.v2.param.AppActionParam;
 
 /**
@@ -18,9 +19,18 @@ public interface AppOptService {
 
     AppOpt selectById(Long optId);
 
+    /**
+     * 发布 回滚
+     *
+     * @param appId
+     * @param envId
+     * @return
+     */
     AppOpt selectLastSuccessByAppIdAndEnv(Long appId, Long envId);
 
     void updateById(AppOpt appopt);
 
     AppOpt selectByAppDeployUuidAndVersion(String marathonDeploymentId, String marathonDeploymentVersion);
+
+    void updateStatus(Long id, AppOptStatusEnum status);
 }

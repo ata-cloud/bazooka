@@ -26,8 +26,6 @@ import net.atayun.bazooka.deploy.biz.service.deploy.cancel.JenkinsFlowCancel;
 import net.atayun.bazooka.deploy.biz.service.jenkins.JenkinsService;
 import org.springframework.stereotype.Component;
 
-import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
-
 /**
  * @author Ping
  * @date 2019-07-12

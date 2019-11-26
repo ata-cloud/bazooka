@@ -51,7 +51,7 @@ public class AppOptFlowStepBuilder {
         appOptFlowStep.setStep(step);
         appOptFlowStep.setStepSeq(seq);
         appOptFlowStep.setInput(input);
-        String logPath = "/data/ata/log/" + optId;
+        String logPath = "/data/ata/log/" + optId + "/" + step;
         appOptFlowStep.setLogPath(logPath);
         return appOptFlowStep;
     }

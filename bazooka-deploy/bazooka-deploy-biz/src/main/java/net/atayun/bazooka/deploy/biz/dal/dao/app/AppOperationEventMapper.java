@@ -15,6 +15,7 @@
  */
 package net.atayun.bazooka.deploy.biz.dal.dao.app;
 
+import com.youyu.common.mapper.YyMapper;
 import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
 import net.atayun.bazooka.deploy.biz.dal.entity.app.AppOperateEventHistoryEntity;
 import net.atayun.bazooka.deploy.biz.dal.entity.app.AppOperationEventEntity;
@@ -22,7 +23,6 @@ import net.atayun.bazooka.deploy.biz.dal.entity.app.EventWithMarathonEntity;
 import net.atayun.bazooka.deploy.biz.enums.status.AppOperationEventStatusEnum;
 import net.atayun.bazooka.deploy.biz.param.app.AppOperateEventHistoryMarathonParam;
 import net.atayun.bazooka.deploy.biz.param.app.AppOperateEventHistoryParam;
-import com.youyu.common.mapper.YyMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 

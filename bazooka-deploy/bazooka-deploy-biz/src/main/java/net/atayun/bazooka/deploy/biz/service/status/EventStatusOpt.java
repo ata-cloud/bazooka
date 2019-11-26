@@ -15,12 +15,10 @@
  */
 package net.atayun.bazooka.deploy.biz.service.status;
 
+import net.atayun.bazooka.base.bean.SpringContextBean;
 import net.atayun.bazooka.deploy.biz.dal.dao.app.AppOperationEventMapper;
 import net.atayun.bazooka.deploy.biz.dal.entity.app.AppOperationEventEntity;
 import net.atayun.bazooka.deploy.biz.enums.status.AppOperationEventStatusEnum;
-import net.atayun.bazooka.base.bean.SpringContextBean;
-
-import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
 
 /**
  * @author Ping

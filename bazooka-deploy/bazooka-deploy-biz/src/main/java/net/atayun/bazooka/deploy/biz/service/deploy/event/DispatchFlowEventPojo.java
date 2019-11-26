@@ -15,9 +15,9 @@
  */
 package net.atayun.bazooka.deploy.biz.service.deploy.event;
 
-import net.atayun.bazooka.deploy.biz.enums.status.BasicStatusEnum;
 import lombok.Getter;
 import lombok.Setter;
+import net.atayun.bazooka.deploy.biz.enums.status.BasicStatusEnum;
 
 /**
  * @author Ping

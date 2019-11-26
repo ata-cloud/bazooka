@@ -10,20 +10,12 @@ import org.springframework.stereotype.Component;
  * @author Ping
  */
 @Component
-@StrategyNum(superClass = DeployMode.class, number = DeployModeEnum.MODE_NODE_BUILD)
-public class DeployMode4NodeBuild implements DeployMode {
+@StrategyNum(superClass = DeployMode.class, number = DeployModeEnum.MODE_BUILD + "2")
+public class DeployMode4NodeBuild implements DeployMode, ICheckBranch {
 
     @Override
     public void check(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
-
+        checkBranch(appOpt);
     }
 
-    @Override
-    public void buildDockerImage(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
-
-    }
-
-    public void checkBranch() {
-
-    }
 }

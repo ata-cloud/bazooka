@@ -8,9 +8,12 @@ import java.util.List;
  * @author Ping
  */
 public interface FlowStepService {
+
     void saveFlowSteps(List<AppOptFlowStep> flowSteps);
 
     AppOptFlowStep selectById(Long stepId);
 
     AppOptFlowStep selectByOptIdAndStep(Long optId, String healthCheck);
+
+    AppOptFlowStep nextStep(AppOptFlowStep appOptFlowStep);
 }

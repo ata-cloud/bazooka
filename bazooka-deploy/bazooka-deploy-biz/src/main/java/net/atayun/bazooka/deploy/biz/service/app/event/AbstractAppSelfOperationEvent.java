@@ -16,10 +16,10 @@
 package net.atayun.bazooka.deploy.biz.service.app.event;
 
 import com.alibaba.fastjson.JSONObject;
-import net.atayun.bazooka.deploy.biz.dal.entity.app.EventWithMarathonEntity;
-import net.atayun.bazooka.deploy.biz.service.app.AppOperationEventService;
 import com.youyu.common.exception.BizException;
 import lombok.Getter;
+import net.atayun.bazooka.deploy.biz.dal.entity.app.EventWithMarathonEntity;
+import net.atayun.bazooka.deploy.biz.service.app.AppOperationEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static net.atayun.bazooka.deploy.biz.constants.DeployResultCodeConstants.NO_SUCCESS_EVENT_WITH_MARATHON_ERR_CODE;

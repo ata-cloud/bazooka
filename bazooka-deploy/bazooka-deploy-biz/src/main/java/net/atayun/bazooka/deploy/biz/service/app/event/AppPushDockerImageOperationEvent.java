@@ -18,7 +18,7 @@ package net.atayun.bazooka.deploy.biz.service.app.event;
 import com.alibaba.fastjson.JSONObject;
 import net.atayun.bazooka.base.annotation.StrategyNum;
 import net.atayun.bazooka.base.bean.SpringContextBean;
-import net.atayun.bazooka.base.constant.CommonConstants;
+import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
 import net.atayun.bazooka.base.enums.deploy.AppOperationEventLogTypeEnum;
 import net.atayun.bazooka.base.jenkins.JenkinsJobPropertiesHelper;
 import net.atayun.bazooka.base.jenkins.JenkinsServerHelper;
@@ -35,15 +35,12 @@ import net.atayun.bazooka.rms.api.RmsDockerImageApi;
 import net.atayun.bazooka.rms.api.api.EnvApi;
 import net.atayun.bazooka.rms.api.dto.ClusterConfigDto;
 import net.atayun.bazooka.rms.api.dto.RmsDockerImagePushCheckResultDto;
-import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
-import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
 
 /**
  * @author Ping
@@ -130,7 +127,7 @@ public class AppPushDockerImageOperationEvent extends AbstractAppOperationEvent 
         }
         param.put(JenkinsPushDockerImageJobConstants.DOCKER_IMAGE_NAME, appInfo.getDockerImageName());
         param.put(JenkinsPushDockerImageJobConstants.DOCKER_IMAGE_TAG, pojo.getDockerImageTag());
-        param.put(JenkinsPushDockerImageJobConstants.PUSH_IMAGE_CALLBACK_URI, jenkinsJobPropertiesHelper.pushImageCallbackUri());
+        param.put(JenkinsPushDockerImageJobConstants.PUSH_IMAGE_CALLBACK_URI, "");
         param.put(JenkinsPushDockerImageJobConstants.EVENT_ID, eventId.toString());
         param.put(JenkinsPushDockerImageJobConstants.IMAGE_ID, pojo.getImageId().toString());
         param.put(JenkinsPushDockerImageJobConstants.TARGET_ENV_ID, Optional.ofNullable(pojo.getTargetEnvId()).map(Object::toString).orElse(""));
@@ -139,21 +136,22 @@ public class AppPushDockerImageOperationEvent extends AbstractAppOperationEvent 
     }
 
     private String getTargetDockerRegistry(AppPushDockerImageOperationEventPoJo appPushDockerImageOperationEventPoJo) {
-        String targetDockerRegistry;
-        if (appPushDockerImageOperationEventPoJo.getIsExternalDockerRegistry()) {
-            targetDockerRegistry = appPushDockerImageOperationEventPoJo.getTargetDockerRegistry();
-        } else {
-            targetDockerRegistry = envApi.getEnvConfiguration(appPushDockerImageOperationEventPoJo.getTargetEnvId())
-                    .ifNotSuccessThrowException()
-                    .getData()
-                    .getDockerHubUrl();
-        }
-        if (targetDockerRegistry.startsWith(CommonConstants.PROTOCOL)) {
-            targetDockerRegistry = targetDockerRegistry.replace(CommonConstants.PROTOCOL, "");
-        }
-        if (targetDockerRegistry.startsWith(CommonConstants.SECURE_PROTOCOL)) {
-            targetDockerRegistry = targetDockerRegistry.replace(CommonConstants.SECURE_PROTOCOL, "");
-        }
-        return targetDockerRegistry;
+//        String targetDockerRegistry;
+//        if (appPushDockerImageOperationEventPoJo.getIsExternalDockerRegistry()) {
+//            targetDockerRegistry = appPushDockerImageOperationEventPoJo.getTargetDockerRegistry();
+//        } else {
+//            targetDockerRegistry = envApi.getEnvConfiguration(appPushDockerImageOperationEventPoJo.getTargetEnvId())
+//                    .ifNotSuccessThrowException()
+//                    .getData()
+//                    .getDockerHubUrl();
+//        }
+//        if (targetDockerRegistry.startsWith(CommonConstants.PROTOCOL)) {
+//            targetDockerRegistry = targetDockerRegistry.replace(CommonConstants.PROTOCOL, "");
+//        }
+//        if (targetDockerRegistry.startsWith(CommonConstants.SECURE_PROTOCOL)) {
+//            targetDockerRegistry = targetDockerRegistry.replace(CommonConstants.SECURE_PROTOCOL, "");
+//        }
+//        return targetDockerRegistry;
+        return "";
     }
 }

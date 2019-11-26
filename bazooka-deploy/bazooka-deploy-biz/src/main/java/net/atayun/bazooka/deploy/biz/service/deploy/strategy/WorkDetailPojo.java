@@ -15,13 +15,13 @@
  */
 package net.atayun.bazooka.deploy.biz.service.deploy.strategy;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import net.atayun.bazooka.deploy.biz.dal.entity.deploy.DeployEntity;
 import net.atayun.bazooka.deploy.biz.dal.entity.flow.DeployFlowEntity;
 import net.atayun.bazooka.pms.api.dto.AppDeployConfigDto;
 import net.atayun.bazooka.pms.api.dto.AppInfoWithCredential;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * @author Ping

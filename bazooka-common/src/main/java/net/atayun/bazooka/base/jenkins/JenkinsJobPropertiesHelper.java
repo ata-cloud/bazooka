@@ -15,9 +15,9 @@
  */
 package net.atayun.bazooka.base.jenkins;
 
+import com.youyu.common.exception.BizException;
 import net.atayun.bazooka.base.config.JenkinsJobProperties;
 import net.atayun.bazooka.base.dcos.DcosPropertiesHelper;
-import com.youyu.common.exception.BizException;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,12 +43,16 @@ public class JenkinsJobPropertiesHelper {
         this.jenkinsJobProperties = jenkinsJobProperties;
     }
 
-    public String randomBuildJobName() {
-        List<String> jenkinsBuildJobs = jenkinsJobProperties.getJenkinsBuildJobs();
-        if (CollectionUtils.isEmpty(jenkinsBuildJobs)) {
-            throw new BizException("", "未配置任何构建Job");
-        }
-        return jenkinsBuildJobs.get(RandomUtils.nextInt(0, jenkinsBuildJobs.size()));
+    public String randomPullCode() {
+        return "";
+    }
+
+    public String randomPackageProject() {
+        return "";
+    }
+
+    public String randomBuildDockerImage() {
+        return "";
     }
 
     public String randomPushDockerImageJobName() {
@@ -59,15 +63,9 @@ public class JenkinsJobPropertiesHelper {
         return jenkinsPushDockerImageJobs.get(RandomUtils.nextInt(0, jenkinsPushDockerImageJobs.size()));
     }
 
-    public String buildScriptCallbackUri() {
-        return dcosPropertiesHelper.dcosPublicAgentIp() + ":" + serverPort + jenkinsJobProperties.getBuildScriptCallbackPath();
-    }
 
     public String buildCallbackUri() {
         return dcosPropertiesHelper.dcosPublicAgentIp() + ":" + serverPort + jenkinsJobProperties.getBuildCallbackPath();
     }
 
-    public String pushImageCallbackUri() {
-        return dcosPropertiesHelper.dcosPublicAgentIp() + ":" + serverPort + jenkinsJobProperties.getPushImageCallbackPath();
-    }
 }

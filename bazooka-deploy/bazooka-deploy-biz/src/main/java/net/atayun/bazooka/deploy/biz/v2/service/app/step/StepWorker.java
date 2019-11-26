@@ -1,6 +1,7 @@
 package net.atayun.bazooka.deploy.biz.v2.service.app.step;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import net.atayun.bazooka.base.bean.StrategyNumBean;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
@@ -9,6 +10,7 @@ import net.atayun.bazooka.deploy.biz.v2.enums.FlowStepStatusEnum;
 /**
  * @author Ping
  */
+@Slf4j
 public class StepWorker {
 
     @Getter
@@ -28,6 +30,7 @@ public class StepWorker {
         try {
             step.doWork(appOpt, appOptFlowStep);
         } catch (Throwable throwable) {
+            log.warn("步骤异常: ", throwable);
             status = FlowStepStatusEnum.FAILURE;
         } finally {
             if (status == FlowStepStatusEnum.SUCCESS) {

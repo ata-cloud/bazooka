@@ -41,8 +41,6 @@ public class JenkinsJobProperties {
      */
     private List<String> jenkinsPushDockerImageJobs;
 
-    private String buildScriptCallbackPath;
-
     private String buildCallbackPath;
 
     private String pushImageCallbackPath;

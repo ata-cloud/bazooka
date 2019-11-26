@@ -15,8 +15,8 @@
  */
 package net.atayun.bazooka.deploy.biz.enums.flow;
 
-import net.atayun.bazooka.base.enums.deploy.AppOperationEventLogTypeEnum;
 import lombok.Getter;
+import net.atayun.bazooka.base.enums.deploy.AppOperationEventLogTypeEnum;
 
 /**
  * @author Ping

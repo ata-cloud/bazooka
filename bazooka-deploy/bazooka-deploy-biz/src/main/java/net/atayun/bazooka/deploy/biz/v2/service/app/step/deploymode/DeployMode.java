@@ -9,6 +9,4 @@ import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
 public interface DeployMode {
 
     void check(AppOpt appOpt, AppOptFlowStep appOptFlowStep);
-
-    void buildDockerImage(AppOpt appOpt, AppOptFlowStep appOptFlowStep);
 }

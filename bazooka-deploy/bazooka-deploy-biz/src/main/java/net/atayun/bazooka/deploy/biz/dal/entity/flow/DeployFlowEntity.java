@@ -15,11 +15,11 @@
  */
 package net.atayun.bazooka.deploy.biz.dal.entity.flow;
 
-import net.atayun.bazooka.deploy.biz.enums.flow.DeployFlowEnum;
-import net.atayun.bazooka.deploy.biz.enums.status.BasicStatusEnum;
 import com.youyu.common.entity.JdbcMysqlEntity;
 import lombok.Getter;
 import lombok.Setter;
+import net.atayun.bazooka.deploy.biz.enums.flow.DeployFlowEnum;
+import net.atayun.bazooka.deploy.biz.enums.status.BasicStatusEnum;
 
 import javax.persistence.Column;
 import javax.persistence.Table;

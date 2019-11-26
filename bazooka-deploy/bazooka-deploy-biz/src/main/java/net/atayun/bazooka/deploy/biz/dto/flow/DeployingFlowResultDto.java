@@ -15,11 +15,11 @@
  */
 package net.atayun.bazooka.deploy.biz.dto.flow;
 
-import net.atayun.bazooka.deploy.biz.enums.status.BasicStatusEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import net.atayun.bazooka.deploy.biz.enums.status.BasicStatusEnum;
 
 import java.util.List;
 

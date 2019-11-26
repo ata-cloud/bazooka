@@ -15,11 +15,11 @@
  */
 package net.atayun.bazooka.deploy.biz.dto.app;
 
-import net.atayun.bazooka.deploy.biz.enums.status.AppOperationEventStatusEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import net.atayun.bazooka.deploy.biz.enums.status.AppOperationEventStatusEnum;
 
 import java.time.LocalDateTime;
 

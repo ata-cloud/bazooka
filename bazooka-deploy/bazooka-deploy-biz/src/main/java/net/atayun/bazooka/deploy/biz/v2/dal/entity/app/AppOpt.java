@@ -4,7 +4,9 @@ import com.youyu.common.entity.JdbcMysqlEntity;
 import lombok.Getter;
 import lombok.Setter;
 import net.atayun.bazooka.deploy.biz.v2.enums.AppOptEnum;
+import net.atayun.bazooka.deploy.biz.v2.enums.AppOptStatusEnum;
 
+import javax.persistence.Table;
 import java.util.Map;
 
 /**
@@ -12,6 +14,7 @@ import java.util.Map;
  */
 @Getter
 @Setter
+@Table(name = "deploy_app_opt")
 public class AppOpt extends JdbcMysqlEntity<Long> {
 
     private Long appId;
@@ -26,7 +29,7 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
 
     private Map<String, Object> detail;
 
-    private String status;
+    private AppOptStatusEnum status;
 
     private String remark;
 
@@ -37,7 +40,9 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
     private String dockerImageTag;
 
     private String appDeployUuid;
+
     private String appDeployVersion;
+
     private String appRunServiceId;
 
     private String appDeployConfig;

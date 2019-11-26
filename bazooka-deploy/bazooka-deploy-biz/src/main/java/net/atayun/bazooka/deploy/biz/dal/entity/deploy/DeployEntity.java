@@ -15,10 +15,10 @@
  */
 package net.atayun.bazooka.deploy.biz.dal.entity.deploy;
 
-import net.atayun.bazooka.deploy.biz.enums.status.BasicStatusEnum;
 import com.youyu.common.entity.JdbcMysqlEntity;
 import lombok.Getter;
 import lombok.Setter;
+import net.atayun.bazooka.deploy.biz.enums.status.BasicStatusEnum;
 
 import javax.persistence.Column;
 import javax.persistence.Table;

@@ -15,12 +15,12 @@
  */
 package net.atayun.bazooka.deploy.biz.dto.deploy;
 
-import net.atayun.bazooka.deploy.biz.enums.status.BasicStatusEnum;
 import com.youyu.common.dto.BaseDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import net.atayun.bazooka.deploy.biz.enums.status.BasicStatusEnum;
 
 /**
  * @author Ping

@@ -21,6 +21,9 @@ package net.atayun.bazooka.deploy.biz.constants;
  */
 public final class JenkinsBuildJobConstants {
 
+    public static final String OPT_ID = "OPT_ID";
+    public static final String STEP_ID = "STEP_ID";
+
     private JenkinsBuildJobConstants() {
         throw new AssertionError("Must not instantiate constant utility class");
     }

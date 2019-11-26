@@ -26,4 +26,9 @@ public class FlowStepServiceImpl implements FlowStepService {
     public AppOptFlowStep selectByOptIdAndStep(Long optId, String healthCheck) {
         return null;
     }
+
+    @Override
+    public AppOptFlowStep nextStep(AppOptFlowStep appOptFlowStep) {
+        return null;
+    }
 }

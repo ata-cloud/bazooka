@@ -15,6 +15,7 @@
  */
 package net.atayun.bazooka.deploy.biz.service.deploy.event;
 
+import lombok.extern.slf4j.Slf4j;
 import net.atayun.bazooka.base.bean.StrategyNumBean;
 import net.atayun.bazooka.deploy.biz.dal.entity.deploy.DeployEntity;
 import net.atayun.bazooka.deploy.biz.dal.entity.flow.DeployFlowEntity;
@@ -28,7 +29,6 @@ import net.atayun.bazooka.deploy.biz.service.deploy.strategy.AbstractDeployFlowW
 import net.atayun.bazooka.deploy.biz.service.flow.DeployFlowService;
 import net.atayun.bazooka.deploy.biz.service.status.AppStatusOpt;
 import net.atayun.bazooka.deploy.biz.service.status.EventStatusOpt;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.event.SmartApplicationListener;

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.atayun.bazooka.deploy.biz.v2.enums.FlowStepStatusEnum;
 
+import javax.persistence.Table;
 import java.util.Map;
 
 /**
@@ -12,7 +13,8 @@ import java.util.Map;
  */
 @Getter
 @Setter
-public class AppOptFlowStep extends JdbcMysqlEntity<Long> implements Cloneable {
+@Table(name = "deploy_app_opt_flow_step")
+public class AppOptFlowStep extends JdbcMysqlEntity<Long> {
 
     private Long optId;
 

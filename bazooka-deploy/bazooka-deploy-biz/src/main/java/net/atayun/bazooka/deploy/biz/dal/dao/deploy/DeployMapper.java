@@ -15,9 +15,9 @@
  */
 package net.atayun.bazooka.deploy.biz.dal.dao.deploy;
 
+import com.youyu.common.mapper.YyMapper;
 import net.atayun.bazooka.deploy.biz.dal.entity.deploy.DeployCountsEntity;
 import net.atayun.bazooka.deploy.biz.dal.entity.deploy.DeployEntity;
-import com.youyu.common.mapper.YyMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 

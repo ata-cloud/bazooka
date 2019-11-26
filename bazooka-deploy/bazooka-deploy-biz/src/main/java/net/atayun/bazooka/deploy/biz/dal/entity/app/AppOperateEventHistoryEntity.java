@@ -15,10 +15,10 @@
  */
 package net.atayun.bazooka.deploy.biz.dal.entity.app;
 
-import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
-import net.atayun.bazooka.deploy.biz.enums.status.AppOperationEventStatusEnum;
 import lombok.Getter;
 import lombok.Setter;
+import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
+import net.atayun.bazooka.deploy.biz.enums.status.AppOperationEventStatusEnum;
 
 import javax.persistence.Column;
 import java.time.LocalDateTime;

@@ -1,6 +1,7 @@
 package net.atayun.bazooka.deploy.biz.v2.service.app.impl;
 
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
+import net.atayun.bazooka.deploy.biz.v2.enums.AppOptStatusEnum;
 import net.atayun.bazooka.deploy.biz.v2.param.AppActionParam;
 import net.atayun.bazooka.deploy.biz.v2.service.app.AppOptService;
 import org.springframework.stereotype.Service;
@@ -34,5 +35,10 @@ public class AppOptServiceImpl implements AppOptService {
     @Override
     public AppOpt selectByAppDeployUuidAndVersion(String marathonDeploymentId, String marathonDeploymentVersion) {
         return null;
+    }
+
+    @Override
+    public void updateStatus(Long id, AppOptStatusEnum status) {
+
     }
 }

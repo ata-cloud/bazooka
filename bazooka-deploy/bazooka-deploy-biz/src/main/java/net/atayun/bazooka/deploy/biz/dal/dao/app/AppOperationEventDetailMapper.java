@@ -15,8 +15,8 @@
  */
 package net.atayun.bazooka.deploy.biz.dal.dao.app;
 
-import net.atayun.bazooka.deploy.biz.dal.entity.app.AppOperationEventDetailEntity;
 import com.youyu.common.mapper.YyMapper;
+import net.atayun.bazooka.deploy.biz.dal.entity.app.AppOperationEventDetailEntity;
 
 /**
  * @author Ping

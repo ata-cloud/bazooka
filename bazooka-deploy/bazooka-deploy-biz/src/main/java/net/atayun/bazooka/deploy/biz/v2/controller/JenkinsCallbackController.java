@@ -1,4 +1,4 @@
-package net.atayun.bazooka.deploy.biz.v2.controller.app;
+package net.atayun.bazooka.deploy.biz.v2.controller;
 
 import com.youyu.common.api.Result;
 import net.atayun.bazooka.deploy.biz.v2.param.StepCallbackParam;
@@ -20,7 +20,7 @@ public class JenkinsCallbackController {
     @Autowired
     private JenkinsService jenkinsService;
 
-    @PostMapping("/step/callback")
+    @PostMapping("/build/callback")
     public Result stepCallback(@Validated @RequestBody StepCallbackParam stepCallbackParam) {
         jenkinsService.stepCallback(stepCallbackParam);
         return Result.ok();

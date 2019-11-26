@@ -15,9 +15,9 @@
  */
 package net.atayun.bazooka.deploy.biz.dto.flow;
 
-import net.atayun.bazooka.base.enums.deploy.DeployModeEnum;
 import lombok.Getter;
 import lombok.Setter;
+import net.atayun.bazooka.base.enums.deploy.DeployModeEnum;
 
 /**
  * @author Ping

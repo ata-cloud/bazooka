@@ -15,11 +15,11 @@
  */
 package net.atayun.bazooka.deploy.biz.service.flow.impl;
 
+import com.youyu.common.service.AbstractService;
 import net.atayun.bazooka.deploy.biz.dal.dao.flow.DeployFlowMarathonMapper;
 import net.atayun.bazooka.deploy.biz.dal.entity.flow.DeployFlowMarathonEntity;
 import net.atayun.bazooka.deploy.biz.dto.flow.DeployFlowMarathonDto;
 import net.atayun.bazooka.deploy.biz.service.flow.DeployFlowMarathonService;
-import com.youyu.common.service.AbstractService;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
