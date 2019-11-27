@@ -2,8 +2,6 @@ package net.atayun.bazooka.deploy.biz.v2.service.app.flow;
 
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
-import net.atayun.bazooka.deploy.biz.v2.enums.AppOptStatusEnum;
-import net.atayun.bazooka.deploy.biz.v2.enums.FlowStepStatusEnum;
 import net.atayun.bazooka.deploy.biz.v2.service.app.AppOptService;
 import net.atayun.bazooka.deploy.biz.v2.service.app.AppStatusOpt;
 import net.atayun.bazooka.deploy.biz.v2.service.app.FlowStepService;
@@ -26,10 +24,9 @@ public class FlowDispatcher {
     public void dispatcher(FlowDispatcherEvent event) {
         StepWorker stepWorker = event.getStepWorker();
         AppOptFlowStep appOptFlowStep = stepWorker.getAppOptFlowStep();
-        FlowStepStatusEnum status = appOptFlowStep.getStatus();
         AppOpt appOpt = stepWorker.getAppOpt();
 
-        if (status == FlowStepStatusEnum.STAND_BY) {
+        if (appOptFlowStep.isStandBy()) {
             FlowStepThreadPool.execute(stepWorker::doWork);
             return;
         }
@@ -39,24 +36,24 @@ public class FlowDispatcher {
         flowStepService.update(appOptFlowStep);
 
         boolean flowFinish = false;
-        if (status == FlowStepStatusEnum.SUCCESS) {
+        if (appOptFlowStep.isSuccess()) {
             //next
             AppOptFlowStep nextStep = getBean(FlowStepService.class).nextStep(appOptFlowStep);
             if (nextStep == null) {
                 //finish
                 flowFinish = true;
-                appOpt.setStatus(AppOptStatusEnum.SUCCESS);
+                appOpt.success();
             } else {
                 nextStep.setInput(appOptFlowStep.getOutput());
                 FlowStepThreadPool.execute(() -> new StepWorker(appOpt, nextStep).doWork());
             }
-        } else if (status == FlowStepStatusEnum.FAILURE) {
+        } else if (appOptFlowStep.isFailure()) {
             //failure -> finish
             flowFinish = true;
-            appOpt.setStatus(AppOptStatusEnum.FAILURE);
+            appOpt.failure();
         }
         if (flowFinish) {
-            getBean(AppOptService.class).updateStatus(appOpt.getId(), appOpt.getStatus());
+            getBean(AppOptService.class).update(appOpt);
             AppStatusOpt.updateAppStatus(appOpt, false);
         }
     }

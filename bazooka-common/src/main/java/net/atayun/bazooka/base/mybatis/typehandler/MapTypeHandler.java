@@ -1,5 +1,6 @@
 package net.atayun.bazooka.base.mybatis.typehandler;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedJdbcTypes;
@@ -50,26 +51,29 @@ public class MapTypeHandler extends BaseTypeHandler<Map<String, Object>> {
         } else if (map.isEmpty()) {
             return "";
         }
-        StringBuilder stringBuilder = new StringBuilder();
-        map.forEach((k, v) -> stringBuilder.append(k).append("=").append(v).append(","));
-        if (stringBuilder.length() > 0) {
-            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-        }
-        return stringBuilder.toString();
+//        StringBuilder stringBuilder = new StringBuilder();
+//        map.forEach((k, v) -> stringBuilder.append(k).append("=").append(v).append(","));
+//        if (stringBuilder.length() > 0) {
+//            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+//        }
+//        return stringBuilder.toString();
+        JSONObject jsonObject = new JSONObject(map);
+        return jsonObject.toString();
     }
 
     private Map<String, Object> str2Map(String value) {
+
         if (value == null) {
             return null;
         } else if (value.isEmpty()) {
             return new HashMap<>();
         }
-        String[] kvArray = value.split(",");
-        Map<String, Object> map = new HashMap<>();
-        for (String kvString : kvArray) {
-            String[] kv = kvString.split("=");
-            map.put(kv[0], kv[1]);
-        }
-        return map;
+//        String[] kvArray = value.split(",");
+//        Map<String, Object> map = new HashMap<>();
+//        for (String kvString : kvArray) {
+//            String[] kv = kvString.split("=");
+//            map.put(kv[0], kv[1]);
+//        }
+        return JSONObject.parseObject(value, Map.class);
     }
 }

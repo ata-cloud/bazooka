@@ -64,7 +64,7 @@ public class CleanDoingEventOnStart implements ApplicationListener<ApplicationRe
 //            AppOperationEventEntity patch = new AppOperationEventEntity();
 //            patch.setId(entity.getId());
 //            patch.setStatus(AppOperationEventStatusEnum.FAILURE);
-//            appOperationEventService.updateStatus(patch);
+//            appOperationEventService.update(patch);
 //
 //            appApi.updateAppDeployStatus(entity.getAppId(), entity.getEnvId(), false, entity.getEvent());
 //        });

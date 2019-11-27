@@ -25,25 +25,6 @@ import java.util.Map;
 @Table(name = "deploy_app_opt")
 public class AppOpt extends JdbcMysqlEntity<Long> {
 
-    public AppOpt() {
-    }
-
-    public AppOpt(AppActionParam appActionParam, AppInfoDto appInfo) {
-        this.appId = appActionParam.getAppId();
-        this.appName = appInfo.getAppName();
-        this.projectId = appInfo.getProjectId();
-        this.envId = appActionParam.getEnvId();
-        this.opt = appActionParam.getEvent();
-        JSONObject jsonObject = JSONObject.parseObject(appActionParam.getDetail());
-        this.detail = new HashMap<>(jsonObject);
-        this.status = AppOptStatusEnum.PROCESS;
-        this.remark = StrategyNumBean.getBeanInstance(AppOptType.class, this.opt.name()).remark(this);
-        this.appDeployUuid = "";
-        this.appDeployVersion = "";
-        this.appRunServiceId = "";
-        this.appDeployConfig = "";
-    }
-
     private Long appId;
 
     private String appName;
@@ -71,6 +52,25 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
 
     private String appDeployConfig;
 
+    public AppOpt() {
+    }
+
+    public AppOpt(AppActionParam appActionParam, AppInfoDto appInfo) {
+        this.appId = appActionParam.getAppId();
+        this.appName = appInfo.getAppName();
+        this.projectId = appInfo.getProjectId();
+        this.envId = appActionParam.getEnvId();
+        this.opt = appActionParam.getEvent();
+        JSONObject jsonObject = JSONObject.parseObject(appActionParam.getDetail());
+        this.detail = new HashMap<>(jsonObject);
+        process();
+        this.remark = StrategyNumBean.getBeanInstance(AppOptType.class, this.opt.name()).remark(this);
+        this.appDeployUuid = "";
+        this.appDeployVersion = "";
+        this.appRunServiceId = "";
+        this.appDeployConfig = "";
+    }
+
     public AppOpt(AppActionParam appActionParam, AppInfoDto appInfo, AppOpt template) {
         this.appId = appActionParam.getAppId();
         this.appName = appInfo.getAppName();
@@ -80,7 +80,7 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
         JSONObject jsonObject = JSONObject.parseObject(appActionParam.getDetail());
         this.detail = new HashMap<>(jsonObject);
         this.detail.putAll(template.getDetail());
-        this.status = AppOptStatusEnum.PROCESS;
+        process();
         this.appDeployUuid = template.getAppDeployUuid();
         this.appDeployVersion = template.getAppDeployVersion();
         this.appDeployConfig = template.getAppDeployConfig();
@@ -90,6 +90,30 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
         this.appDeployVersion = "";
         this.appRunServiceId = "";
         this.appDeployConfig = "";
+    }
+
+    public void process() {
+        this.status = AppOptStatusEnum.PROCESS;
+    }
+
+    public void success() {
+        this.status = AppOptStatusEnum.SUCCESS;
+    }
+
+    public void failure() {
+        this.status = AppOptStatusEnum.FAILURE;
+    }
+
+    public boolean isProcess() {
+        return this.status == AppOptStatusEnum.PROCESS;
+    }
+
+    public boolean isSuccess() {
+        return this.status == AppOptStatusEnum.SUCCESS;
+    }
+
+    public boolean isFailure() {
+        return this.status == AppOptStatusEnum.FAILURE;
     }
 
     public Long getDeployConfigId() {

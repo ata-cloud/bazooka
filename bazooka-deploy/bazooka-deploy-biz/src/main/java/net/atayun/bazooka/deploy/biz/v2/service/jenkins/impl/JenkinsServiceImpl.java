@@ -48,16 +48,17 @@ public class JenkinsServiceImpl implements JenkinsService {
         custom.remove(StepCallbackParam.CUSTOM_KEY_OPT_ID);
         custom.remove(StepCallbackParam.CUSTOM_KEY_STEP_ID);
         appOptFlowStep.setOutput(new HashMap<>(custom));
+        appOptFlowStep.setStatus(stepStatusEnum);
 
         Step step = StrategyNumBean.getBeanInstance(Step.class, appOptFlowStep.getStep());
         if (step instanceof Callback) {
             try {
                 ((Callback) step).callback(appOpt, appOptFlowStep);
             } catch (Throwable throwable) {
-                stepStatusEnum = FlowStepStatusEnum.FAILURE;
+                appOptFlowStep.failure();
             }
         }
 
-        step.notification(appOpt, appOptFlowStep, stepStatusEnum);
+        step.notification(appOpt, appOptFlowStep);
     }
 }

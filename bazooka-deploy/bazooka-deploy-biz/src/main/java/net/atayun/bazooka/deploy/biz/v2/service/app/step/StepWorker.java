@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.atayun.bazooka.base.bean.StrategyNumBean;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
-import net.atayun.bazooka.deploy.biz.v2.enums.FlowStepStatusEnum;
+import net.atayun.bazooka.deploy.biz.v2.service.app.FlowStepService;
+
+import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
 
 /**
  * @author Ping
@@ -25,20 +27,22 @@ public class StepWorker {
     }
 
     public void doWork() {
+        appOptFlowStep.process();
+        getBean(FlowStepService.class).update(appOptFlowStep);
         Step step = StrategyNumBean.getBeanInstance(Step.class, appOptFlowStep.getStep());
-        FlowStepStatusEnum status = FlowStepStatusEnum.SUCCESS;
         try {
             step.doWork(appOpt, appOptFlowStep);
+            appOptFlowStep.success();
         } catch (Throwable throwable) {
             log.warn("步骤异常: ", throwable);
-            status = FlowStepStatusEnum.FAILURE;
+            appOptFlowStep.failure();
         } finally {
-            if (status == FlowStepStatusEnum.SUCCESS) {
+            if (appOptFlowStep.isSuccess()) {
                 if (step instanceof SinglePhase) {
-                    step.notification(appOpt, appOptFlowStep, status);
+                    step.notification(appOpt, appOptFlowStep);
                 }
             } else {
-                step.notification(appOpt, appOptFlowStep, status);
+                step.notification(appOpt, appOptFlowStep);
             }
         }
 

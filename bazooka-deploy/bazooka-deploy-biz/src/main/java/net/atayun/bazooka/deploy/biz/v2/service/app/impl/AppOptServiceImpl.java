@@ -86,10 +86,7 @@ public class AppOptServiceImpl implements AppOptService {
     }
 
     @Override
-    public void updateStatus(Long id, AppOptStatusEnum status) {
-        AppOpt appOpt = new AppOpt();
-        appOpt.setId(id);
-        appOpt.setStatus(status);
+    public void update(AppOpt appOpt) {
         appOptMapper.updateByPrimaryKeySelective(appOpt);
     }
 

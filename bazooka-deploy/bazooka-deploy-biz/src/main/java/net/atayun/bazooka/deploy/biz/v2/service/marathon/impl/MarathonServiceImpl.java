@@ -46,15 +46,16 @@ public class MarathonServiceImpl implements MarathonService {
         map.put("appDeployVersion", marathonCallbackParam.getMarathonDeploymentVersion());
         map.put("finishStatus", marathonCallbackParam.getFinishStatus());
         appOptFlowStep.setOutput(map);
+        appOptFlowStep.setStatus(stepStatusEnum);
 
         Step4HealthCheck step = (Step4HealthCheck) StrategyNumBean.getBeanInstance(Step.class, FlowStepConstants.HEALTH_CHECK);
         try {
             step.callback(appOpt, appOptFlowStep);
         } catch (Throwable throwable) {
-            stepStatusEnum = FlowStepStatusEnum.FAILURE;
+            appOptFlowStep.failure();
         }
 
-        step.notification(appOpt, appOptFlowStep, stepStatusEnum);
+        step.notification(appOpt, appOptFlowStep);
     }
 
     @Override

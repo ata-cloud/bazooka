@@ -34,4 +34,35 @@ public class AppOptFlowStep extends JdbcMysqlEntity<Long> {
 
     private String logPath;
 
+    public void success() {
+        this.setStatus(FlowStepStatusEnum.SUCCESS);
+    }
+
+    public void failure() {
+        this.setStatus(FlowStepStatusEnum.FAILURE);
+    }
+
+    public void process() {
+        this.setStatus(FlowStepStatusEnum.PROCESS);
+    }
+
+    public void standBy() {
+        this.setStatus(FlowStepStatusEnum.STAND_BY);
+    }
+
+    public boolean isSuccess() {
+        return this.status == FlowStepStatusEnum.SUCCESS;
+    }
+
+    public boolean isFailure() {
+        return this.status == FlowStepStatusEnum.FAILURE;
+    }
+
+    public boolean isProcess() {
+        return this.status == FlowStepStatusEnum.PROCESS;
+    }
+
+    public boolean isStandBy() {
+        return this.status == FlowStepStatusEnum.STAND_BY;
+    }
 }

@@ -68,6 +68,9 @@ public class Platform4Node implements Platform {
     public void stopApp(AppOpt appOpt, boolean updateAppOpt) {
         AppOptService appOptService = getBean(AppOptService.class);
         AppOpt lastAppOpt = appOptService.selectLastSuccessByAppIdAndEnv(appOpt.getAppId(), appOpt.getEnvId());
+        if (lastAppOpt == null) {
+            return;
+        }
         String[] nodeIdsStr = lastAppOpt.getAppDeployUuid().split(",");
         String containerName = lastAppOpt.getAppDeployVersion();
         String command = STOP_COMMAND.replace("__CONTAINER_NAME__", containerName);

@@ -13,8 +13,7 @@ public abstract class Step {
 
     protected abstract void doWork(AppOpt appOpt, AppOptFlowStep appOptFlowStep);
 
-    public void notification(AppOpt appOpt, AppOptFlowStep appOptFlowStep, FlowStepStatusEnum stepStatus) {
-        appOptFlowStep.setStatus(stepStatus);
+    public void notification(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
         SpringApplicationEventPublisher.publish(new FlowDispatcherEvent(this, new StepWorker(appOpt, appOptFlowStep)));
     }
 

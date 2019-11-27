@@ -47,7 +47,7 @@ public class AppOptFlowStepBuilder {
 
         AppOptFlowStep appOptFlowStep = new AppOptFlowStep();
         appOptFlowStep.setOptId(optId);
-        appOptFlowStep.setStatus(FlowStepStatusEnum.STAND_BY);
+        appOptFlowStep.standBy();
         appOptFlowStep.setStep(step);
         appOptFlowStep.setStepSeq(seq);
         appOptFlowStep.setInput(input);

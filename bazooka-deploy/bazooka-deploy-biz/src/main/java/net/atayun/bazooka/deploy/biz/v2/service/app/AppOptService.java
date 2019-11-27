@@ -28,7 +28,7 @@ public interface AppOptService {
 
     AppOpt selectByAppDeployUuidAndVersionForMarathon(String marathonDeploymentId, String marathonDeploymentVersion);
 
-    void updateStatus(Long id, AppOptStatusEnum status);
+    void update(AppOpt appOpt);
 
     List<AppOpt> selectByAppIdAndStatus(Long appId, AppOptStatusEnum status);
 
