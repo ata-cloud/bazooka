@@ -193,7 +193,7 @@ public class Platform4Node implements Platform {
 
     private void exec(Session session, String command) throws JSchException, IOException {
         ChannelExec exec = (ChannelExec) session.openChannel("exec");
-        exec.setCommand("ls");
+        exec.setCommand(command);
         exec.setErrStream(System.err);
         exec.connect();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(exec.getInputStream(), StandardCharsets.UTF_8));
@@ -203,10 +203,13 @@ public class Platform4Node implements Platform {
         }
         System.out.println(exec.getExitStatus());
         exec.disconnect();
+    }
+
+//    private void shell(Session session, String command) throws JSchException, IOException {
 //        ChannelShell channel = (ChannelShell) session.openChannel("shell");
 //        channel.connect();
 //        OutputStream outputStream = channel.getOutputStream();
-////        outputStream.write("sudo su".getBytes());
+//        outputStream.write("sudo su".getBytes());
 //        outputStream.write(command.getBytes());
 //        outputStream.write("exit".getBytes());
 ////        outputStream.write("exit".getBytes());
@@ -218,5 +221,5 @@ public class Platform4Node implements Platform {
 //        }
 //        System.out.println(channel.getExitStatus());
 //        channel.disconnect();
-    }
+//    }
 }
