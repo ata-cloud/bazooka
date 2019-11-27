@@ -44,28 +44,31 @@ public class JenkinsJobPropertiesHelper {
     }
 
     public String randomPullCode() {
-        return "";
+        return randomJob(jenkinsJobProperties.getPullCodeJobs());
     }
 
     public String randomPackageProject() {
-        return "";
+        return randomJob(jenkinsJobProperties.getPackageProjectJobs());
     }
 
     public String randomBuildDockerImage() {
-        return "";
+        return randomJob(jenkinsJobProperties.getBuildImageJobs());
     }
 
     public String randomPushDockerImageJobName() {
-        List<String> jenkinsPushDockerImageJobs = jenkinsJobProperties.getJenkinsPushDockerImageJobs();
-        if (CollectionUtils.isEmpty(jenkinsPushDockerImageJobs)) {
-            throw new BizException("", "未配置任何推送镜像Job");
-        }
-        return jenkinsPushDockerImageJobs.get(RandomUtils.nextInt(0, jenkinsPushDockerImageJobs.size()));
+        return randomJob(jenkinsJobProperties.getPushImageJobs());
     }
 
+    private String randomJob(List<String> jobs) {
+        if (CollectionUtils.isEmpty(jobs)) {
+            throw new BizException("", "未配置任何Job");
+        }
+        return jobs.get(RandomUtils.nextInt(0, jobs.size()));
+    }
 
     public String buildCallbackUri() {
-        return dcosPropertiesHelper.dcosPublicAgentIp() + ":" + serverPort + jenkinsJobProperties.getBuildCallbackPath();
+//        return dcosPropertiesHelper.dcosPublicAgentIp() + ":" + serverPort + jenkinsJobProperties.getBuildCallbackPath();
+        return "http://10.0.52.50:" + serverPort + jenkinsJobProperties.getBuildCallbackPath();
     }
 
 }

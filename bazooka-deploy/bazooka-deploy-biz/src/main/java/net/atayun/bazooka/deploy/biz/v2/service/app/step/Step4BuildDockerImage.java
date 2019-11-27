@@ -2,17 +2,21 @@ package net.atayun.bazooka.deploy.biz.v2.service.app.step;
 
 import com.alibaba.fastjson.JSONObject;
 import com.youyu.common.enums.IsDeleted;
+import com.youyu.common.exception.BizException;
 import net.atayun.bazooka.base.annotation.StrategyNum;
-import net.atayun.bazooka.deploy.biz.constants.JenkinsBuildJobConstants;
-import net.atayun.bazooka.deploy.biz.constants.JenkinsPushDockerImageJobConstants;
-import net.atayun.bazooka.deploy.biz.param.jenkins.GitCommit;
-import net.atayun.bazooka.deploy.biz.v2.constant.FlowStepConstants;
+import net.atayun.bazooka.base.constant.FlowStepConstants;
+import net.atayun.bazooka.deploy.biz.v2.constant.JenkinsBuildJobConstants;
+import net.atayun.bazooka.deploy.biz.v2.constant.JenkinsPushDockerImageJobConstants;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
+import net.atayun.bazooka.deploy.biz.v2.param.GitCommit;
+import net.atayun.bazooka.deploy.biz.v2.service.app.FlowStepService;
 import net.atayun.bazooka.deploy.biz.v2.service.app.step.jenkins.Step4Jenkins;
+import net.atayun.bazooka.pms.api.PmsCredentialsApi;
 import net.atayun.bazooka.pms.api.dto.AppDeployConfigDto;
 import net.atayun.bazooka.pms.api.dto.AppInfoDto;
 import net.atayun.bazooka.pms.api.dto.AppInfoWithCredential;
+import net.atayun.bazooka.pms.api.dto.PmsCredentialsDto;
 import net.atayun.bazooka.pms.api.feign.AppApi;
 import net.atayun.bazooka.rms.api.RmsDockerImageApi;
 import net.atayun.bazooka.rms.api.api.EnvApi;
@@ -48,7 +52,14 @@ public class Step4BuildDockerImage extends Step4Jenkins implements Callback {
         ClusterConfigDto clusterConfig = getBean(EnvApi.class).getEnvConfiguration(appOpt.getEnvId())
                 .ifNotSuccessThrowException().getData();
         String branch = appOpt.getBranch();
-        GitCommit gitCommit = JSONObject.parseObject((String) output.get("gitCommit"), GitCommit.class);
+        Object commitObj = output.get("gitCommit");
+        if (commitObj == null) {
+            commitObj = getBean(FlowStepService.class).getFromBeforeOutput(appOptFlowStep, "gitCommit");
+            if (commitObj == null) {
+                throw new BizException("", "保存镜像信息异常[gitCommit丢失]");
+            }
+        }
+        GitCommit gitCommit = JSONObject.parseObject((String) commitObj, GitCommit.class);
         RmsDockerImageDto rmsDockerImageDto = new RmsDockerImageDto();
         rmsDockerImageDto.setEnvId(appOpt.getEnvId());
         rmsDockerImageDto.setAppId(appOpt.getAppId());
@@ -81,18 +92,25 @@ public class Step4BuildDockerImage extends Step4Jenkins implements Callback {
                 .ifNotSuccessThrowException()
                 .getData();
         Map<String, String> param = new HashMap<>();
-        param.put(JenkinsBuildJobConstants.OPT_ID, appOpt.getId().toString());
         param.put(JenkinsBuildJobConstants.STEP_ID, appOptFlowStep.getId().toString());
+        param.put(JenkinsBuildJobConstants.OPT_ID, appOpt.getId().toString());
         param.put(JenkinsBuildJobConstants.BUILD_CALLBACK_URI, jenkinsJobPropertiesHelper.buildCallbackUri());
+        param.put(JenkinsBuildJobConstants.WORK_PATH, (String) appOptFlowStep.getInput().get("workPath"));
         param.put(JenkinsBuildJobConstants.DOCKER_REGISTRY, clusterConfig.getDockerHubUrl());
         param.put(JenkinsBuildJobConstants.DOCKER_IMAGE_NAME, appInfo.getDockerImageName());
         String dockerImageTag = String.join("-", env.getCode(), appOpt.getBranch(),
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMdd-HHmm")));
         param.put(JenkinsBuildJobConstants.DOCKER_IMAGE_TAG, dockerImageTag);
         param.put(JenkinsBuildJobConstants.DOCKERFILE_PATH, appDeployConfig.getDockerfilePath());
-        param.put(JenkinsPushDockerImageJobConstants.NEED_AUTH, "");
-        param.put(JenkinsPushDockerImageJobConstants.USERNAME, "");
-        param.put(JenkinsPushDockerImageJobConstants.PASSWORD, "");
+        Long dockerHubCredentialId = clusterConfig.getDockerHubCredentialId();
+        boolean needAuth = dockerHubCredentialId != null;
+        param.put(JenkinsPushDockerImageJobConstants.NEED_AUTH, needAuth + "");
+        if (needAuth) {
+            PmsCredentialsDto credentials = getBean(PmsCredentialsApi.class).getCredentialsDtoById(dockerHubCredentialId)
+                    .ifNotSuccessThrowException().getData();
+            param.put(JenkinsPushDockerImageJobConstants.PASSWORD, credentials.getCredentialValue());
+            param.put(JenkinsPushDockerImageJobConstants.USERNAME, credentials.getCredentialKey());
+        }
         return param;
     }
 

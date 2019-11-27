@@ -26,7 +26,7 @@ public class AppOptWorker {
 
     public void doWork() {
         AppOpt appOpt = this.appOpt;
-        //可后续拓展自定义
+        //可后续拓展为自定义
         List<String> stepTypes = appOpt.getOpt().defaultFlowStepTypes();
 
         Map<String, Object> detail = appOpt.getDetail();

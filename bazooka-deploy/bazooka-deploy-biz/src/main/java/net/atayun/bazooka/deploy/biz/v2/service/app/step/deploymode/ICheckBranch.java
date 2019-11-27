@@ -2,7 +2,7 @@ package net.atayun.bazooka.deploy.biz.v2.service.app.step.deploymode;
 
 import com.youyu.common.exception.BizException;
 import net.atayun.bazooka.base.git.GitServiceHelp;
-import net.atayun.bazooka.deploy.biz.constants.DeployResultCodeConstants;
+import net.atayun.bazooka.deploy.biz.v2.constant.DeployResultCodeConstants;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.pms.api.dto.AppDeployConfigDto;
 import net.atayun.bazooka.pms.api.dto.AppInfoWithCredential;

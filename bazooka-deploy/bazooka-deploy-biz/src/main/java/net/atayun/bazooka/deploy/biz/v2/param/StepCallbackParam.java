@@ -2,7 +2,7 @@ package net.atayun.bazooka.deploy.biz.v2.param;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.atayun.bazooka.deploy.biz.constants.JenkinsCallbackConstants;
+import net.atayun.bazooka.deploy.biz.v2.constant.JenkinsCallbackConstants;
 
 import java.util.Map;
 

@@ -5,6 +5,7 @@ import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
 import net.atayun.bazooka.deploy.biz.v2.enums.AppOptStatusEnum;
 import net.atayun.bazooka.deploy.biz.v2.enums.FlowStepStatusEnum;
 import net.atayun.bazooka.deploy.biz.v2.service.app.AppOptService;
+import net.atayun.bazooka.deploy.biz.v2.service.app.AppStatusOpt;
 import net.atayun.bazooka.deploy.biz.v2.service.app.FlowStepService;
 import net.atayun.bazooka.deploy.biz.v2.service.app.step.StepWorker;
 import net.atayun.bazooka.deploy.biz.v2.service.app.threadpool.FlowStepThreadPool;
@@ -28,10 +29,17 @@ public class FlowDispatcher {
         FlowStepStatusEnum status = appOptFlowStep.getStatus();
         AppOpt appOpt = stepWorker.getAppOpt();
 
-        boolean flowFinish = false;
         if (status == FlowStepStatusEnum.STAND_BY) {
             FlowStepThreadPool.execute(stepWorker::doWork);
-        } else if (status == FlowStepStatusEnum.SUCCESS) {
+            return;
+        }
+
+        //update
+        FlowStepService flowStepService = getBean(FlowStepService.class);
+        flowStepService.update(appOptFlowStep);
+
+        boolean flowFinish = false;
+        if (status == FlowStepStatusEnum.SUCCESS) {
             //next
             AppOptFlowStep nextStep = getBean(FlowStepService.class).nextStep(appOptFlowStep);
             if (nextStep == null) {
@@ -49,6 +57,7 @@ public class FlowDispatcher {
         }
         if (flowFinish) {
             getBean(AppOptService.class).updateStatus(appOpt.getId(), appOpt.getStatus());
+            AppStatusOpt.updateAppStatus(appOpt, false);
         }
     }
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.atayun.bazooka.deploy.biz.v2.enums.FlowStepStatusEnum;
 
+import javax.persistence.Column;
 import javax.persistence.Table;
 import java.util.Map;
 
@@ -22,10 +23,13 @@ public class AppOptFlowStep extends JdbcMysqlEntity<Long> {
 
     private String step;
 
+    @Column(name = "status")
     private FlowStepStatusEnum status;
 
+    @Column(name = "input")
     private Map<String, Object> input;
 
+    @Column(name = "output")
     private Map<String, Object> output;
 
     private String logPath;

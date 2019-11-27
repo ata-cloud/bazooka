@@ -6,7 +6,7 @@ import mesosphere.marathon.client.MarathonClient;
 import mesosphere.marathon.client.model.v2.*;
 import net.atayun.bazooka.base.annotation.StrategyNum;
 import net.atayun.bazooka.base.constant.CommonConstants;
-import net.atayun.bazooka.deploy.biz.constants.MarathonAppConfigConstants;
+import net.atayun.bazooka.deploy.biz.v2.constant.MarathonAppConfigConstants;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
 import net.atayun.bazooka.deploy.biz.v2.service.app.AppOptService;
@@ -67,7 +67,7 @@ public class Platform4Marathon implements Platform {
     @Override
     public void startApp(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
         Consumer<App> consumer = app -> {
-            Integer instance = (Integer) appOptFlowStep.getInput().get("instance");
+            Integer instance = appOpt.getInstance();
             app.setInstances(instance);
         };
         lifeCycle(appOpt, consumer);
@@ -88,9 +88,9 @@ public class Platform4Marathon implements Platform {
     @Override
     public void scaleApp(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
         Consumer<App> consumer = app -> {
-            Integer instance = (Integer) appOptFlowStep.getInput().get("instance");
-            Double cpu = (Double) appOptFlowStep.getInput().get("cpu");
-            Double mem = (Double) appOptFlowStep.getInput().get("memory");
+            Integer instance = appOpt.getInstance();
+            Double cpu = appOpt.getCpu();
+            Double mem = appOpt.getMemory();
             app.setInstances(instance);
             app.setCpus(cpu);
             app.setMem(mem);

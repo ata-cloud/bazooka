@@ -1,7 +1,7 @@
 package net.atayun.bazooka.deploy.biz.v2.service.jenkins.impl;
 
 import net.atayun.bazooka.base.bean.StrategyNumBean;
-import net.atayun.bazooka.deploy.biz.constants.JenkinsCallbackConstants;
+import net.atayun.bazooka.deploy.biz.v2.constant.JenkinsCallbackConstants;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
 import net.atayun.bazooka.deploy.biz.v2.enums.FlowStepStatusEnum;
@@ -43,6 +43,8 @@ public class JenkinsServiceImpl implements JenkinsService {
         FlowStepStatusEnum stepStatusEnum = Objects.equals(result, JenkinsCallbackConstants.BUILD_RESULT_SUCCESS) ?
                 FlowStepStatusEnum.SUCCESS : FlowStepStatusEnum.FAILURE;
 
+        custom.put("jobName", stepCallbackParam.getJobName());
+        custom.put("buildNumber", stepCallbackParam.getJobBuildNumber().toString());
         custom.remove(StepCallbackParam.CUSTOM_KEY_OPT_ID);
         custom.remove(StepCallbackParam.CUSTOM_KEY_STEP_ID);
         appOptFlowStep.setOutput(new HashMap<>(custom));

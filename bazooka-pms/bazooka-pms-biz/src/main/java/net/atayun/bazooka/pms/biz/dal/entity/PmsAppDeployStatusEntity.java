@@ -15,11 +15,11 @@
  */
 package net.atayun.bazooka.pms.biz.dal.entity;
 
-import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.atayun.bazooka.base.enums.AppOptEnum;
 
 import javax.persistence.Column;
 import javax.persistence.Table;
@@ -29,7 +29,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "pms_app_deploy_status")
-public class  PmsAppDeployStatusEntity extends com.youyu.common.entity.JdbcMysqlEntity<Long> {
+public class PmsAppDeployStatusEntity extends com.youyu.common.entity.JdbcMysqlEntity<Long> {
     public PmsAppDeployStatusEntity(Long appId, Long envId) {
         this.appId = appId;
         this.envId = envId;
@@ -58,5 +58,5 @@ public class  PmsAppDeployStatusEntity extends com.youyu.common.entity.JdbcMysql
      * 部署类型
      */
     @Column(name = "deploy_type")
-    private AppOperationEnum deployType;
+    private AppOptEnum deployType;
 }

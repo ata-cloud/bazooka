@@ -16,9 +16,9 @@
 
 package net.atayun.bazooka.deploy.api.dto;
 
-import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
 import lombok.Getter;
 import lombok.Setter;
+import net.atayun.bazooka.base.enums.AppOptEnum;
 
 /**
  * @author Ping
@@ -29,5 +29,5 @@ public class AppRunningEventDto {
 
     private Long envId;
 
-    private AppOperationEnum event;
+    private AppOptEnum event;
 }

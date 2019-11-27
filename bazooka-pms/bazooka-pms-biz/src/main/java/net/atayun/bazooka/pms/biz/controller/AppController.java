@@ -15,9 +15,18 @@
  */
 package net.atayun.bazooka.pms.biz.controller;
 
+import com.youyu.common.api.Result;
+import com.youyu.common.enums.BaseResultCode;
+import com.youyu.common.enums.IsDeleted;
+import com.youyu.common.exception.BizException;
+import com.youyu.common.helper.YyRequestInfoHelper;
+import com.youyu.common.utils.YyAssert;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import net.atayun.bazooka.base.annotation.PmsAuth;
 import net.atayun.bazooka.base.config.GitLabProperties;
-import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
+import net.atayun.bazooka.base.enums.AppOptEnum;
 import net.atayun.bazooka.base.git.GitServiceHelp;
 import net.atayun.bazooka.pms.api.dto.*;
 import net.atayun.bazooka.pms.api.enums.AppKindEnum;
@@ -36,20 +45,11 @@ import net.atayun.bazooka.pms.biz.dal.entity.PmsCredentialsEntity;
 import net.atayun.bazooka.pms.biz.service.*;
 import net.atayun.bazooka.rms.api.RmsDockerImageApi;
 import net.atayun.bazooka.rms.api.api.EnvApi;
-import net.atayun.bazooka.rms.api.dto.*;
 import net.atayun.bazooka.rms.api.dto.EnvDto;
+import net.atayun.bazooka.rms.api.dto.*;
 import net.atayun.bazooka.rms.api.param.EnvAppReq;
 import net.atayun.bazooka.rms.api.param.EnvMlbPortUsedReq;
 import net.atayun.bazooka.rms.api.param.EnvMlbPortUsedRsp;
-import com.youyu.common.api.Result;
-import com.youyu.common.enums.BaseResultCode;
-import com.youyu.common.enums.IsDeleted;
-import com.youyu.common.exception.BizException;
-import com.youyu.common.helper.YyRequestInfoHelper;
-import com.youyu.common.utils.YyAssert;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Branch;
@@ -61,7 +61,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -117,7 +116,7 @@ public class AppController implements AppApi {
         Long currentUserId = YyRequestInfoHelper.getCurrentUserId();
         List<AppInfoDto> appInfoListByUser = this.appService.getAppInfoListByUser(currentUserId, projectId, keyword);
 
-        if (appInfoListByUser == null || appInfoListByUser.size()<=0){
+        if (appInfoListByUser == null || appInfoListByUser.size() <= 0) {
             return Result.ok();
         }
 
@@ -300,7 +299,7 @@ public class AppController implements AppApi {
      */
     @Override
     @PostMapping("/deploy-status/update{appId:\\d+}/{envId:\\d+}")
-    public Result<PmsAppDeployStatusDto> updateAppDeployStatus(@PathVariable Long appId, @PathVariable Long envId, @RequestParam boolean isDeploying, @RequestParam(required = false) AppOperationEnum appOperationEnum) {
+    public Result<PmsAppDeployStatusDto> updateAppDeployStatus(@PathVariable Long appId, @PathVariable Long envId, @RequestParam boolean isDeploying, @RequestParam(required = false) AppOptEnum appOperationEnum) {
         PmsAppDeployStatusDto appDeployStatusDto = this.appDeployStatusService.selectOne(new PmsAppDeployStatusEntity(appId, envId));
         if (ObjectUtils.isEmpty(appDeployStatusDto)) {
             this.appDeployStatusService.insertSelective(new PmsAppDeployStatusEntity(appId, envId, isDeploying, appOperationEnum));

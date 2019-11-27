@@ -10,7 +10,7 @@ import net.atayun.bazooka.rms.api.dto.EnvResourceDto;
 import java.math.BigDecimal;
 
 import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
-import static net.atayun.bazooka.deploy.biz.constants.DeployResultCodeConstants.*;
+import static net.atayun.bazooka.deploy.biz.v2.constant.DeployResultCodeConstants.*;
 
 /**
  * @author Ping

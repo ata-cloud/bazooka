@@ -2,9 +2,9 @@ package net.atayun.bazooka.deploy.biz.v2.service.app.step;
 
 import com.youyu.common.exception.BizException;
 import net.atayun.bazooka.base.annotation.StrategyNum;
-import net.atayun.bazooka.deploy.biz.constants.DeployResultCodeConstants;
-import net.atayun.bazooka.deploy.biz.constants.JenkinsBuildJobConstants;
-import net.atayun.bazooka.deploy.biz.v2.constant.FlowStepConstants;
+import net.atayun.bazooka.base.constant.FlowStepConstants;
+import net.atayun.bazooka.deploy.biz.v2.constant.DeployResultCodeConstants;
+import net.atayun.bazooka.deploy.biz.v2.constant.JenkinsBuildJobConstants;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
 import net.atayun.bazooka.deploy.biz.v2.service.app.step.jenkins.Step4Jenkins;

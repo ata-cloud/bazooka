@@ -14,6 +14,7 @@ import net.atayun.bazooka.pms.api.dto.AppDeployConfigDto;
 import net.atayun.bazooka.pms.api.dto.PmsCredentialsDto;
 import net.atayun.bazooka.pms.api.feign.AppApi;
 import net.atayun.bazooka.pms.api.param.PortMapping;
+import net.atayun.bazooka.pms.api.param.VolumeMount;
 import net.atayun.bazooka.rms.api.api.RmsClusterNodeApi;
 import net.atayun.bazooka.rms.api.dto.rsp.ClusterNodeRspDto;
 import org.springframework.stereotype.Component;
@@ -37,7 +38,7 @@ import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
 @StrategyNum(superClass = Platform.class, number = "2")
 public class Platform4Node implements Platform {
 
-    private static final String DEPLOY_COMMAND = "docker run --name __CONTAINER_NAME__ __PORT_MAPPING__ -d __IMAGE_AND_TAG__";
+    private static final String DEPLOY_COMMAND = "docker run --name __CONTAINER_NAME__ __PORT_MAPPING__ __ENV__ __VOLUME__ -d __IMAGE_AND_TAG__";
     private static final String STOP_COMMAND = "docker stop __CONTAINER_NAME__; docker rm __CONTAINER_NAME__";
     private static final String RESTART_COMMAND = "docker restart __CONTAINER_NAME__";
 
@@ -127,8 +128,17 @@ public class Platform4Node implements Platform {
         String port = portMappings.stream()
                 .map(portMapping -> " -p " + portMapping.getServicePort() + ":" + portMapping.getContainerPort())
                 .collect(Collectors.joining(" "));
+        Map<String, Object> environmentVariable = appDeployConfigDto.getEnvironmentVariable();
+        StringBuilder env = new StringBuilder();
+        environmentVariable.forEach((k, v) -> env.append(" -e ").append(k).append("=").append("\"").append(v).append("\" "));
+        List<VolumeMount> volumes = appDeployConfigDto.getVolumes();
+        String volume = volumes.stream()
+                .map(volumeMount -> " -v " + volumeMount.getHostPath() + ":" + volumeMount.getContainerPath())
+                .collect(Collectors.joining(" "));
         String command = DEPLOY_COMMAND.replace("__CONTAINER_NAME__", containerName)
                 .replace("__PORT_MAPPING__", port)
+                .replace("__ENV__", env.toString())
+                .replace("__VOLUME__", volume)
                 .replace("__IMAGE_AND_TAG__", image);
 
         ssh(clusterNodeIds, command);

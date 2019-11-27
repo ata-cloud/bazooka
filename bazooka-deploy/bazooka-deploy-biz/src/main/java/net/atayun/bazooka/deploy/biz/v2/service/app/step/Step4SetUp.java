@@ -1,7 +1,7 @@
 package net.atayun.bazooka.deploy.biz.v2.service.app.step;
 
 import net.atayun.bazooka.base.annotation.StrategyNum;
-import net.atayun.bazooka.deploy.biz.v2.constant.FlowStepConstants;
+import net.atayun.bazooka.base.constant.FlowStepConstants;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
 import net.atayun.bazooka.deploy.biz.v2.service.app.step.deploymode.DeployMode;

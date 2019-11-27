@@ -1,36 +1,44 @@
 package net.atayun.bazooka.deploy.biz.v2.service.app;
 
+import net.atayun.bazooka.base.enums.AppOptEnum;
+import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.EventWithMarathonEntity;
+import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.DeployCountsEntity;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
+import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptHis;
 import net.atayun.bazooka.deploy.biz.v2.enums.AppOptStatusEnum;
 import net.atayun.bazooka.deploy.biz.v2.param.AppActionParam;
+import net.atayun.bazooka.deploy.biz.v2.param.AppOptHisMarathonParam;
+import net.atayun.bazooka.deploy.biz.v2.param.AppOptHisParam;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author Ping
  */
 public interface AppOptService {
 
-    /**
-     * 保存app操作
-     *
-     * @param appActionParam 参数
-     * @return 服务操作
-     */
     AppOpt saveOpt(AppActionParam appActionParam);
 
     AppOpt selectById(Long optId);
 
-    /**
-     * 发布 回滚
-     *
-     * @param appId
-     * @param envId
-     * @return
-     */
     AppOpt selectLastSuccessByAppIdAndEnv(Long appId, Long envId);
 
-    void updateById(AppOpt appopt);
+    void updateById(AppOpt appOpt);
 
-    AppOpt selectByAppDeployUuidAndVersion(String marathonDeploymentId, String marathonDeploymentVersion);
+    AppOpt selectByAppDeployUuidAndVersionForMarathon(String marathonDeploymentId, String marathonDeploymentVersion);
 
     void updateStatus(Long id, AppOptStatusEnum status);
+
+    List<AppOpt> selectByAppIdAndStatus(Long appId, AppOptStatusEnum status);
+
+    List<AppOptHis> getAppOptHis(AppOptHisParam pageParam);
+
+    List<EventWithMarathonEntity> getAppOptHisMarathon(AppOptHisMarathonParam pageParam);
+
+    AppOpt selectRollbackEntity(Long appId, Long envId, AppOptStatusEnum statusEnum, AppOptEnum appOptEnum);
+
+    AppOpt isProcessing(Long appId, Long envId);
+
+    List<DeployCountsEntity> deployCountsByProject(Long projectId, LocalDateTime leftDatetime);
 }

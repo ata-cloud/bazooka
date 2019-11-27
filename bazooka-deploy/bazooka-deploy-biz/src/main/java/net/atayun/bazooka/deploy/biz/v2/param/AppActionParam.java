@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import net.atayun.bazooka.deploy.biz.v2.enums.AppOptEnum;
+import net.atayun.bazooka.base.enums.AppOptEnum;
 
 import javax.validation.constraints.NotNull;
 

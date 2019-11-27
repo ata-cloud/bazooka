@@ -6,7 +6,7 @@ import net.atayun.bazooka.base.constant.CommonConstants;
 import net.atayun.bazooka.base.docker.DockerRegistryService;
 import net.atayun.bazooka.base.docker.domain.DockerImageTags;
 import net.atayun.bazooka.base.enums.deploy.DeployModeEnum;
-import net.atayun.bazooka.deploy.biz.constants.DeployResultCodeConstants;
+import net.atayun.bazooka.deploy.biz.v2.constant.DeployResultCodeConstants;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
 import net.atayun.bazooka.pms.api.dto.AppInfoDto;
