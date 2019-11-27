@@ -189,14 +189,14 @@ class BuildSet extends React.Component {
           <Steps current={i} style={{ padding: '0 100px' }} size="small" >
             <Step title="基本信息" />
             {
-              deployMode == 'BUILD' && <Step title="编译构建" />
+              deployMode.indexOf('BUILD') > -1 == 'BUILD' && <Step title="编译构建" />
             }
             <Step title="容器运行" />
             <Step title="额外设置" />
           </Steps>
           <Form onSubmit={this.onSubmit}>
             {step === 0 && <BaseInfo formParent={form} data={data} deployMode={deployMode} currentItem={currentItem} />}
-            {step === 1 && deployMode == 'BUILD' && <Compile formParent={form} data={data} />}
+            {step === 1 && deployMode.indexOf('BUILD') > -1 && <Compile formParent={form} data={data} />}
             {step === 2 && <Container formParent={form} data={data} info={info} />}
             {step === 3 && <ExtarSet formParent={form} data={data} />}
           </Form>

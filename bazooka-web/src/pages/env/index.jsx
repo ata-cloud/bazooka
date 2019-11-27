@@ -162,7 +162,7 @@ class Env extends React.Component {
     const { resourceType } = this.state;
     const { list, loading } = this.props;
     return (
-      <Row gutter={24}>
+      <Row gutter={24} type="flex">
         {
           list && list && !list.length && !loading &&
           <Col span={8}>
@@ -207,10 +207,9 @@ class Env extends React.Component {
                     <p>所属集群</p>
                     {
                       isAdmin() ?
-                        <Link to={{ pathname: '/cluster/detail', query: { clusterId: item.clusterId } }}>{item.clusterName}</Link> :
-                        <span>{item.clusterName}</span>
+                        <Link className={`${styles.textOverflow} ${styles.clusterName}`} to={{ pathname: '/cluster/detail', query: { clusterId: item.clusterId } }} title={item.clusterName}>{item.clusterName}</Link> :
+                        <span className={`${styles.textOverflow} ${styles.clusterName}`} title={item.clusterName}>{item.clusterName}</span>
                     }
-
                   </div>
                   <div className={styles.clusterItem}>
                     <p>使用此环境的项目</p>
@@ -244,11 +243,11 @@ class Env extends React.Component {
                         <div className={styles.rightBlock}>-%（-/ {MformG(item.memory)} GiB）</div>
                       </div>
                       <div className={`${styles.flexCenter}`} style={{ margin: '10px 20px' }}>
-                        <div className={styles.leftBlock}>磁盘</div>
+                        <div className={styles.leftBlock}></div>
                         <div className={`${styles.flex1} ${styles.processLR}`}>
-                          <Progress percent={0} showInfo={false} />
+                          {/* <Progress percent={0} showInfo={false} /> */}
                         </div>
-                        <div className={styles.rightBlock}>-%（-/ {MformG(item.disk)} GiB）</div>
+                        {/* <div className={styles.rightBlock}>-%（-/ {MformG(item.disk)} GiB）</div> */}
                       </div>
                     </div>
                     :

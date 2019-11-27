@@ -312,7 +312,7 @@ class ServiceSetting extends React.Component {
         </div>
         <div className={styles.flexCenter}>
           <p className={styles.basicInfoItem}>服务描述：</p>
-          <p className={styles.flex1}>{appBaseInfo.description}</p>
+          <p className={styles.flex1} style={{wordBreak: 'break-all'}}>{appBaseInfo.description}</p>
         </div>
       </Card>
     )

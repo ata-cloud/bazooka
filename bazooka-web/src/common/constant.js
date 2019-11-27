@@ -8,6 +8,23 @@ const CLUSTER_TYPE_O = {
   '1': 'Kubernetes集群',
   '2': 'Bazooka单节点集群'
 };
+const CLUSTER_TYPE_O_ALL = {
+  '0': {
+    name: 'Mesos集群',
+    buildName: 'Mesos构建发布',
+    buildType: 'MARATHON_BUILD'
+  },
+  '1': {
+    name: 'Kubernetes集群',
+    buildName: 'Kubernetes构建发布',
+    buildType: 'KUBERNETES_BUILD'
+  },
+  '2': {
+    name: 'Bazooka单节点集群',
+    buildName: '单节点构建发布',
+    buildType: 'NODE_BUILD'
+  }
+};
 const CLUSTER_STATUS = {
   '0': {
     type: 'success',
@@ -156,12 +173,18 @@ const APP_KINDS_O = {
     text: 'OPS托管Gitlab',
     icon: IMAGE.GITLAB
   },
-  "GIT_REPOSITORY":{
+  "GIT_REPOSITORY": {
     type: 'GIT_REPOSITORY',
     text: 'Git代码仓库',
     icon: IMAGE.GIT
   }
 };
+//凭据类型
+const GIT_DOMAIN_O = {
+  GIT_SERVER: '代码仓库凭据',
+  DOCKER_REGISTRY: '镜像库凭据',
+  NODE_LOGIN: '节点登录凭据'
+}
 export {
   CARD_TITLE_BG,
   SCALE_CPU,
@@ -176,7 +199,9 @@ export {
   CONTAINTER_STATUS_O,
   SERVICE_LOG_RESULT_O,
   HEALTH_STATUS_O,
-  APP_KINDS_O
+  APP_KINDS_O,
+  CLUSTER_TYPE_O_ALL,
+  GIT_DOMAIN_O
 }
 
 
