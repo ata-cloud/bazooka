@@ -13,29 +13,22 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package net.atayun.bazooka.deploy.biz.v2.dto.app;
+package net.atayun.bazooka.deploy.biz.v2.dal.entity.app;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  * @author Ping
- * @date 2019-07-26
+ * @date 2019-07-30
  */
 @Getter
 @Setter
-@ApiModel(description = "发布次数统计dto")
-public class DeployCountsDto {
+public class AppOptCounts {
 
-    @ApiModelProperty("服务Id")
     private Long appId;
 
-    @ApiModelProperty("服务名称")
     private String appName;
 
-    @ApiModelProperty("发布次数")
     private Integer counts;
-
 }

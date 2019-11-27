@@ -4,7 +4,7 @@ import com.youyu.common.api.Result;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import net.atayun.bazooka.deploy.biz.v2.dto.app.DeployCountsDto;
+import net.atayun.bazooka.deploy.biz.v2.dto.app.AppOptCountsDto;
 import net.atayun.bazooka.deploy.biz.v2.dto.app.DeployingConfigInfoDto;
 import net.atayun.bazooka.deploy.biz.v2.dto.app.DeployingFlowResultDto;
 import net.atayun.bazooka.deploy.biz.v2.enums.TimeGranularityEnum;
@@ -65,8 +65,8 @@ public class FlowController {
             @ApiImplicitParam(name = "granularity", value = "时间粒度", required = true, dataType = "TimeGranularityEnum", paramType = "path")
     })
     @GetMapping("/counts/{projectId}/{granularity}")
-    public Result<List<DeployCountsDto>> deployCountsByProject(@PathVariable("projectId") Long projectId, @PathVariable("granularity") TimeGranularityEnum timeGranularity) {
-        List<DeployCountsDto> list = flowService.deployCountsByProject(projectId, timeGranularity);
+    public Result<List<AppOptCountsDto>> deployCountsByProject(@PathVariable("projectId") Long projectId, @PathVariable("granularity") TimeGranularityEnum timeGranularity) {
+        List<AppOptCountsDto> list = flowService.deployCountsByProject(projectId, timeGranularity);
         return Result.ok(list);
     }
 }

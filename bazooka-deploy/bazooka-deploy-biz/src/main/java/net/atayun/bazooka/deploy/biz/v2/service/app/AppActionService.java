@@ -2,13 +2,13 @@ package net.atayun.bazooka.deploy.biz.v2.service.app;
 
 import com.youyu.common.api.PageData;
 import net.atayun.bazooka.deploy.api.dto.AppRunningEventDto;
-import net.atayun.bazooka.deploy.biz.v2.dto.app.AppEventOperateWithStatusDto;
-import net.atayun.bazooka.deploy.biz.v2.dto.app.AppOptHisMarathonDto;
+import net.atayun.bazooka.deploy.biz.v2.dto.app.AppOptWithStatusDto;
+import net.atayun.bazooka.deploy.biz.v2.dto.app.AppOptHisPlatformDto;
 import net.atayun.bazooka.deploy.biz.v2.dto.app.AppOptLogDto;
 import net.atayun.bazooka.deploy.biz.v2.dto.app.AppActionDto;
 import net.atayun.bazooka.deploy.biz.v2.dto.app.AppOptHisDto;
 import net.atayun.bazooka.deploy.biz.v2.param.AppActionParam;
-import net.atayun.bazooka.deploy.biz.v2.param.AppOptHisMarathonParam;
+import net.atayun.bazooka.deploy.biz.v2.param.AppOptHisPlatformParam;
 import net.atayun.bazooka.deploy.biz.v2.param.AppOptHisParam;
 
 import java.util.List;
@@ -30,11 +30,11 @@ public interface AppActionService {
 
     PageData<AppOptHisDto> getAppOptHis(AppOptHisParam pageParam);
 
-    PageData<AppOptHisMarathonDto> getAppOptHisMarathon(AppOptHisMarathonParam pageParam);
+    PageData<AppOptHisPlatformDto> getAppOptHisPlatform(AppOptHisPlatformParam pageParam);
 
-    String getAppOptHisMarathonDetail(Long optId);
+    String getAppOptHisPlatformDetail(Long optId);
 
     List<AppOptLogDto> getAppOptLog(Long optId);
 
-    AppEventOperateWithStatusDto getOptStatus(Long optId);
+    AppOptWithStatusDto getOptStatus(Long optId);
 }

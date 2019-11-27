@@ -149,4 +149,13 @@ public enum AppOptEnum {
 
     public boolean isMutex() {
         return mutex;
-    }}
+    }
+
+    public static List<AppOptEnum> deployList() {
+        return Arrays.asList(IMAGE_DEPLOY, MARATHON_BUILD_DEPLOY, NODE_BUILD_DEPLOY);
+    }
+
+    public static List<AppOptEnum> lastSuccessList() {
+        return Arrays.asList(IMAGE_DEPLOY, MARATHON_BUILD_DEPLOY, NODE_BUILD_DEPLOY, ROLLBACK);
+    }
+}
