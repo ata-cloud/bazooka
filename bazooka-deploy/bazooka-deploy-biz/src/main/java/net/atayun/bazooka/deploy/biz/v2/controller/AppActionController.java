@@ -90,7 +90,7 @@ public class AppActionController implements AppActionApi {
 
     @ApiOperation("所有操作记录(Platform相关)")
     @PostMapping("/operate/history/platform")
-    public Result<PageData<AppOptHisPlatformDto>> getAppOptHistMarathon(@Validated @RequestBody AppOptHisPlatformParam pageParam) {
+    public Result<PageData<AppOptHisPlatformDto>> getAppOptHistPlatform(@Validated @RequestBody AppOptHisPlatformParam pageParam) {
         PageData<AppOptHisPlatformDto> pageData = appActionService.getAppOptHisPlatform(pageParam);
         return Result.ok(pageData);
     }

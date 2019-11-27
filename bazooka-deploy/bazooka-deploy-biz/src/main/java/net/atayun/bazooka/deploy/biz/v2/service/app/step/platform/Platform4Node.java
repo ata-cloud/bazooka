@@ -15,8 +15,11 @@ import net.atayun.bazooka.pms.api.dto.PmsCredentialsDto;
 import net.atayun.bazooka.pms.api.feign.AppApi;
 import net.atayun.bazooka.pms.api.param.PortMapping;
 import net.atayun.bazooka.pms.api.param.VolumeMount;
+import net.atayun.bazooka.rms.api.api.EnvApi;
 import net.atayun.bazooka.rms.api.api.RmsClusterNodeApi;
+import net.atayun.bazooka.rms.api.dto.ClusterConfigDto;
 import net.atayun.bazooka.rms.api.dto.rsp.ClusterNodeRspDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -28,6 +31,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
@@ -38,6 +42,11 @@ import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
 @Component
 @StrategyNum(superClass = Platform.class, number = "2")
 public class Platform4Node implements Platform {
+
+    public static final Pattern COMPILE = Pattern.compile("-u\\s+(\\w+)\\s+-p\\s+(\\w+)");
+
+    @Autowired
+    private PmsCredentialsApi pmsCredentialsApi;
 
     private static final String DEPLOY_COMMAND = "sudo docker run --name=__CONTAINER_NAME__ __PORT_MAPPING__ __ENV__ __VOLUME__ -d __IMAGE_AND_TAG__";
     private static final String STOP_COMMAND = "sudo docker stop __CONTAINER_NAME__; docker rm __CONTAINER_NAME__";
@@ -145,11 +154,25 @@ public class Platform4Node implements Platform {
                     .map(volumeMount -> " -v " + volumeMount.getHostPath() + ":" + volumeMount.getContainerPath())
                     .collect(Collectors.joining(" "));
         }
+
         String command = DEPLOY_COMMAND.replace("__CONTAINER_NAME__", containerName)
                 .replace("__PORT_MAPPING__", port)
                 .replace("__ENV__", env.toString())
                 .replace("__VOLUME__", volume)
                 .replace("__IMAGE_AND_TAG__", image);
+
+        ClusterConfigDto clusterConfigDto = getBean(EnvApi.class).getEnvConfiguration(appOpt.getEnvId()).ifNotSuccessThrowException().getData();
+        if (clusterConfigDto.getDockerHubCredentialId() != null) {
+            PmsCredentialsDto credentials = pmsCredentialsApi.getCredentialsDtoById(clusterConfigDto.getDockerHubCredentialId())
+                    .ifNotSuccessThrowException().getData();
+            String host = image.split("/")[0];
+            String login = "sudo docker login" +
+                    " -u " + credentials.getCredentialKey() +
+                    " -p " + credentials.getCredentialValue() +
+                    " " + host;
+            String logout = "sudo docker logout " + host;
+            command = login + " && " + command + " && " + logout;
+        }
 
         ssh(clusterNodeIds, command);
 
@@ -165,7 +188,7 @@ public class Platform4Node implements Platform {
     }
 
     private void ssh(List<Long> nodeIds, String command) {
-        PmsCredentialsApi pmsCredentialsApi = getBean(PmsCredentialsApi.class);
+
         List<ClusterNodeRspDto> clusterNodes = getBean(RmsClusterNodeApi.class).getClusterNodeInfoByNodeIds(nodeIds)
                 .ifNotSuccessThrowException().getData();
         for (ClusterNodeRspDto clusterNode : clusterNodes) {

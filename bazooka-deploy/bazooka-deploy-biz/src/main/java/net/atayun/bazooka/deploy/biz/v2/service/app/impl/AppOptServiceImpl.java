@@ -101,7 +101,7 @@ public class AppOptServiceImpl implements AppOptService {
 
     @Override
     public List<AppOptWithPlatform> getAppOptHisPlatform(AppOptHisPlatformParam pageParam) {
-        return appOptMapper.getAppOptHisMarathon(pageParam);
+        return appOptMapper.getAppOptHisPlatform(pageParam);
     }
 
     @Override
