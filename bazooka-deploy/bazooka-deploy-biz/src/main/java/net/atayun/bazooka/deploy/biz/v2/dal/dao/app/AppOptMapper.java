@@ -43,9 +43,11 @@ public interface AppOptMapper extends YyMapper<AppOpt> {
             "d.app_deploy_config, " +
             "d.app_deploy_version " +
             "from deploy_app_opt d " +
-            "where d.app_id = #{pageData.appId} and d.env_id = #{pageData.envId} and d.opt in ('MARATHON_BUILD_DEPLOY', 'NODE_BUILD_DEPLOY', 'SCALE', 'ROLLBACK')" +
+            "where d.app_id = #{pageData.appId} and d.env_id = #{pageData.envId} " +
+            "and d.status = 'SUCCESS' " +
+            "and d.opt in ('MARATHON_BUILD_DEPLOY', 'NODE_BUILD_DEPLOY', 'SCALE', 'ROLLBACK')" +
             "order by d.id desc ")
-    List<AppOptWithPlatform> getAppOptHisMarathon(@Param("pageData") AppOptHisPlatformParam pageParam);
+    List<AppOptWithPlatform> getAppOptHisPlatform(@Param("pageData") AppOptHisPlatformParam pageParam);
 
     @Select("select " +
             "app_id, " +

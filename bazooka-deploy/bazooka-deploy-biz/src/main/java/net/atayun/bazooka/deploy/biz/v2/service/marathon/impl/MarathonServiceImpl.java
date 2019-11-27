@@ -35,7 +35,15 @@ public class MarathonServiceImpl implements MarathonService {
     public void marathonCallback(MarathonCallbackParam marathonCallbackParam) {
         AppOpt appOpt = appOptService.selectByAppDeployUuidAndVersionForMarathon(marathonCallbackParam.getMarathonDeploymentId(), marathonCallbackParam.getMarathonDeploymentVersion());
 
+        if (appOpt == null) {
+            return;
+        }
+
         AppOptFlowStep appOptFlowStep = flowStepService.selectByOptIdAndStep(appOpt.getId(), FlowStepConstants.HEALTH_CHECK);
+
+        if (appOptFlowStep == null) {
+            return;
+        }
 
         FinishStatusEnum finishStatus = marathonCallbackParam.getFinishStatus();
 

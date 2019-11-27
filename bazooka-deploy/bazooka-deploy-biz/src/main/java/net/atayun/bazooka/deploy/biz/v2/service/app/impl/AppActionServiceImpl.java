@@ -14,13 +14,14 @@ import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptWithPlatform;
 import net.atayun.bazooka.deploy.biz.v2.dto.app.*;
 import net.atayun.bazooka.deploy.biz.v2.enums.AppOptStatusEnum;
 import net.atayun.bazooka.deploy.biz.v2.param.AppActionParam;
-import net.atayun.bazooka.deploy.biz.v2.param.AppOptHisPlatformParam;
 import net.atayun.bazooka.deploy.biz.v2.param.AppOptHisParam;
+import net.atayun.bazooka.deploy.biz.v2.param.AppOptHisPlatformParam;
 import net.atayun.bazooka.deploy.biz.v2.service.app.AppActionService;
 import net.atayun.bazooka.deploy.biz.v2.service.app.AppOptService;
 import net.atayun.bazooka.deploy.biz.v2.service.app.AppStatusOpt;
 import net.atayun.bazooka.deploy.biz.v2.service.app.FlowStepService;
 import net.atayun.bazooka.deploy.biz.v2.service.app.opt.AppOptWorker;
+import net.atayun.bazooka.deploy.biz.v2.service.app.step.platform.Platform4Node;
 import net.atayun.bazooka.deploy.biz.v2.service.app.threadpool.AppActionThreadPool;
 import net.atayun.bazooka.pms.api.dto.AppInfoDto;
 import net.atayun.bazooka.pms.api.dto.PmsAppDeployStatusDto;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
@@ -205,10 +207,23 @@ public class AppActionServiceImpl implements AppActionService {
         if (appOpt == null) {
             return "";
         }
+        String appDeployConfig = appOpt.getAppDeployConfig();
         if (appOpt.getOpt() == AppOptEnum.NODE_BUILD_DEPLOY) {
-            return "{\"cmd\": \"" + appOpt.getAppDeployConfig() + "\"}";
+            String[] cmdArr = appDeployConfig.split("&&");
+            if (cmdArr.length > 1) {
+                String loginCmd = cmdArr[0];
+                Matcher matcher = Platform4Node.COMPILE.matcher(loginCmd);
+                if (matcher.find()) {
+                    String username = matcher.group(1);
+                    String password = matcher.group(2);
+                    loginCmd = loginCmd.replace(username, "******")
+                            .replace(password, "******");
+                    cmdArr[0] = loginCmd;
+                }
+            }
+            return "{\"cmd\": \"" + String.join("&&", cmdArr) + "\"}";
         }
-        return appOpt.getAppDeployConfig();
+        return appDeployConfig;
     }
 
     @Override

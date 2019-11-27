@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package net.atayun.bazooka.deploy.biz.v2.log;
+package net.atayun.bazooka.deploy.biz.v2.service.app.step.log;
 
 import com.youyu.common.exception.BizException;
 import org.springframework.util.StringUtils;
