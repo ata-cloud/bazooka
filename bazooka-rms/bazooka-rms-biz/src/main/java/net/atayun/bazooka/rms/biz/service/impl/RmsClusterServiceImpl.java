@@ -650,6 +650,7 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
                 rmsClusterNodeEntity.setClusterId(id);
                 rmsClusterNodeEntity.setIp(node.getNodeIp());
                 rmsClusterNodeEntity.setCpu(node.getCpu());
+                rmsClusterNodeEntity.setSshPort(node.getSshPort());
                 rmsClusterNodeEntity.setMemory(node.getMemory());
                 rmsClusterNodeEntity.setDisk(new BigDecimal(0));
                 rmsClusterNodeEntity.setCredentialId(node.getCredentialId());
