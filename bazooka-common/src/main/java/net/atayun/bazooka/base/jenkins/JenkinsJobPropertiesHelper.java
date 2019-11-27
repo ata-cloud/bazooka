@@ -67,8 +67,8 @@ public class JenkinsJobPropertiesHelper {
     }
 
     public String buildCallbackUri() {
-//        return dcosPropertiesHelper.dcosPublicAgentIp() + ":" + serverPort + jenkinsJobProperties.getBuildCallbackPath();
-        return "http://10.0.52.50:" + serverPort + jenkinsJobProperties.getBuildCallbackPath();
+        return dcosPropertiesHelper.dcosPublicAgentIp() + ":" + serverPort + jenkinsJobProperties.getBuildCallbackPath();
+//        return "http://10.0.52.50:" + serverPort + jenkinsJobProperties.getBuildCallbackPath();
     }
 
 }

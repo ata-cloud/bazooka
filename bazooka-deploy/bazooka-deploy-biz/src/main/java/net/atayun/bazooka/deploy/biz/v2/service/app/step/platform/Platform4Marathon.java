@@ -247,11 +247,7 @@ public class Platform4Marathon implements Platform {
         }
         container.setVolumes(Collections.unmodifiableCollection(localVolumes));
         Docker docker = new Docker();
-        String dockerImageName = (String) input.get("dockerImageName");
-        String dockerImageTag = (String) input.get("dockerImageTag");
-        docker.setImage(clusterConfig.getDockerHubUrl() + "/" +
-                dockerImageName + ":" +
-                dockerImageTag);
+        docker.setImage((String) input.get("dockerImage"));
         docker.setForcePullImage(false);
         docker.setPrivileged(false);
         container.setDocker(docker);

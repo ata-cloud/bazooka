@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Ping
@@ -84,6 +85,30 @@ public class FlowStepServiceImpl implements FlowStepService {
 
     @Override
     public List<DeployingFlowDto> getDeployingFlow(Long optId) {
-        return new ArrayList<>();
+        List<AppOptFlowStep> appOptFlowSteps = selectByOptId(optId);
+        List<AppOptFlowStep> filter = new ArrayList<>();
+        for (AppOptFlowStep appOptFlowStep : appOptFlowSteps) {
+            if (appOptFlowStep.isStandBy()) {
+                break;
+            }
+            filter.add(appOptFlowStep);
+            if (appOptFlowStep.isFailure()) {
+                break;
+            }
+        }
+        return filter.stream()
+                .map(appOptFlowStep -> {
+                    DeployingFlowDto deployingFlowDto = new DeployingFlowDto();
+                    deployingFlowDto.setDeployFlowId(appOptFlowStep.getId());
+                    deployingFlowDto.setDisplayName(appOptFlowStep.getStep());
+                    deployingFlowDto.setDeployId(appOptFlowStep.getOptId());
+                    deployingFlowDto.setStatus(appOptFlowStep.getStatus());
+                    if (appOptFlowStep.isSuccess() || appOptFlowStep.isFailure()) {
+                        deployingFlowDto.setFinishDatetime(appOptFlowStep.getUpdateTime());
+                    }
+                    deployingFlowDto.setLog("");
+                    return deployingFlowDto;
+                })
+                .collect(Collectors.toList());
     }
 }

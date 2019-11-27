@@ -18,6 +18,7 @@ import net.atayun.bazooka.pms.api.param.VolumeMount;
 import net.atayun.bazooka.rms.api.api.RmsClusterNodeApi;
 import net.atayun.bazooka.rms.api.dto.rsp.ClusterNodeRspDto;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,7 +39,7 @@ import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
 @StrategyNum(superClass = Platform.class, number = "2")
 public class Platform4Node implements Platform {
 
-    private static final String DEPLOY_COMMAND = "docker run --name __CONTAINER_NAME__ __PORT_MAPPING__ __ENV__ __VOLUME__ -d __IMAGE_AND_TAG__";
+    private static final String DEPLOY_COMMAND = "docker run --name=__CONTAINER_NAME__ __PORT_MAPPING__ __ENV__ __VOLUME__ -d __IMAGE_AND_TAG__";
     private static final String STOP_COMMAND = "docker stop __CONTAINER_NAME__; docker rm __CONTAINER_NAME__";
     private static final String RESTART_COMMAND = "docker restart __CONTAINER_NAME__";
 
@@ -124,20 +125,26 @@ public class Platform4Node implements Platform {
         List<Long> clusterNodeIds = appDeployConfigDto.getClusterNodes();
 
         String containerName = UUID.randomUUID().toString().replace("-", "");
-        String dockerImageName = (String) input.get("dockerImageName");
-        String dockerImageTag = (String) input.get("dockerImageTag");
-        String image = dockerImageName + ":" + dockerImageTag;
+        String image = (String) input.get("dockerImage");
+        String port = "";
         List<PortMapping> portMappings = appDeployConfigDto.getPortMappings();
-        String port = portMappings.stream()
-                .map(portMapping -> " -p " + portMapping.getServicePort() + ":" + portMapping.getContainerPort())
-                .collect(Collectors.joining(" "));
+        if (CollectionUtils.isEmpty(portMappings)) {
+            port = portMappings.stream()
+                    .map(portMapping -> " -p " + portMapping.getServicePort() + ":" + portMapping.getContainerPort())
+                    .collect(Collectors.joining(" "));
+        }
         Map<String, Object> environmentVariable = appDeployConfigDto.getEnvironmentVariable();
         StringBuilder env = new StringBuilder();
-        environmentVariable.forEach((k, v) -> env.append(" -e ").append(k).append("=").append("\"").append(v).append("\" "));
+        if (!CollectionUtils.isEmpty(environmentVariable)) {
+            environmentVariable.forEach((k, v) -> env.append(" -e ").append(k).append("=").append("\"").append(v).append("\" "));
+        }
         List<VolumeMount> volumes = appDeployConfigDto.getVolumes();
-        String volume = volumes.stream()
-                .map(volumeMount -> " -v " + volumeMount.getHostPath() + ":" + volumeMount.getContainerPath())
-                .collect(Collectors.joining(" "));
+        String volume = "";
+        if (!CollectionUtils.isEmpty(volumes)) {
+            volume = volumes.stream()
+                    .map(volumeMount -> " -v " + volumeMount.getHostPath() + ":" + volumeMount.getContainerPath())
+                    .collect(Collectors.joining(" "));
+        }
         String command = DEPLOY_COMMAND.replace("__CONTAINER_NAME__", containerName)
                 .replace("__PORT_MAPPING__", port)
                 .replace("__ENV__", env.toString())
@@ -171,7 +178,8 @@ public class Platform4Node implements Platform {
             }
             try {
                 JSch jSch = new JSch();
-                Session session = jSch.getSession(credentials.getCredentialKey(), clusterNode.getIp());
+                Session session = jSch.getSession(credentials.getCredentialKey(), clusterNode.getIp(),
+                        Integer.parseInt(clusterNode.getSshPort()));
                 session.setPassword(credentials.getCredentialValue());
                 session.setConfig("StrictHostKeyChecking", "no");
                 session.connect();
@@ -185,7 +193,7 @@ public class Platform4Node implements Platform {
 
     private void exec(Session session, String command) throws JSchException, IOException {
         ChannelExec exec = (ChannelExec) session.openChannel("exec");
-        exec.setCommand(command);
+        exec.setCommand("ls");
         exec.setErrStream(System.err);
         exec.connect();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(exec.getInputStream(), StandardCharsets.UTF_8));
@@ -195,5 +203,20 @@ public class Platform4Node implements Platform {
         }
         System.out.println(exec.getExitStatus());
         exec.disconnect();
+//        ChannelShell channel = (ChannelShell) session.openChannel("shell");
+//        channel.connect();
+//        OutputStream outputStream = channel.getOutputStream();
+////        outputStream.write("sudo su".getBytes());
+//        outputStream.write(command.getBytes());
+//        outputStream.write("exit".getBytes());
+////        outputStream.write("exit".getBytes());
+//        outputStream.flush();
+//        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(channel.getInputStream(), StandardCharsets.UTF_8));
+//        String line;
+//        while ((line = bufferedReader.readLine()) != null) {
+//            System.out.println(line);
+//        }
+//        System.out.println(channel.getExitStatus());
+//        channel.disconnect();
     }
 }

@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import net.atayun.bazooka.deploy.biz.v2.constant.DeployConstants;
-import net.atayun.bazooka.deploy.biz.v2.enums.AppOptStatusEnum;
+import net.atayun.bazooka.deploy.biz.v2.enums.FlowStepStatusEnum;
 
 import java.time.LocalDateTime;
 
@@ -48,7 +48,7 @@ public class DeployingFlowDto {
     private LocalDateTime finishDatetime;
 
     @ApiModelProperty("发布流状态")
-    private AppOptStatusEnum status;
+    private FlowStepStatusEnum status;
 
     @ApiModelProperty("发布流log")
     private String log;
