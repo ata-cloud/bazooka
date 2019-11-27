@@ -54,6 +54,9 @@ public class ClusterNodeRspDto implements Serializable {
     @ApiModelProperty("容器数量")
     private Integer containerQuantity;
 
+    @ApiModelProperty("ssh端口号")
+    private String sshPort;
+
     @ApiModelProperty("总cpu信息")
     private BigDecimal cpu;
 

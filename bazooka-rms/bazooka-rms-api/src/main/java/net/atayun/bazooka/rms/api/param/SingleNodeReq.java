@@ -15,6 +15,9 @@ public class SingleNodeReq {
     @ApiModelProperty("节点ip")
     private String nodeIp;
 
+    @ApiModelProperty("ssh端口号")
+    private String sshPort;
+
     @ApiModelProperty("cpu")
     private BigDecimal cpu;
 

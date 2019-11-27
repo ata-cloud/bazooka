@@ -91,15 +91,13 @@ public class RmsClusterController implements RmsClusterApi {
     @ApiOperation("新建单节点集群")
     @PostMapping("/createSingleNodeCluster")
     public Result createSingleNodeCluster(@RequestBody @Valid CreateClusterReq createClusterReq){
-        rmsClusterService.createSingleNodeCluster(createClusterReq);
-        return ok();
+        return rmsClusterService.createSingleNodeCluster(createClusterReq);
     }
 
     @ApiOperation("新建mesos集群")
     @PostMapping("/createMesosCluster")
     public Result createMesosCluster(@RequestBody @Valid CreateClusterReq createClusterReq){
-        rmsClusterService.createMesosCluster(createClusterReq);
-        return ok();
+        return rmsClusterService.createMesosCluster(createClusterReq);
     }
 
     @ApiOperation("根据id获取集群基本信息")

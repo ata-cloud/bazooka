@@ -15,6 +15,7 @@
  */
 package net.atayun.bazooka.rms.biz.service;
 
+import com.youyu.common.api.Result;
 import net.atayun.bazooka.base.dcos.dto.MesosTaskDto;
 import net.atayun.bazooka.base.dcos.dto.TaskDto;
 import net.atayun.bazooka.rms.api.dto.ClusterAppResourceDto;
@@ -130,14 +131,14 @@ public interface RmsClusterService extends IService<RmsClusterDto, RmsClusterEnt
      * @Modifier:
      * @Description: 创建单节点集群
      */
-    void createSingleNodeCluster(CreateClusterReq createClusterReq);
+    Result createSingleNodeCluster(CreateClusterReq createClusterReq);
 
     /**
      * @create: zhangyingbin 2019/11/8 0008 下午 5:16
      * @Modifier:
      * @Description: 创建mesos集群
      */
-    void createMesosCluster(CreateClusterReq createClusterReq);
+    Result createMesosCluster(CreateClusterReq createClusterReq);
 
     /**
      * @create: zhangyingbin 2019/11/11 0011 下午 5:37
