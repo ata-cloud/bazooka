@@ -29,7 +29,8 @@ class ServiceItem extends React.Component {
     if (!list.length || list.length <= 3) {
       return
     }
-    let moveNumber = parseInt(list.length / 3);
+    let moveNumber = list.length%3;
+    let leftArrow = document.getElementById(`left${item.id}`), rightArrow = document.getElementById(`right${item.id}`);
     switch (type) {
       case 'left': {
         let left = Number(positionLeft.split('%')[0]);
@@ -37,13 +38,22 @@ class ServiceItem extends React.Component {
           return
         }
         ele.style.left = `${left + 33.5}%`;
+        rightArrow.style.color = '#1890ff';
+        if(left + 33.5 === 0) {
+          leftArrow.style.color = '#bbb';
+        }
       } break;
       case 'right': {
         let left = Math.abs(Number(positionLeft.split('%')[0]));
         if (left === moveNumber * 33.5) {
+          rightArrow.style.color = '#bbb';
           return
         }
         ele.style.left = `-${left + 33.5}%`;
+        leftArrow.style.color = '#1890ff';
+        if(left + 33.5 === moveNumber * 33.5) {
+          rightArrow.style.color = '#bbb';
+        }
       } break;
     }
 
@@ -71,8 +81,8 @@ class ServiceItem extends React.Component {
           </div>
           <div onClick={() => onItemClick()}>
             <div className={stylesService.listItemAppName}>{item.appName}</div>
-            <div className={styles.itemDesc}>
-              <span className={`${styles.itemDescSpan} ${styles.textC}`}>{item.description}</span>
+            <div className={stylesService.itemDesc}>
+              <span className={`${stylesService.itemDescSpan} ${styles.textC}`}>{item.description}</span>
             </div>
           </div>
           <div className={stylesService.listItemEnvBox}>
@@ -95,10 +105,10 @@ class ServiceItem extends React.Component {
               item.appEnvInfoVoList &&
               <Fragment>
                 <div className={stylesService.leftArrow} onClick={() => { this.onArrowClick('left') }}>
-                  <Icon type="left" style={{ color: "#bbb" }} />
+                  <Icon type="left" style={{ color: "#bbb" }} id={`left${item.id}`} />
                 </div>
                 <div className={stylesService.rightArrow}>
-                  <Icon type="right" style={{ color: "#bbb" }} onClick={() => { this.onArrowClick('right') }} />
+                  <Icon type="right" style={item.appEnvInfoVoList.length > 3 ? { color: "#1890ff" } : { color: "#bbb" }} onClick={() => { this.onArrowClick('right') }} id={`right${item.id}`} />
                 </div>
               </Fragment>
             }

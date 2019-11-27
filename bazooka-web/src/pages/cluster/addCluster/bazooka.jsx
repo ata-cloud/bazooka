@@ -134,7 +134,7 @@ class Bazooka extends React.Component {
                   <span>{index + 1}</span>
                 </FormItem>
               </Col>
-              <Col span={5}>
+              <Col span={4}>
                 <FormItem label="节点ip" colon={false}>
                   {getFieldDecorator(`nodeList.${k}.nodeIp`, {
                     rules:[
@@ -143,7 +143,17 @@ class Bazooka extends React.Component {
                   })(<Input placeholder="请输入节点ip" />)}
                 </FormItem>
               </Col>
-              <Col span={5}>
+              <Col span={4}>
+                <FormItem label="SSH端口" colon={false}>
+                  {getFieldDecorator(`nodeList.${k}.sshPort`, {
+                    initialValue: 22,
+                    rules:[
+                      {required: true, message: '请输入ssh端口'}
+                    ]
+                  })(<Input placeholder="请输入ssh端口" />)}
+                </FormItem>
+              </Col>
+              <Col span={4}>
                 <FormItem label="CPU" colon={false}>
                   {getFieldDecorator(`nodeList.${k}.cpu`, {
                    rules:[
@@ -152,7 +162,7 @@ class Bazooka extends React.Component {
                   })(<InputNumber placeholder="请输入CPU核数" style={{width: '100%'}}/>)}
                 </FormItem>
               </Col>
-              <Col span={5}>
+              <Col span={4}>
                 <FormItem label="内存" colon={false}>
                   {getFieldDecorator(`nodeList.${k}.memory`, {
                      rules:[

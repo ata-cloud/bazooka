@@ -13,7 +13,7 @@
   color: #333;
   font-size: 20px;
   text-align: center;
-  margin-top: 20px;
+  // margin-top: 20px;
 }
 .listItemEnvBox {
   position: relative;
@@ -24,6 +24,8 @@
   width: 100%;
   .listItemEnv {
     display: flex;
+    align-items: center;
+    height: 100%;
     position: absolute;
     width: 100%;
     left: 0;
@@ -43,7 +45,7 @@
     // flex-shrink: 0;
     // flex-grow: 0;
     text-align: center;
-    margin: 10px 0;
+    // margin: 10px 0;
     overflow: hidden;
   }
   .envItem:not(:last-child) {
@@ -69,6 +71,21 @@
   .envItemName {
     margin-bottom: 10px;
     // white-space: nowrap;
-   
   }
+
+}
+.itemDesc {
+  height: 40px;
+  color: #999;
+  margin: 10px 0 15px 0;
+  .itemDescSpan {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; 
+    /* autoprefixer: off */
+    -webkit-box-orient: vertical;
+    /* autoprefixer: on */
+    word-break: break-all;
+  }
+
 }

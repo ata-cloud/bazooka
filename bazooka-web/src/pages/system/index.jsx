@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import { Card, Table, Divider, message, Row, Col, Badge } from 'antd';
 import { isAdmin, toHref } from '@/utils/utils';
 import router from 'umi/router';
-import { CLUSTER_STATUS } from '@/common/constant';
+import { CLUSTER_STATUS, GIT_DOMAIN_O } from '@/common/constant';
 import GITMODAL from '../service/addService/gitCredentialModal';
 import { system } from '@/services/system';
 import styles from '@/pages/index.less';
@@ -84,7 +84,7 @@ class System extends React.Component {
         title: '类型',
         dataIndex: 'domain',
         render: (text, record) => (
-          <span>{text === "GIT_SERVER" ? '代码仓库凭据' : '镜像库凭据'}</span>
+          <span>{GIT_DOMAIN_O[text]}</span>
         )
       },
       {
