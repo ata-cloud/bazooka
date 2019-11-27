@@ -674,7 +674,12 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
         }
         //Get Version
         DcosApi dcos = dcosServerBean.getInstance(PROTOCOL + createClusterReq.getMasterUrls().get(0));
-        createClusterReq.setVersion(dcos.getInfo().getVersion());
+        try{
+            createClusterReq.setVersion(dcos.getInfo().getVersion());
+        }catch (Exception e){
+            return Result.fail(RmsResultCode.MASTER_NODE_IP.getCode(),RmsResultCode.MASTER_NODE_IP.getDesc());
+        }
+
 
         long id = this.createClusterInfo(createClusterReq);
         this.createClusterConfig(createClusterReq, id);

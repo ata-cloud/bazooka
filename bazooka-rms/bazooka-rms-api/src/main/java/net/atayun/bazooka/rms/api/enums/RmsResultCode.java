@@ -39,6 +39,7 @@ public enum RmsResultCode implements IBaseResultCode {
     ENV_NOT_EXISTS("0012", "环境信息不存在"),
     GET_INSTANCE_LOG_EXCEPTION("0013", "获取实例日志信息异常"),
     CLUSTER_NAME_HAVE_IN_DB("0014", "集群名称已经存在"),
+    MASTER_NODE_IP("0015", "master节点Ip获取对应镜像库状态信息异常"),
     ;
 
     private static final String RMS_PREFIX = "0106";
