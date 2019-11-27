@@ -294,8 +294,11 @@ class Project extends React.Component {
             list.length ? list.map((item, i) => (
               <Col key={i} md={8} sm={12}>
                 <Card className={`${styles.marginB} ${styles.listItem}`} hoverable style={{ backgroundColor: COLOR_SHOW[item.projectId % 5] }}>
+                  <div className={styles.pushpinIcon} onClick={() => { this.onTop(item) }} title={item.orderId > 0 ? '取消置顶' : '置顶'}>
+                    <Icon type="pushpin" theme={item.orderId > 0 ? "filled" : "outlined"} style={{ fontSize: 18 }} />
+                  </div>
                   <Row onClick={() => this.onRouteTo('/project/detail', item)}>
-                    <div className={styles.flexCenter}>
+                    <div className={styles.flex}>
                       <strong className={styles.textFont16}>{item.projectName}</strong>
                       {/* <div className={styles.itemFirst} style={{ backgroundColor: COLOR_SHOW[item.projectId % 5] }}>{item.projectName.charAt(0).toUpperCase()}</div>
                       <strong className={styles.textFont16}>{item.projectName}</strong>

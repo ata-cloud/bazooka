@@ -128,7 +128,7 @@ class Bazooka extends React.Component {
       <Fragment>
         {
           keys.map((k, index) => (
-            <Row type="flex" gutter={48} key={k}>
+            <Row type="flex" gutter={24} key={k}>
               <Col span={2}>
                 <FormItem label="序号" colon={false}>
                   <span>{index + 1}</span>

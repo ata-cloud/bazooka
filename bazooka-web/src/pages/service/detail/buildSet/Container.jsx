@@ -259,7 +259,7 @@ class Container extends React.Component {
                   </FormItem> :
                   <FormItem label="发布节点"  {...formItemLayout}>
                     {getFieldDecorator('clusterNodes', {
-                      initialValue: data.clusterNodes,
+                      initialValue: data.clusterNodes || [],
                       rules: [
                         { required: true, message: "请选择发布节点" }
                       ]

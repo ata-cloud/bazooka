@@ -245,7 +245,7 @@ class Env extends React.Component {
                       <div className={`${styles.flexCenter}`} style={{ margin: '10px 20px' }}>
                         <div className={styles.leftBlock}></div>
                         <div className={`${styles.flex1} ${styles.processLR}`}>
-                          {/* <Progress percent={0} showInfo={false} /> */}
+                          <Progress percent={0} showInfo={false} style={{ visibility: 'hidden' }}/>
                         </div>
                         {/* <div className={styles.rightBlock}>-%（-/ {MformG(item.disk)} GiB）</div> */}
                       </div>

@@ -21,7 +21,7 @@ class BuildSet extends React.Component {
   }
   componentDidMount() {
     const { deployMode, currentItem } = this.props;
-    if (deployMode == 'BUILD') {
+    if (deployMode.indexOf('BUILD') > -1) {
       this.setState({
         steps: [0, 1, 2, 3]
       })
@@ -164,7 +164,7 @@ class BuildSet extends React.Component {
   render() {
     const { visible, form, onCancel, deployMode, info, currentItem } = this.props;
     const { step, data, i } = this.state;
-    let deployModeName = deployMode === 'BUILD' ? '构建发布' : '镜像发布';
+    let deployModeName = deployMode.indexOf('BUILD') > -1 ? '构建发布' : '镜像发布';
     return (
       <Modal
         title={currentItem.type == 'edit' ? `修改发布配置 - ${deployModeName}` : `新建发布配置 - ${deployModeName}`}
@@ -189,7 +189,7 @@ class BuildSet extends React.Component {
           <Steps current={i} style={{ padding: '0 100px' }} size="small" >
             <Step title="基本信息" />
             {
-              deployMode.indexOf('BUILD') > -1 == 'BUILD' && <Step title="编译构建" />
+              deployMode.indexOf('BUILD') > -1 && <Step title="编译构建" />
             }
             <Step title="容器运行" />
             <Step title="额外设置" />

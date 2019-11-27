@@ -25,6 +25,21 @@ const CLUSTER_TYPE_O_ALL = {
     buildType: 'NODE_BUILD'
   }
 };
+//构建发布类型
+const DEPLOY_WITH_BUILD = {
+  "NODE_BUILD": {
+    deployType: 'NODE_BUILD_DEPLOY'
+  },
+  "MARATHON_BUILD": {
+    deployType: 'MARATHON_BUILD_DEPLOY'
+  },
+  "KUBERNETES_BUILD": {
+    deployType: 'KUBERNETES_BUILD_DEPLOY'
+  },
+  "DOCKER_IMAGE": {
+    deployType: 'IMAGE_DEPLOY'
+  },
+};
 const CLUSTER_STATUS = {
   '0': {
     type: 'success',
@@ -184,7 +199,8 @@ const GIT_DOMAIN_O = {
   GIT_SERVER: '代码仓库凭据',
   DOCKER_REGISTRY: '镜像库凭据',
   NODE_LOGIN: '节点登录凭据'
-}
+};
+
 export {
   CARD_TITLE_BG,
   SCALE_CPU,
@@ -201,7 +217,8 @@ export {
   HEALTH_STATUS_O,
   APP_KINDS_O,
   CLUSTER_TYPE_O_ALL,
-  GIT_DOMAIN_O
+  GIT_DOMAIN_O,
+  DEPLOY_WITH_BUILD
 }
 
 
