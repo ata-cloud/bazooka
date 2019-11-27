@@ -694,6 +694,16 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
      */
     public Result checkClusterInData(CreateClusterReq createClusterReq) {
 
+        //集合ip重复判断
+        if (createClusterReq.getType().equals(ClusterTypeEnum.MESOS.getCode())){
+            if (createClusterReq.getMasterUrls().size() > createClusterReq.getMasterUrls().stream().distinct().count()){
+                return Result.fail(RmsResultCode.MASTER_NODE_IP_REPEAT.getCode(),RmsResultCode.MASTER_NODE_IP_REPEAT.getDesc());
+            }
+            if (createClusterReq.getMlbUrls().size() > createClusterReq.getMlbUrls().stream().distinct().count()){
+                return Result.fail(RmsResultCode.PUBLIC_AGENT_NODE_IP_REPEAT.getCode(),RmsResultCode.PUBLIC_AGENT_NODE_IP_REPEAT.getDesc());
+            }
+        }
+
         Example example = Example.builder(RmsClusterEntity.class).build();
         example.createCriteria().andEqualTo("name", createClusterReq.getName());
         List<RmsClusterEntity> list = rmsClusterMapper.selectByExample(example);
