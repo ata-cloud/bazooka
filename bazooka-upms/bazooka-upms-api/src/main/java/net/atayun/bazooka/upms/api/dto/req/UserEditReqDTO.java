@@ -50,8 +50,8 @@ public class UserEditReqDTO implements Serializable {
     private String realName;
 
     @ApiModelProperty("密码")
-    @Size(min = 6, max = 14)
-    @Pattern(regexp = "^[a-zA-Z0-9\\pP]{6,14}$")
+ //   @Size(min = 6, max = 14)
+    @Pattern(regexp = "^[a-zA-Z0-9\\pP]{6,14}$",message = "密码请输入6-14位字母、数字、标点符号的组合")
     private String password;
 
     @ApiModelProperty("性别(0:男 1:女)")

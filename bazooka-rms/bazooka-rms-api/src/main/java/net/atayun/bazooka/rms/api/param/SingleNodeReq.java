@@ -26,4 +26,12 @@ public class SingleNodeReq {
 
     @ApiModelProperty("节点登录凭据ID")
     private Long credentialId;
+
+    public BigDecimal getMemory() {
+        return memory.multiply(new BigDecimal(1024));
+    }
+
+    public void setMemory(BigDecimal memory) {
+        this.memory = memory;
+    }
 }
