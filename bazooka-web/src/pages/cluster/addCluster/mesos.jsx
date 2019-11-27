@@ -13,6 +13,7 @@ class Mesos extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      saveLoading: false
     };
   }
   componentDidMount() { }
@@ -21,11 +22,17 @@ class Mesos extends React.Component {
     e && e.preventDefault();
     this.props.form.validateFieldsAndScroll(async (err, values) => {
       if (!err) {
+        this.setState({
+          saveLoading: true
+        })
         let res = await cluster.createMesosCluster({...values, type: '0', keys: undefined, keys1: undefined, credentialId: values.credentialId=='-1'? undefined: values.credentialId});
         if(res && res.code == '1') {
           message.success('添加成功')
           onCancel()
         }
+        this.setState({
+          saveLoading: false
+        })
         // onSave({ ...values })
       }
     });
@@ -63,10 +70,11 @@ class Mesos extends React.Component {
   renderForm() {
     const { onCancel, form, credentialsList } = this.props;
     const { getFieldDecorator } = form;
+    const { saveLoading }= this.state;
     return (
       <Form onSubmit={this.onSubmit} colon={false} className={styles.marginT}>
         <Row type="flex" align="top" gutter={48}>
-          <CommomItem onCancel={onCancel} onSave={this.onSubmit} formItem={form} type="mesos">
+          <CommomItem onCancel={onCancel} onSave={this.onSubmit} formItem={form} type="mesos" saveLoading={saveLoading}>
             <Col md={8} sm={24}>
               <FormItem label={
                 <Fragment>

@@ -374,7 +374,7 @@ class ServiceSetting extends React.Component {
         render: (text, record) => (
           <span>
             {
-              text.indexOf('BUILD') > -1 === 'BUILD' && <span>构建发布</span>
+              text.indexOf('BUILD') > -1 && <span>构建发布</span>
             }
             {
               text === 'DOCKER_IMAGE' && <span>镜像发布</span>

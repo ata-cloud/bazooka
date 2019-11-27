@@ -15,7 +15,8 @@ class Bazooka extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showGitModal: false
+      showGitModal: false,
+      saveLoading: false
     };
   }
   componentDidMount() {
@@ -35,11 +36,18 @@ class Bazooka extends React.Component {
     e && e.preventDefault();
     this.props.form.validateFieldsAndScroll(async (err, values) => {
       if (!err) {
+        this.setState({
+          saveLoading: true
+        })
         let res = await cluster.createSingleNodeCluster({...values, type: '2', keys: undefined, credentialId: values.credentialId=='-1'? undefined: values.credentialId})
+        
         if(res && res.code == '1') {
           message.success('添加成功')
           onCancel()
         }
+        this.setState({
+          saveLoading: false
+        })
         // onSave({ ...values })
       }
     });
@@ -95,10 +103,11 @@ class Bazooka extends React.Component {
   renderForm() {
     const { onCancel, form } = this.props;
     const { getFieldDecorator } = form;
+    const { saveLoading }= this.state;
     return (
       <Form onSubmit={this.onSubmit} colon={false} className={styles.marginT}>
         <Row type="flex" align="top" gutter={48}>
-          <CommomItem onCancel={onCancel} onSave={this.onSubmit} formItem={form}>
+          <CommomItem onCancel={onCancel} onSave={this.onSubmit} formItem={form} saveLoading={saveLoading}>
             <Col span={24}>
               <FormItem required={true} label={
                 <Fragment>
