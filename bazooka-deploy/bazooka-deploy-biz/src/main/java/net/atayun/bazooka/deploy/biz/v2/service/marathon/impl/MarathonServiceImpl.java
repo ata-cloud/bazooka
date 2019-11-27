@@ -1,7 +1,13 @@
 package net.atayun.bazooka.deploy.biz.v2.service.marathon.impl;
 
+import lombok.extern.slf4j.Slf4j;
+import mesosphere.marathon.client.Marathon;
+import mesosphere.marathon.client.MarathonClient;
+import mesosphere.marathon.client.model.v2.Deployment;
 import net.atayun.bazooka.base.bean.StrategyNumBean;
+import net.atayun.bazooka.base.constant.CommonConstants;
 import net.atayun.bazooka.base.constant.FlowStepConstants;
+import net.atayun.bazooka.base.enums.AppOptEnum;
 import net.atayun.bazooka.base.enums.status.FinishStatusEnum;
 import net.atayun.bazooka.deploy.api.param.MarathonCallbackParam;
 import net.atayun.bazooka.deploy.api.param.MarathonTaskFailureCallbackParam;
@@ -13,15 +19,22 @@ import net.atayun.bazooka.deploy.biz.v2.service.app.FlowStepService;
 import net.atayun.bazooka.deploy.biz.v2.service.app.step.Step;
 import net.atayun.bazooka.deploy.biz.v2.service.app.step.Step4HealthCheck;
 import net.atayun.bazooka.deploy.biz.v2.service.marathon.MarathonService;
+import net.atayun.bazooka.rms.api.api.EnvApi;
+import net.atayun.bazooka.rms.api.dto.ClusterConfigDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
+import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
 
 /**
  * @author Ping
  */
+@Slf4j
 @Service
 public class MarathonServiceImpl implements MarathonService {
 
@@ -33,9 +46,9 @@ public class MarathonServiceImpl implements MarathonService {
 
     @Override
     public void marathonCallback(MarathonCallbackParam marathonCallbackParam) {
-        AppOpt appOpt = appOptService.selectByAppDeployUuidAndVersionForMarathon(marathonCallbackParam.getMarathonDeploymentId(), marathonCallbackParam.getMarathonDeploymentVersion());
+        AppOpt appOpt = appOptService.selectByAppDeployUuidAndVersionForPlatform(marathonCallbackParam.getMarathonDeploymentId(), marathonCallbackParam.getMarathonDeploymentVersion());
 
-        if (appOpt == null) {
+        if (appOpt == null || appOpt.getOpt() != AppOptEnum.MARATHON_BUILD_DEPLOY) {
             return;
         }
 
@@ -68,38 +81,30 @@ public class MarathonServiceImpl implements MarathonService {
 
     @Override
     public void marathonTaskFailureCallback(MarathonTaskFailureCallbackParam marathonTaskFailureCallbackParam) {
-//        String marathonServiceId = marathonTaskFailureCallbackParam.getMarathonServiceId();
-//        AppOperationEventMarathonEntity appOperationEventMarathonEntity = appOperationEventMarathonService.selectByServiceIdAndVersion(marathonServiceId,
-//                marathonTaskFailureCallbackParam.getMarathonDeploymentVersion());
-//        if (appOperationEventMarathonEntity == null) {
-//            return;
-//        }
-//        Long eventId = appOperationEventMarathonEntity.getEventId();
-//        AppOperationEventEntity appOperationEventEntity = getMapper().selectByPrimaryKey(eventId);
-//        if (appOperationEventEntity.getStatus() == AppOperationEventStatusEnum.PROCESS) {
-//            AppOperationEventLog eventLog = getBean(AppOperationEventLog.class);
-//            AppOperationEnum event = appOperationEventEntity.getEvent();
-//            String content = "当前操作失败:\n" + marathonTaskFailureCallbackParam.getMessage();
-//            if (event == AppOperationEnum.DEPLOY) {
-//                eventLog.save(eventId, AppOperationEventLogTypeEnum.APP_DEPLOY_FLOW_HEALTH_CHECK, 2, content);
-//            } else {
-//                eventLog.save(eventId, event.getLogType(), content);
-//            }
-//            log.warn("MarathonTask失败: serviceId: [{}], message: [{}]", marathonServiceId, content);
-//        }
-//        ClusterConfigDto clusterConf = getBean(EnvApi.class).getEnvConfiguration(appOperationEventEntity.getEnvId()).ifNotSuccessThrowException().getData();
-//        String dcosUrl = CommonConstants.PROTOCOL + clusterConf.getDcosEndpoint() + CommonConstants.MARATHON_PORT;
-//        Marathon instance = MarathonClient.getInstance(dcosUrl);
-//        List<Deployment> deployments = instance.getDeployments();
-//        deployments.stream()
-//                .filter(deployment -> deployment.getAffectedApps().stream()
-//                        .anyMatch(app -> Objects.equals(marathonTaskFailureCallbackParam.getMarathonServiceId(), app)))
-//                .forEach(deployment -> {
-//                    try {
-//                        instance.cancelDeploymentAndRollback(deployment.getId());
-//                    } catch (Throwable throwable) {
-//                        log.warn("cancel deployment error: [" + deployment.toString() + "]", throwable);
-//                    }
-//                });
+        String marathonServiceId = marathonTaskFailureCallbackParam.getMarathonServiceId();
+        AppOpt appOpt = appOptService.selectByServiceIdAndVersionForPlatform(marathonServiceId,
+                marathonTaskFailureCallbackParam.getMarathonDeploymentVersion());
+        if (appOpt == null || appOpt.getOpt() != AppOptEnum.MARATHON_BUILD_DEPLOY) {
+            return;
+        }
+        if (appOpt.isProcess()) {
+            //保存失败log
+            log.warn("发布task失败: {}", marathonTaskFailureCallbackParam.getMessage());
+        }
+        ClusterConfigDto clusterConf = getBean(EnvApi.class).getEnvConfiguration(appOpt.getEnvId())
+                .ifNotSuccessThrowException().getData();
+        String dcosUrl = CommonConstants.PROTOCOL + clusterConf.getDcosEndpoint() + CommonConstants.MARATHON_PORT;
+        Marathon instance = MarathonClient.getInstance(dcosUrl);
+        List<Deployment> deployments = instance.getDeployments();
+        deployments.stream()
+                .filter(deployment -> deployment.getAffectedApps().stream()
+                        .anyMatch(app -> Objects.equals(marathonTaskFailureCallbackParam.getMarathonServiceId(), app)))
+                .forEach(deployment -> {
+                    try {
+                        instance.cancelDeploymentAndRollback(deployment.getId());
+                    } catch (Throwable throwable) {
+                        log.warn("cancel deployment error: [" + deployment.toString() + "]", throwable);
+                    }
+                });
     }
 }

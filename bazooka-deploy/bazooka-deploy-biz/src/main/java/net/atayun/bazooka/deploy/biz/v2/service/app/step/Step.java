@@ -9,7 +9,7 @@ import net.atayun.bazooka.deploy.biz.v2.service.app.flow.FlowDispatcherEvent;
 /**
  * @author Ping
  */
-public abstract class Step {
+public abstract class Step implements Cancel {
 
     protected abstract void doWork(AppOpt appOpt, AppOptFlowStep appOptFlowStep);
 
@@ -17,4 +17,8 @@ public abstract class Step {
         SpringApplicationEventPublisher.publish(new FlowDispatcherEvent(this, new StepWorker(appOpt, appOptFlowStep)));
     }
 
+    @Override
+    public void cancel(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
+
+    }
 }
