@@ -5,6 +5,7 @@ import com.youyu.common.api.PageData;
 import com.youyu.common.enums.IsDeleted;
 import com.youyu.common.exception.BizException;
 import com.youyu.common.utils.YyBeanUtils;
+import net.atayun.bazooka.base.constant.FlowStepConstants;
 import net.atayun.bazooka.base.enums.AppOptEnum;
 import net.atayun.bazooka.deploy.api.dto.AppRunningEventDto;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
@@ -34,6 +35,7 @@ import net.atayun.bazooka.rms.api.dto.RmsDockerImageDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -173,11 +175,8 @@ public class AppActionServiceImpl implements AppActionService {
                     dto.setStatus(appOptWithPlatform.getStatus().getDescription());
                     dto.setStatusCode(appOptWithPlatform.getStatus());
                     dto.setVersion(appOptWithPlatform.getAppDeployVersion());
-//                    String platformConfig = appOptWithPlatform.getAppDeployConfig();
-//                    App app = ModelUtils.GSON.fromJson(marathonConfig, App.class);
-//                    String image = app.getContainer().getDocker().getImage();
-//                    String[] split = image.split(":");
-                    String imageTag = "";
+                    AppOptFlowStep appOptFlowStep = flowStepService.selectByOptIdAndStep(appOptWithPlatform.getEventId(), FlowStepConstants.BUILD_DOCKER_IMAGE);
+                    String imageTag = (String) appOptFlowStep.getOutput().get("dockerImageTag");
                     dto.setImageTag(imageTag);
                     Optional<RmsDockerImageDto> imageDtoOptional = imageTags.stream()
                             .filter(rmsDockerImageDto -> Objects.equals(imageTag, rmsDockerImageDto.getImageTag()))
@@ -215,9 +214,13 @@ public class AppActionServiceImpl implements AppActionService {
                 Matcher matcher = Platform4Node.COMPILE.matcher(loginCmd);
                 if (matcher.find()) {
                     String username = matcher.group(1);
+                    if (StringUtils.hasText(username)) {
+                        loginCmd = loginCmd.replace(username, "******");
+                    }
                     String password = matcher.group(2);
-                    loginCmd = loginCmd.replace(username, "******")
-                            .replace(password, "******");
+                    if (StringUtils.hasText(password)) {
+                        loginCmd = loginCmd.replace(password, "******");
+                    }
                     cmdArr[0] = loginCmd;
                 }
             }

@@ -22,15 +22,14 @@ import net.atayun.bazooka.rms.api.dto.rsp.ClusterNodeRspDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -52,21 +51,44 @@ public class Platform4Node implements Platform {
     private static final String STOP_COMMAND = "sudo docker stop __CONTAINER_NAME__; docker rm __CONTAINER_NAME__";
     private static final String RESTART_COMMAND = "sudo docker restart __CONTAINER_NAME__";
 
+    private String getVersion() {
+        return LocalDateTime.now().toString();
+    }
+
+    private String getServiceId() {
+        return UUID.randomUUID().toString().replace("-", "");
+    }
+
+    private String getUuid(List<Long> clusterNodeIds) {
+        if (CollectionUtils.isEmpty(clusterNodeIds)) {
+            return "";
+        }
+        return clusterNodeIds.stream().map(Object::toString).collect(Collectors.joining(","));
+    }
+
+    private List<Long> getNodeIds(String uuid) {
+        if (StringUtils.isEmpty(uuid)) {
+            return new ArrayList<>();
+        }
+        String[] nodeIdsStr = uuid.split(",");
+        return Arrays.stream(nodeIdsStr).map(Long::parseLong).collect(Collectors.toList());
+    }
+
     @Override
     public void startApp(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
         AppDeployConfigDto appDeployConfigDto = getBean(AppApi.class).getAppDeployConfigInfoById(appOpt.getDeployConfigId())
                 .ifNotSuccessThrowException().getData();
-        List<Long> clusterNodeIds = appDeployConfigDto.getClusterNodes();
 
         AppOptService appOptService = getBean(AppOptService.class);
         AppOpt lastAppOpt = appOptService.selectLastSuccessByAppIdAndEnv(appOpt.getAppId(), appOpt.getEnvId());
-        String command = lastAppOpt.getAppDeployConfig();
 
+        String command = lastAppOpt.getAppDeployConfig();
+        List<Long> clusterNodeIds = appDeployConfigDto.getClusterNodes();
         ssh(clusterNodeIds, command);
 
-        String uuid = clusterNodeIds.stream().map(Object::toString).collect(Collectors.joining(","));
-        appOpt.setAppDeployUuid(uuid);
-        appOpt.setAppDeployVersion(lastAppOpt.getAppDeployVersion());
+        appOpt.setAppDeployUuid(getUuid(clusterNodeIds));
+        appOpt.setAppRunServiceId(getServiceId());
+        appOpt.setAppDeployVersion(getVersion());
         appOpt.setAppDeployConfig(command);
     }
 
@@ -81,29 +103,29 @@ public class Platform4Node implements Platform {
         if (lastAppOpt == null) {
             return;
         }
-        String[] nodeIdsStr = lastAppOpt.getAppDeployUuid().split(",");
-        String containerName = lastAppOpt.getAppDeployVersion();
+        String containerName = lastAppOpt.getAppRunServiceId();
         String command = STOP_COMMAND.replace("__CONTAINER_NAME__", containerName);
-        List<Long> cNodeIds = Arrays.stream(nodeIdsStr).map(Long::parseLong).collect(Collectors.toList());
+        List<Long> cNodeIds = getNodeIds(lastAppOpt.getAppDeployUuid());
         ssh(cNodeIds, command);
         if (updateAppOpt) {
             appOpt.setAppDeployConfig(command);
             appOpt.setAppDeployUuid(lastAppOpt.getAppDeployUuid());
-            appOpt.setAppDeployVersion(lastAppOpt.getAppDeployVersion());
+            appOpt.setAppDeployVersion(getVersion());
+            appOpt.setAppRunServiceId(containerName);
         }
     }
 
     @Override
     public void restartApp(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
         AppOpt lastAppOpt = getBean(AppOptService.class).selectLastSuccessByAppIdAndEnv(appOpt.getAppId(), appOpt.getEnvId());
-        String[] nodeIdsArr = lastAppOpt.getAppDeployUuid().split(",");
-        List<Long> nodeIds = Arrays.stream(nodeIdsArr).map(Long::parseLong).collect(Collectors.toList());
-        String containerName = lastAppOpt.getAppDeployVersion();
+        String containerName = lastAppOpt.getAppRunServiceId();
         String command = RESTART_COMMAND.replace("__CONTAINER_NAME__", containerName);
+        List<Long> nodeIds = getNodeIds(lastAppOpt.getAppDeployUuid());
         ssh(nodeIds, command);
         appOpt.setAppDeployConfig(command);
         appOpt.setAppDeployUuid(lastAppOpt.getAppDeployUuid());
-        appOpt.setAppDeployVersion(lastAppOpt.getAppDeployVersion());
+        appOpt.setAppDeployVersion(getVersion());
+        appOpt.setAppRunServiceId(containerName);
     }
 
     @Override
@@ -117,10 +139,11 @@ public class Platform4Node implements Platform {
         stopApp(appOpt, false);
 
         //复用历史
-        String[] nodeIdsStr = appOpt.getAppDeployUuid().split(",");
-        List<Long> nodeIds = Arrays.stream(nodeIdsStr).map(Long::parseLong).collect(Collectors.toList());
+        List<Long> nodeIds = getNodeIds(appOpt.getAppDeployUuid());
         String command = appOpt.getAppDeployConfig();
         ssh(nodeIds, command);
+
+        appOpt.setAppDeployVersion(getVersion());
     }
 
     @Override
@@ -131,9 +154,8 @@ public class Platform4Node implements Platform {
         Map<String, Object> input = appOptFlowStep.getInput();
         AppDeployConfigDto appDeployConfigDto = getBean(AppApi.class).getAppDeployConfigInfoById(appOpt.getDeployConfigId())
                 .ifNotSuccessThrowException().getData();
-        List<Long> clusterNodeIds = appDeployConfigDto.getClusterNodes();
 
-        String containerName = UUID.randomUUID().toString().replace("-", "");
+        String containerName = getServiceId();
         String image = (String) input.get("dockerImage");
         String port = "";
         List<PortMapping> portMappings = appDeployConfigDto.getPortMappings();
@@ -174,11 +196,12 @@ public class Platform4Node implements Platform {
             command = login + " && " + command + " && " + logout;
         }
 
+        List<Long> clusterNodeIds = appDeployConfigDto.getClusterNodes();
         ssh(clusterNodeIds, command);
 
-        String uuid = clusterNodeIds.stream().map(Object::toString).collect(Collectors.joining(","));
-        appOpt.setAppDeployUuid(uuid);
-        appOpt.setAppDeployVersion(containerName);
+        appOpt.setAppDeployUuid(getUuid(clusterNodeIds));
+        appOpt.setAppDeployVersion(getVersion());
+        appOpt.setAppRunServiceId(containerName);
         appOpt.setAppDeployConfig(command);
     }
 
