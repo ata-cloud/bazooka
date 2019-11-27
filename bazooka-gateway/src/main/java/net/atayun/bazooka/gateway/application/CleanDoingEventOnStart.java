@@ -69,7 +69,7 @@ public class CleanDoingEventOnStart implements ApplicationListener<ApplicationRe
                         });
             }
             appOpt.failure();
-            appOptService.update(appOpt);
+            appOptService.updateStatus(appOpt);
             AppStatusOpt.updateAppStatus(appOpt, Boolean.FALSE);
         });
     }

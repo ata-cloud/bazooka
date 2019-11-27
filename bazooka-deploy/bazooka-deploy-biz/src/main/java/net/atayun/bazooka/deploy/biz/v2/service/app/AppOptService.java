@@ -45,4 +45,6 @@ public interface AppOptService {
     List<AppOptCounts> appOptCountsByProject(Long projectId, LocalDateTime leftDatetime);
 
     List<AppOpt> selectByStatus(AppOptStatusEnum status);
+
+    void updateStatus(AppOpt appOpt);
 }

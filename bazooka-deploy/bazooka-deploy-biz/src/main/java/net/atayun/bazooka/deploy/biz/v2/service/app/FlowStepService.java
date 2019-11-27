@@ -25,4 +25,6 @@ public interface FlowStepService {
     List<AppOptFlowStep> selectByOptId(Long optId);
 
     List<DeployingFlowDto> getDeployingFlow(Long optId);
+
+    void cancel(AppOptFlowStep appOptFlowStep);
 }

@@ -50,6 +50,10 @@ public class AppOptFlowStep extends JdbcMysqlEntity<Long> {
         this.setStatus(FlowStepStatusEnum.STAND_BY);
     }
 
+    public void cancel() {
+        this.setStatus(FlowStepStatusEnum.CANCEL);
+    }
+
     public boolean isSuccess() {
         return this.status == FlowStepStatusEnum.SUCCESS;
     }
@@ -64,5 +68,9 @@ public class AppOptFlowStep extends JdbcMysqlEntity<Long> {
 
     public boolean isStandBy() {
         return this.status == FlowStepStatusEnum.STAND_BY;
+    }
+
+    public boolean isCancel() {
+        return this.status == FlowStepStatusEnum.CANCEL;
     }
 }

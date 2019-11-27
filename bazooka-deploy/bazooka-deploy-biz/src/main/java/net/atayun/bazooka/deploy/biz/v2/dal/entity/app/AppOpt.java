@@ -116,6 +116,10 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
         return this.status == AppOptStatusEnum.FAILURE;
     }
 
+    public boolean isFinish() {
+        return isSuccess() || isFailure();
+    }
+
     public Long getDeployConfigId() {
         return Long.parseLong(detail.get("deployConfigId").toString());
     }

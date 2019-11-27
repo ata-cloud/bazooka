@@ -153,4 +153,12 @@ public class AppOptServiceImpl implements AppOptService {
                 .andEqualTo("status", status);
         return appOptMapper.selectByExample(example);
     }
+
+    @Override
+    public void updateStatus(AppOpt appOpt) {
+        AppOpt patch = new AppOpt();
+        patch.setId(appOpt.getId());
+        patch.setStatus(appOpt.getStatus());
+        appOptMapper.updateByPrimaryKeySelective(patch);
+    }
 }

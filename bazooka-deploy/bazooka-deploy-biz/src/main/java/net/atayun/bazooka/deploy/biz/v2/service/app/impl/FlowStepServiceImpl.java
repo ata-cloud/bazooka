@@ -111,4 +111,9 @@ public class FlowStepServiceImpl implements FlowStepService {
                 })
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void cancel(AppOptFlowStep appOptFlowStep) {
+        appOptFlowStepMapper.cancelRestSteps(appOptFlowStep.getOptId(), appOptFlowStep.getStepSeq());
+    }
 }
