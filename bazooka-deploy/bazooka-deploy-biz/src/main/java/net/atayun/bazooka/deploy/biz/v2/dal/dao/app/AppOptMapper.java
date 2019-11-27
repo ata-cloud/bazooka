@@ -4,10 +4,10 @@ import com.youyu.common.mapper.YyMapper;
 import net.atayun.bazooka.base.enums.AppOptEnum;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptHis;
-import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.DeployCountsEntity;
-import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.EventWithMarathonEntity;
+import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptWithPlatform;
+import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptCounts;
 import net.atayun.bazooka.deploy.biz.v2.enums.AppOptStatusEnum;
-import net.atayun.bazooka.deploy.biz.v2.param.AppOptHisMarathonParam;
+import net.atayun.bazooka.deploy.biz.v2.param.AppOptHisPlatformParam;
 import net.atayun.bazooka.deploy.biz.v2.param.AppOptHisParam;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -40,18 +40,12 @@ public interface AppOptMapper extends YyMapper<AppOpt> {
             "d.opt event, " +
             "d.detail, " +
             "d.status, " +
-            "d.app_deploy_config marathon_config, " +
-            "d.app_deploy_version marathon_deployment_version " +
+            "d.app_deploy_config, " +
+            "d.app_deploy_version " +
             "from deploy_app_opt d " +
             "where d.app_id = #{pageData.appId} and d.env_id = #{pageData.envId} and d.opt in ('MARATHON_BUILD_DEPLOY', 'NODE_BUILD_DEPLOY', 'SCALE', 'ROLLBACK')" +
             "order by d.id desc ")
-    List<EventWithMarathonEntity> getAppOptHisMarathon(@Param("pageData") AppOptHisMarathonParam pageParam);
-
-    @Select("select " +
-            "* " +
-            "from deploy_app_opt d " +
-            "where d.app_id = #{appId} and d.env_id = #{envId} and d.status = #{status} and d.event = #{event} ")
-    AppOpt selectRollbackEntity(@Param("appId") Long appId, @Param("envId") Long envId, @Param("status") AppOptStatusEnum status, @Param("event") AppOptEnum event);
+    List<AppOptWithPlatform> getAppOptHisMarathon(@Param("pageData") AppOptHisPlatformParam pageParam);
 
     @Select("select " +
             "app_id, " +
@@ -61,5 +55,5 @@ public interface AppOptMapper extends YyMapper<AppOpt> {
             "where project_id = #{projectId} and create_time >= #{leftDatetime} " +
             "group by app_id, app_name " +
             "order by counts desc;")
-    List<DeployCountsEntity> deployCountsByProject(@Param("projectId") Long projectId, @Param("leftDatetime") LocalDateTime leftDatetime);
+    List<AppOptCounts> appOptCountsByProject(@Param("projectId") Long projectId, @Param("leftDatetime") LocalDateTime leftDatetime);
 }

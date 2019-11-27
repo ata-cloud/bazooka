@@ -6,14 +6,10 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import net.atayun.bazooka.deploy.api.AppActionApi;
 import net.atayun.bazooka.deploy.api.dto.AppRunningEventDto;
-import net.atayun.bazooka.deploy.biz.v2.dto.app.AppEventOperateWithStatusDto;
-import net.atayun.bazooka.deploy.biz.v2.dto.app.AppOptHisMarathonDto;
-import net.atayun.bazooka.deploy.biz.v2.dto.app.AppOptLogDto;
-import net.atayun.bazooka.deploy.biz.v2.dto.app.AppActionDto;
-import net.atayun.bazooka.deploy.biz.v2.dto.app.AppOptHisDto;
+import net.atayun.bazooka.deploy.biz.v2.dto.app.*;
 import net.atayun.bazooka.deploy.biz.v2.param.AppActionParam;
-import net.atayun.bazooka.deploy.biz.v2.param.AppOptHisMarathonParam;
 import net.atayun.bazooka.deploy.biz.v2.param.AppOptHisParam;
+import net.atayun.bazooka.deploy.biz.v2.param.AppOptHisPlatformParam;
 import net.atayun.bazooka.deploy.biz.v2.service.app.AppActionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -92,18 +88,18 @@ public class AppActionController implements AppActionApi {
         return Result.ok(pageData);
     }
 
-    @ApiOperation("所有操作记录(Marathon相关)")
-    @PostMapping("/operate/history/marathon")
-    public Result<PageData<AppOptHisMarathonDto>> getAppOptHistMarathon(@Validated @RequestBody AppOptHisMarathonParam pageParam) {
-        PageData<AppOptHisMarathonDto> pageData = appActionService.getAppOptHisMarathon(pageParam);
+    @ApiOperation("所有操作记录(Platform相关)")
+    @PostMapping("/operate/history/platform")
+    public Result<PageData<AppOptHisPlatformDto>> getAppOptHistMarathon(@Validated @RequestBody AppOptHisPlatformParam pageParam) {
+        PageData<AppOptHisPlatformDto> pageData = appActionService.getAppOptHisPlatform(pageParam);
         return Result.ok(pageData);
     }
 
-    @ApiOperation("操作记录详情(Marathon相关)")
+    @ApiOperation("操作记录详情(Platform相关)")
     @ApiImplicitParam(name = "optId", value = "事件Id", required = true, dataType = "long", paramType = "path")
-    @GetMapping("/operate/history/marathon/detail/{optId}")
-    public Result<String> getAppOptHisMarathonDetail(@PathVariable("optId") Long optId) {
-        String marathonConfig = appActionService.getAppOptHisMarathonDetail(optId);
+    @GetMapping("/operate/history/platform/detail/{optId}")
+    public Result<String> getAppOptHisPlatformDetail(@PathVariable("optId") Long optId) {
+        String marathonConfig = appActionService.getAppOptHisPlatformDetail(optId);
         return Result.ok(marathonConfig);
     }
 
@@ -118,8 +114,8 @@ public class AppActionController implements AppActionApi {
     @ApiOperation("操作记录状态")
     @ApiImplicitParam(name = "optId", value = "事件Id", required = true, dataType = "long", paramType = "path")
     @GetMapping("/operate/status/{optId}")
-    public Result<AppEventOperateWithStatusDto> getOptStatus(@PathVariable("optId") Long optId) {
-        AppEventOperateWithStatusDto dto = appActionService.getOptStatus(optId);
+    public Result<AppOptWithStatusDto> getOptStatus(@PathVariable("optId") Long optId) {
+        AppOptWithStatusDto dto = appActionService.getOptStatus(optId);
         return Result.ok(dto);
     }
 

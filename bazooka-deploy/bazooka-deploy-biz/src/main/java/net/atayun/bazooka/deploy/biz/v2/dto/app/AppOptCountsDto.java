@@ -13,14 +13,12 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package net.atayun.bazooka.deploy.biz.v2.dal.entity.app;
+package net.atayun.bazooka.deploy.biz.v2.dto.app;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import net.atayun.bazooka.base.enums.AppOptEnum;
-import net.atayun.bazooka.deploy.biz.v2.enums.AppOptStatusEnum;
-
-import java.util.Map;
 
 /**
  * @author Ping
@@ -28,21 +26,16 @@ import java.util.Map;
  */
 @Getter
 @Setter
-public class EventWithMarathonEntity {
+@ApiModel(description = "发布次数统计dto")
+public class AppOptCountsDto {
 
-    private Long eventId;
-
+    @ApiModelProperty("服务Id")
     private Long appId;
 
-    private Long envId;
+    @ApiModelProperty("服务名称")
+    private String appName;
 
-    private AppOptEnum event;
+    @ApiModelProperty("发布次数")
+    private Integer counts;
 
-    private AppOptStatusEnum status;
-
-    private String marathonConfig;
-
-    private String marathonDeploymentVersion;
-
-    private Map<String, Object> detail;
 }

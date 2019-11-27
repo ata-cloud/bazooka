@@ -34,10 +34,10 @@ import java.time.LocalDateTime;
 @ApiModel(description = "发布流dto")
 public class DeployingFlowDto {
 
-    @ApiModelProperty("发布Id")
+    @ApiModelProperty("OptId")
     private Long deployId;
 
-    @ApiModelProperty("发布流Id")
+    @ApiModelProperty("stepId")
     private Long deployFlowId;
 
     @ApiModelProperty("发布流名称")

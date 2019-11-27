@@ -17,18 +17,32 @@ package net.atayun.bazooka.deploy.biz.v2.dal.entity.app;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.atayun.bazooka.base.enums.AppOptEnum;
+import net.atayun.bazooka.deploy.biz.v2.enums.AppOptStatusEnum;
+
+import java.util.Map;
 
 /**
  * @author Ping
- * @date 2019-07-30
+ * @date 2019-07-26
  */
 @Getter
 @Setter
-public class DeployCountsEntity {
+public class AppOptWithPlatform {
+
+    private Long eventId;
 
     private Long appId;
 
-    private String appName;
+    private Long envId;
 
-    private Integer counts;
+    private AppOptEnum event;
+
+    private AppOptStatusEnum status;
+
+    private String appDeployConfig;
+
+    private String appDeployVersion;
+
+    private Map<String, Object> detail;
 }

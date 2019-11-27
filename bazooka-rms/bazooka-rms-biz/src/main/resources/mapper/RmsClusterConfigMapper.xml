@@ -10,6 +10,8 @@
         t.type,
         t.url,
         t.status,
+        t.version,
+        t.credential_id,
         t.create_time,
         t.update_time,
         t.create_author,

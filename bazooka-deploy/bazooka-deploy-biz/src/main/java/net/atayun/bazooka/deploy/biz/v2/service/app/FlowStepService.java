@@ -14,7 +14,7 @@ public interface FlowStepService {
 
     AppOptFlowStep selectById(Long stepId);
 
-    AppOptFlowStep selectByOptIdAndStep(Long optId, String healthCheck);
+    AppOptFlowStep selectByOptIdAndStep(Long optId, String step);
 
     AppOptFlowStep nextStep(AppOptFlowStep appOptFlowStep);
 

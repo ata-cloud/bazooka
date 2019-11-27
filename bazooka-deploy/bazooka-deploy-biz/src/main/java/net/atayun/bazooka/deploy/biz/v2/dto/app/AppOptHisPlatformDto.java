@@ -15,25 +15,53 @@
  */
 package net.atayun.bazooka.deploy.biz.v2.dto.app;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import net.atayun.bazooka.base.enums.AppOptEnum;
 import net.atayun.bazooka.deploy.biz.v2.enums.AppOptStatusEnum;
+
+import java.time.LocalDateTime;
 
 /**
  * @author Ping
+ * @date 2019-07-26
  */
 @Getter
 @Setter
-public class AppEventOperateWithStatusDto {
+@ApiModel(description = "Marathon相关事件dto")
+public class AppOptHisPlatformDto {
 
-    @ApiModelProperty("事件ID")
+    @ApiModelProperty("事件Id")
     private Long eventId;
 
     @ApiModelProperty("事件")
-    private AppOptEnum event;
+    private String event;
 
-    @ApiModelProperty("事件状态")
-    private AppOptStatusEnum status;
+    @ApiModelProperty("Marathon发布版本")
+    private String version;
+
+    @ApiModelProperty("镜像标签")
+    private String imageTag;
+
+    @ApiModelProperty("git commit")
+    private String gitCommitId;
+
+    @ApiModelProperty("git commit time")
+    private LocalDateTime gitCommitTime;
+
+    @ApiModelProperty("状态")
+    private String status;
+
+    @ApiModelProperty("状态")
+    private AppOptStatusEnum statusCode;
+
+    @ApiModelProperty("是否是最新操作")
+    private Boolean isTheLast;
+
+    @ApiModelProperty("镜像是否被删除")
+    private Boolean imageIsDelete;
+
+    @ApiModelProperty("是否在回滚")
+    private Boolean isRollback;
 }

@@ -3,15 +3,15 @@ package net.atayun.bazooka.deploy.biz.v2.service.app.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.youyu.common.exception.BizException;
 import net.atayun.bazooka.base.enums.AppOptEnum;
-import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.EventWithMarathonEntity;
-import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.DeployCountsEntity;
 import net.atayun.bazooka.deploy.biz.v2.dal.dao.app.AppOptMapper;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
+import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptCounts;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptHis;
+import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptWithPlatform;
 import net.atayun.bazooka.deploy.biz.v2.enums.AppOptStatusEnum;
 import net.atayun.bazooka.deploy.biz.v2.param.AppActionParam;
-import net.atayun.bazooka.deploy.biz.v2.param.AppOptHisMarathonParam;
 import net.atayun.bazooka.deploy.biz.v2.param.AppOptHisParam;
+import net.atayun.bazooka.deploy.biz.v2.param.AppOptHisPlatformParam;
 import net.atayun.bazooka.deploy.biz.v2.service.app.AppOptService;
 import net.atayun.bazooka.pms.api.dto.AppInfoDto;
 import net.atayun.bazooka.pms.api.feign.AppApi;
@@ -21,7 +21,6 @@ import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
@@ -63,10 +62,7 @@ public class AppOptServiceImpl implements AppOptService {
         example.createCriteria().andEqualTo("appId", appId)
                 .andEqualTo("envId", envId)
                 .andEqualTo("status", AppOptStatusEnum.SUCCESS)
-                .andIn("opt", Arrays.asList(AppOptEnum.IMAGE_DEPLOY,
-                        AppOptEnum.MARATHON_BUILD_DEPLOY,
-                        AppOptEnum.NODE_BUILD_DEPLOY,
-                        AppOptEnum.ROLLBACK));
+                .andIn("opt", AppOptEnum.lastSuccessList());
         example.orderBy("id").desc();
         List<AppOpt> appOpts = appOptMapper.selectByExample(example);
         return CollectionUtils.isEmpty(appOpts) ? null : appOpts.get(0);
@@ -104,13 +100,19 @@ public class AppOptServiceImpl implements AppOptService {
     }
 
     @Override
-    public List<EventWithMarathonEntity> getAppOptHisMarathon(AppOptHisMarathonParam pageParam) {
+    public List<AppOptWithPlatform> getAppOptHisPlatform(AppOptHisPlatformParam pageParam) {
         return appOptMapper.getAppOptHisMarathon(pageParam);
     }
 
     @Override
-    public AppOpt selectRollbackEntity(Long appId, Long envId, AppOptStatusEnum statusEnum, AppOptEnum appOptEnum) {
-        return appOptMapper.selectRollbackEntity(appId, envId, statusEnum, appOptEnum);
+    public AppOpt selectByStatusAndOpt(Long appId, Long envId, AppOptStatusEnum status, AppOptEnum appOptEnum) {
+        Example example = new Example(AppOpt.class);
+        example.createCriteria()
+                .andEqualTo("appId", appId)
+                .andEqualTo("envId", envId)
+                .andEqualTo("status", status)
+                .andEqualTo("opt", appOptEnum);
+        return appOptMapper.selectOneByExample(example);
     }
 
     @Override
@@ -119,7 +121,8 @@ public class AppOptServiceImpl implements AppOptService {
         example.createCriteria()
                 .andEqualTo("appId", appId)
                 .andEqualTo("envId", envId)
-                .andEqualTo("status", AppOptStatusEnum.PROCESS);
+                .andEqualTo("status", AppOptStatusEnum.PROCESS)
+                .andIn("opt", AppOptEnum.deployList());
         List<AppOpt> deployEntities = appOptMapper.selectByExample(example);
         if (CollectionUtils.isEmpty(deployEntities)) {
             return null;
@@ -131,7 +134,7 @@ public class AppOptServiceImpl implements AppOptService {
     }
 
     @Override
-    public List<DeployCountsEntity> deployCountsByProject(Long projectId, LocalDateTime leftDatetime) {
-        return appOptMapper.deployCountsByProject(projectId, leftDatetime);
+    public List<AppOptCounts> appOptCountsByProject(Long projectId, LocalDateTime leftDatetime) {
+        return appOptMapper.appOptCountsByProject(projectId, leftDatetime);
     }
 }

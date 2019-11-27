@@ -27,10 +27,10 @@ public class StepWorker {
     }
 
     public void doWork() {
-        appOptFlowStep.process();
-        getBean(FlowStepService.class).update(appOptFlowStep);
         Step step = StrategyNumBean.getBeanInstance(Step.class, appOptFlowStep.getStep());
         try {
+            appOptFlowStep.process();
+            getBean(FlowStepService.class).update(appOptFlowStep);
             step.doWork(appOpt, appOptFlowStep);
             appOptFlowStep.success();
         } catch (Throwable throwable) {
@@ -45,6 +45,5 @@ public class StepWorker {
                 step.notification(appOpt, appOptFlowStep);
             }
         }
-
     }
 }

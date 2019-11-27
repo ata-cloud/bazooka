@@ -5,18 +5,16 @@ import com.youyu.common.api.PageData;
 import com.youyu.common.enums.IsDeleted;
 import com.youyu.common.exception.BizException;
 import com.youyu.common.utils.YyBeanUtils;
-import mesosphere.client.common.ModelUtils;
-import mesosphere.marathon.client.model.v2.App;
 import net.atayun.bazooka.base.enums.AppOptEnum;
 import net.atayun.bazooka.deploy.api.dto.AppRunningEventDto;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptHis;
-import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.EventWithMarathonEntity;
+import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptWithPlatform;
 import net.atayun.bazooka.deploy.biz.v2.dto.app.*;
 import net.atayun.bazooka.deploy.biz.v2.enums.AppOptStatusEnum;
 import net.atayun.bazooka.deploy.biz.v2.param.AppActionParam;
-import net.atayun.bazooka.deploy.biz.v2.param.AppOptHisMarathonParam;
+import net.atayun.bazooka.deploy.biz.v2.param.AppOptHisPlatformParam;
 import net.atayun.bazooka.deploy.biz.v2.param.AppOptHisParam;
 import net.atayun.bazooka.deploy.biz.v2.service.app.AppActionService;
 import net.atayun.bazooka.deploy.biz.v2.service.app.AppOptService;
@@ -141,8 +139,8 @@ public class AppActionServiceImpl implements AppActionService {
     }
 
     @Override
-    public PageData<AppOptHisMarathonDto> getAppOptHisMarathon(AppOptHisMarathonParam pageData) {
-        List<EventWithMarathonEntity> entities = appOptService.getAppOptHisMarathon(pageData);
+    public PageData<AppOptHisPlatformDto> getAppOptHisPlatform(AppOptHisPlatformParam pageData) {
+        List<AppOptWithPlatform> entities = appOptService.getAppOptHisPlatform(pageData);
         if (CollectionUtils.isEmpty(entities)) {
             pageData.setRows(new ArrayList<>());
             return pageData;
@@ -159,25 +157,25 @@ public class AppActionServiceImpl implements AppActionService {
                 .ifNotSuccessThrowException()
                 .getData();
 
-        AppOpt rollbackEntity = getRollbackEntity(pageData.getAppId(), pageData.getEnvId());
+        AppOpt rollbackEntity = getRollback(pageData.getAppId(), pageData.getEnvId());
         Long templateEventId = null;
         if (rollbackEntity != null) {
             templateEventId = rollbackEntity.getTemplateEventId();
         }
         Long finalTemplateEventId = templateEventId;
-        List<AppOptHisMarathonDto> resultPageRow = entities.stream()
-                .map(eventWithMarathonEntity -> {
-                    AppOptHisMarathonDto dto = new AppOptHisMarathonDto();
-                    dto.setEvent(eventWithMarathonEntity.getEvent().getDescription());
-                    dto.setEventId(eventWithMarathonEntity.getEventId());
-                    dto.setStatus(eventWithMarathonEntity.getStatus().getDescription());
-                    dto.setStatusCode(eventWithMarathonEntity.getStatus());
-                    dto.setVersion(eventWithMarathonEntity.getMarathonDeploymentVersion());
-                    String marathonConfig = eventWithMarathonEntity.getMarathonConfig();
-                    App app = ModelUtils.GSON.fromJson(marathonConfig, App.class);
-                    String image = app.getContainer().getDocker().getImage();
-                    String[] split = image.split(":");
-                    String imageTag = split[split.length - 1];
+        List<AppOptHisPlatformDto> resultPageRow = entities.stream()
+                .map(appOptWithPlatform -> {
+                    AppOptHisPlatformDto dto = new AppOptHisPlatformDto();
+                    dto.setEvent(appOptWithPlatform.getEvent().getDescription());
+                    dto.setEventId(appOptWithPlatform.getEventId());
+                    dto.setStatus(appOptWithPlatform.getStatus().getDescription());
+                    dto.setStatusCode(appOptWithPlatform.getStatus());
+                    dto.setVersion(appOptWithPlatform.getAppDeployVersion());
+//                    String platformConfig = appOptWithPlatform.getAppDeployConfig();
+//                    App app = ModelUtils.GSON.fromJson(marathonConfig, App.class);
+//                    String image = app.getContainer().getDocker().getImage();
+//                    String[] split = image.split(":");
+                    String imageTag = "";
                     dto.setImageTag(imageTag);
                     Optional<RmsDockerImageDto> imageDtoOptional = imageTags.stream()
                             .filter(rmsDockerImageDto -> Objects.equals(imageTag, rmsDockerImageDto.getImageTag()))
@@ -189,7 +187,7 @@ public class AppActionServiceImpl implements AppActionService {
                     dto.setGitCommitId(imageDtoOptional.map(RmsDockerImageDto::getGitCommitId).orElse(""));
                     dto.setGitCommitTime(imageDtoOptional.map(RmsDockerImageDto::getGitCommitTime).orElse(null));
                     dto.setIsTheLast(false);
-                    dto.setIsRollback(finalTemplateEventId != null && eventWithMarathonEntity.getEventId().compareTo(finalTemplateEventId) == 0);
+                    dto.setIsRollback(finalTemplateEventId != null && appOptWithPlatform.getEventId().compareTo(finalTemplateEventId) == 0);
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -202,7 +200,7 @@ public class AppActionServiceImpl implements AppActionService {
     }
 
     @Override
-    public String getAppOptHisMarathonDetail(Long optId) {
+    public String getAppOptHisPlatformDetail(Long optId) {
         AppOpt appOpt = appOptService.selectById(optId);
         if (appOpt == null) {
             return "";
@@ -220,16 +218,16 @@ public class AppActionServiceImpl implements AppActionService {
     }
 
     @Override
-    public AppEventOperateWithStatusDto getOptStatus(Long optId) {
+    public AppOptWithStatusDto getOptStatus(Long optId) {
         AppOpt appOpt = appOptService.selectById(optId);
-        AppEventOperateWithStatusDto dto = new AppEventOperateWithStatusDto();
+        AppOptWithStatusDto dto = new AppOptWithStatusDto();
         dto.setEventId(appOpt.getId());
         dto.setEvent(appOpt.getOpt());
         dto.setStatus(appOpt.getStatus());
         return dto;
     }
 
-    private AppOpt getRollbackEntity(Long appId, Long envId) {
-        return appOptService.selectRollbackEntity(appId, envId, AppOptStatusEnum.PROCESS, AppOptEnum.ROLLBACK);
+    private AppOpt getRollback(Long appId, Long envId) {
+        return appOptService.selectByStatusAndOpt(appId, envId, AppOptStatusEnum.PROCESS, AppOptEnum.ROLLBACK);
     }
 }

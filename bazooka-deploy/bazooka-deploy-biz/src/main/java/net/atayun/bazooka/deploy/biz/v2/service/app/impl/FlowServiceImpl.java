@@ -5,8 +5,8 @@ import com.youyu.common.utils.YyBeanUtils;
 import net.atayun.bazooka.base.enums.deploy.DeployModeEnum;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
-import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.DeployCountsEntity;
-import net.atayun.bazooka.deploy.biz.v2.dto.app.DeployCountsDto;
+import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptCounts;
+import net.atayun.bazooka.deploy.biz.v2.dto.app.AppOptCountsDto;
 import net.atayun.bazooka.deploy.biz.v2.dto.app.DeployingConfigInfoDto;
 import net.atayun.bazooka.deploy.biz.v2.dto.app.DeployingFlowDto;
 import net.atayun.bazooka.deploy.biz.v2.dto.app.DeployingFlowResultDto;
@@ -79,17 +79,17 @@ public class FlowServiceImpl implements FlowService {
     }
 
     @Override
-    public List<DeployCountsDto> deployCountsByProject(Long projectId, TimeGranularityEnum timeGranularity) {
+    public List<AppOptCountsDto> deployCountsByProject(Long projectId, TimeGranularityEnum timeGranularity) {
         LocalDateTime leftDatetime = timeGranularity.getLeftDatetime();
-        List<DeployCountsEntity> deployCountsEntities = appOptService.deployCountsByProject(projectId, leftDatetime);
-        if (CollectionUtils.isEmpty(deployCountsEntities)) {
+        List<AppOptCounts> appOptCounts = appOptService.appOptCountsByProject(projectId, leftDatetime);
+        if (CollectionUtils.isEmpty(appOptCounts)) {
             return new ArrayList<>();
         }
-        return deployCountsEntities.stream()
-                .map(deployCountsEntity -> {
-                    DeployCountsDto deployCountsDto = new DeployCountsDto();
-                    YyBeanUtils.copyProperties(deployCountsEntity, deployCountsDto);
-                    return deployCountsDto;
+        return appOptCounts.stream()
+                .map(appOptCount -> {
+                    AppOptCountsDto appOptCountsDto = new AppOptCountsDto();
+                    YyBeanUtils.copyProperties(appOptCount, appOptCountsDto);
+                    return appOptCountsDto;
                 })
                 .collect(Collectors.toList());
     }
