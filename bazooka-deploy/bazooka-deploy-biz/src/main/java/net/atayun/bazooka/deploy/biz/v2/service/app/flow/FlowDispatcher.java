@@ -1,5 +1,6 @@
 package net.atayun.bazooka.deploy.biz.v2.service.app.flow;
 
+import com.youyu.common.exception.BizException;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
 import net.atayun.bazooka.deploy.biz.v2.service.app.AppOptService;
@@ -23,8 +24,8 @@ public class FlowDispatcher {
     @EventListener
     public void dispatcher(FlowDispatcherEvent event) {
         StepWorker stepWorker = event.getStepWorker();
-        AppOptFlowStep appOptFlowStep = stepWorker.getAppOptFlowStep();
         AppOpt appOpt = stepWorker.getAppOpt();
+        AppOptFlowStep appOptFlowStep = stepWorker.getAppOptFlowStep();
 
         if (appOptFlowStep.isStandBy()) {
             FlowStepThreadPool.execute(stepWorker::doWork);
@@ -35,26 +36,26 @@ public class FlowDispatcher {
         FlowStepService flowStepService = getBean(FlowStepService.class);
         flowStepService.update(appOptFlowStep);
 
-        boolean flowFinish = false;
-        if (appOptFlowStep.isSuccess()) {
-            //next
-            AppOptFlowStep nextStep = getBean(FlowStepService.class).nextStep(appOptFlowStep);
-            if (nextStep == null) {
-                //finish
-                flowFinish = true;
-                appOpt.success();
-            } else {
-                nextStep.setInput(appOptFlowStep.getOutput());
-                FlowStepThreadPool.execute(() -> new StepWorker(appOpt, nextStep).doWork());
+        try {
+            if (appOptFlowStep.isSuccess()) {
+                AppOptFlowStep nextStep = getBean(FlowStepService.class).nextStep(appOptFlowStep);
+                if (nextStep != null) {
+                    nextStep.setInput(appOptFlowStep.getOutput());
+                    FlowStepThreadPool.execute(() -> new StepWorker(appOpt, nextStep).doWork());
+                } else {
+                    appOpt.success();
+                }
+            } else if (appOptFlowStep.isFailure()) {
+                appOpt.failure();
             }
-        } else if (appOptFlowStep.isFailure()) {
-            //failure -> finish
-            flowFinish = true;
+        } catch (Throwable throwable) {
             appOpt.failure();
-        }
-        if (flowFinish) {
-            getBean(AppOptService.class).update(appOpt);
-            AppStatusOpt.updateAppStatus(appOpt, false);
+            throw new BizException("", "操作异常", throwable);
+        } finally {
+            if (appOpt.isSuccess() || appOpt.isFailure()) {
+                getBean(AppOptService.class).update(appOpt);
+                AppStatusOpt.updateAppStatus(appOpt, Boolean.FALSE);
+            }
         }
     }
 }
