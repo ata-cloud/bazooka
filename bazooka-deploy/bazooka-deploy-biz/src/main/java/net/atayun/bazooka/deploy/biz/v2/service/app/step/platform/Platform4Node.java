@@ -48,7 +48,7 @@ public class Platform4Node implements Platform {
     private PmsCredentialsApi pmsCredentialsApi;
 
     private static final String DEPLOY_COMMAND = "sudo docker run --name=__CONTAINER_NAME__ __PORT_MAPPING__ __ENV__ __VOLUME__ -d __IMAGE_AND_TAG__";
-    private static final String STOP_COMMAND = "sudo docker stop __CONTAINER_NAME__; docker rm __CONTAINER_NAME__";
+    private static final String STOP_COMMAND = "sudo docker stop __CONTAINER_NAME__ && sudo docker rm __CONTAINER_NAME__";
     private static final String RESTART_COMMAND = "sudo docker restart __CONTAINER_NAME__";
 
     private String getVersion() {
