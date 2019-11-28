@@ -60,8 +60,11 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static com.alibaba.fastjson.JSON.parseArray;
@@ -706,6 +709,20 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
             }
         }
 
+        if (createClusterReq.getType().equals(ClusterTypeEnum.SINGLENODE.getCode())) {
+            Iterator<SingleNodeReq> sListIterator = createClusterReq.getNodeList().iterator();
+            while (sListIterator.hasNext()) {
+                SingleNodeReq singleNodeReq = sListIterator.next();
+                if (singleNodeReq == null){
+                    sListIterator.remove();
+                }
+            }
+
+            if (createClusterReq.getNodeList().size() > createClusterReq.getNodeList().stream().filter(distinctByKey(SingleNodeReq::getNodeIp)).distinct().count()) {
+                return Result.fail(RmsResultCode.NODE_IP_REPEAT.getCode(), RmsResultCode.NODE_IP_REPEAT.getDesc());
+            }
+        }
+
         Example example = Example.builder(RmsClusterEntity.class).build();
         example.createCriteria().andEqualTo("name", createClusterReq.getName());
         List<RmsClusterEntity> list = rmsClusterMapper.selectByExample(example);
@@ -726,6 +743,11 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
             }
         }
         return null;
+    }
+
+    public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        ConcurrentHashMap<Object, Boolean> map = new ConcurrentHashMap<>(16);
+        return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
 
     /**
