@@ -57,6 +57,7 @@ public class AppDeployConfigConverterTest {
                 1L,
                 10L,
                 3L,
+                "0",
                 "TEST",
                 "发布配置",
                 "构建发布",

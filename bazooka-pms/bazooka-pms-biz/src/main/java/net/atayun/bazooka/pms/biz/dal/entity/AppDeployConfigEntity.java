@@ -38,10 +38,11 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Table(name = "pms_app_deploy_config")
 public class AppDeployConfigEntity extends JdbcMysqlEntity<Long> {
-    public AppDeployConfigEntity(Long id, Long appId, Long envId, String configName, String configDescription, DeployModeEnum deployMode, String gitBranchAllow, String gitBranchDeny, String compileCommand, String dockerfilePath, Double cpus, Integer memory, Integer disk, Integer instance, String startCommand, String portMappings, String environmentVariable, String volumes, String healthChecks, IsDeleted isDeleted, String clusterNodes) {
+    public AppDeployConfigEntity(Long id, Long appId, Long envId, String clusterType, String configName, String configDescription, DeployModeEnum deployMode, String gitBranchAllow, String gitBranchDeny, String compileCommand, String dockerfilePath, Double cpus, Integer memory, Integer disk, Integer instance, String startCommand, String portMappings, String environmentVariable, String volumes, String healthChecks, IsDeleted isDeleted, String clusterNodes) {
         super(id);
         this.appId = appId;
         this.envId = envId;
+        this.clusterType = clusterType;
         this.configName = configName;
         this.configDescription = configDescription;
         this.deployMode = deployMode;
@@ -67,10 +68,11 @@ public class AppDeployConfigEntity extends JdbcMysqlEntity<Long> {
         this.isDeleted = isDeleted;
     }
 
-    public AppDeployConfigEntity(Long appId, Long envId, IsDeleted isDeleted) {
+    public AppDeployConfigEntity(Long appId, Long envId, IsDeleted isDeleted, String clusterType) {
         this.appId = appId;
         this.envId = envId;
         this.isDeleted = isDeleted;
+        this.clusterType = clusterType;
     }
 
     public AppDeployConfigEntity(Long appId, Long envId, String configName, IsDeleted isDeleted) {
@@ -91,6 +93,12 @@ public class AppDeployConfigEntity extends JdbcMysqlEntity<Long> {
      */
     @Column(name = "env_id")
     private Long envId;
+
+    /**
+     * 集群类型: 0:MESOS集群 1:KUBERNETES集群 2:单节点集群
+     */
+    @Column(name = "cluster_type")
+    private String clusterType;
 
     /**
      * 配置名

@@ -320,8 +320,8 @@ public class AppController implements AppApi {
     @ApiOperation(value = "查询服务所有的发布配置")
     @PmsAuth
     @GetMapping("/deploy-config/list/{appId:\\d+}")
-    public Result<List<AppDeployConfigDto>> getAppDeployConfigList(@PathVariable Long appId, @RequestParam(required = false) Long envId) {
-        List<AppDeployConfigEntity> deployConfigEntityList = this.appDeployConfigService.selectEntity(new AppDeployConfigEntity(appId, envId, IsDeleted.NOT_DELETED));
+    public Result<List<AppDeployConfigDto>> getAppDeployConfigList(@PathVariable Long appId, @RequestParam(required = false) Long envId, @RequestParam(required = false) String clusterType) {
+        List<AppDeployConfigEntity> deployConfigEntityList = this.appDeployConfigService.selectEntity(new AppDeployConfigEntity(appId, envId, IsDeleted.NOT_DELETED, clusterType));
         if (ObjectUtils.isEmpty(deployConfigEntityList)) {
             return Result.ok();
         } else {

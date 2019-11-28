@@ -48,11 +48,12 @@ import java.util.Map;
 @AllArgsConstructor
 @ApiModel
 public class AppDeployConfigDto extends BaseDto<Long> {
-    public AppDeployConfigDto(Long id, Long appId, Long envId, String envName, String configName, String configDescription, DeployModeEnum deployMode, String gitBranchAllow, String gitBranchDeny, String compileCommand, String dockerfilePath, Double cpus, Integer memory, Integer disk, Integer instance, String startCommand, List<Long> clusterNodes, List<PortMapping> portMappings, Map<String, Object> environmentVariable, List<VolumeMount> volumes, List<HealthCheck> healthChecks, String updateAuthor, LocalDateTime updateTime) {
+    public AppDeployConfigDto(Long id, Long appId, Long envId, String clusterType, String envName, String configName, String configDescription, DeployModeEnum deployMode, String gitBranchAllow, String gitBranchDeny, String compileCommand, String dockerfilePath, Double cpus, Integer memory, Integer disk, Integer instance, String startCommand, List<Long> clusterNodes, List<PortMapping> portMappings, Map<String, Object> environmentVariable, List<VolumeMount> volumes, List<HealthCheck> healthChecks, String updateAuthor, LocalDateTime updateTime) {
         super(id);
         this.appId = appId;
         this.envId = envId;
         this.envName = envName;
+        this.clusterType = clusterType;
         this.configName = configName;
         this.configDescription = configDescription;
         this.deployMode = deployMode;
@@ -81,6 +82,10 @@ public class AppDeployConfigDto extends BaseDto<Long> {
     @NotNull(message = "环境id不能空")
     @ApiModelProperty(value = "环境id")
     private Long envId;
+
+    @ApiModelProperty("集群类型: 0:MESOS集群 1:KUBERNETES集群 2:单节点集群")
+    @NotBlank(message = "集群类型不能空")
+    private String clusterType;
 
     @Size(max = 30, message = "配置名长度不能超过30")
     @NotBlank(message = "配置名不能空")
