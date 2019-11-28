@@ -10,8 +10,10 @@ import java.util.regex.Pattern;
  */
 public class MessageDesensitizationUtil {
 
-    private static final Pattern DOCKER_RUN_PATTERN = Pattern.compile("-u\\s+(\\w+)\\s+-p\\s+(\\w+)");
+    private static final Pattern DOCKER_RUN_PATTERN = Pattern.compile("-u\\s+(.+?)\\s+-p\\s+(.+?)");
     private static final Pattern GIT_CLONE_PATTERN = Pattern.compile(":\\/\\/(.+?)@");
+    private static final Pattern USERNAME_PATTERN = Pattern.compile("USERNAME=(.+?),");
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile("PASSWORD=(.+?),");
     private static final String REPLACEMENT = "******";
 
     public static String replaceDockerCmd(String cmd) {
@@ -34,11 +36,23 @@ public class MessageDesensitizationUtil {
     }
 
     public static String replaceGitCloneCmd(String gitCloneCmd) {
-        if (StringUtils.isEmpty(gitCloneCmd)) {
+        return replaceOne(GIT_CLONE_PATTERN, gitCloneCmd);
+    }
+
+    public static String replaceUsernameE(String username) {
+        return replaceOne(USERNAME_PATTERN, username);
+    }
+
+    public static String replacePasswordE(String password) {
+        return replaceOne(PASSWORD_PATTERN, password);
+    }
+
+    public static String replaceOne(Pattern pattern, String str) {
+        if (StringUtils.isEmpty(str)) {
             return "";
         }
-        String finalStr = gitCloneCmd;
-        Matcher matcher = GIT_CLONE_PATTERN.matcher(gitCloneCmd);
+        String finalStr = str;
+        Matcher matcher = pattern.matcher(str);
         if (matcher.find()) {
             String privacy = matcher.group(1);
             if (StringUtils.hasText(privacy)) {

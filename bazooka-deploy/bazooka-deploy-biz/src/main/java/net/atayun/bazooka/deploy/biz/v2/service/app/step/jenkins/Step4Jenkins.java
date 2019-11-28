@@ -58,6 +58,8 @@ public abstract class Step4Jenkins extends Step implements Callback {
         //优化
         String log = MessageDesensitizationUtil.replaceGitCloneCmd(jenkinsLog);
         log = MessageDesensitizationUtil.replaceDockerCmd(log);
+        log = MessageDesensitizationUtil.replaceUsernameE(log);
+        log = MessageDesensitizationUtil.replacePasswordE(log);
         getStepLogCollector().collect(appOptFlowStep, "Job日志:\n" + log);
         getStepLogCollector().collect(appOptFlowStep, "Job输出参数:\n" + output.toString());
     }
