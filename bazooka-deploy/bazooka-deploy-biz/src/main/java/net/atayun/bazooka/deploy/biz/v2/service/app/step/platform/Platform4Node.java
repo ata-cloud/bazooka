@@ -5,6 +5,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.youyu.common.exception.BizException;
+import lombok.extern.slf4j.Slf4j;
 import net.atayun.bazooka.base.annotation.StrategyNum;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
@@ -26,7 +27,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -37,6 +42,7 @@ import static net.atayun.bazooka.deploy.biz.v2.constant.DeployResultCodeConstant
 /**
  * @author Ping
  */
+@Slf4j
 @Component
 @StrategyNum(superClass = Platform.class, number = "2")
 public class Platform4Node implements Platform {
@@ -211,24 +217,30 @@ public class Platform4Node implements Platform {
                 session.connect();
                 exec(session, command, logBuilder);
                 session.disconnect();
-            } catch (JSchException e) {
+            } catch (JSchException | IOException e) {
                 throw new BizException(ACCESS_NODE_ERR_CODE, "节点访问异常[" + ip + "]", e);
             }
         }
     }
 
-    private void exec(Session session, String command, StepLogBuilder logBuilder) throws JSchException {
+    private void exec(Session session, String command, StepLogBuilder logBuilder) throws JSchException, IOException {
         ChannelExec exec = (ChannelExec) session.openChannel("exec");
         exec.setCommand(command);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         exec.setErrStream(byteArrayOutputStream);
         exec.connect();
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(exec.getInputStream(), StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                logBuilder.append(line);
+            }
+        }
         exec.disconnect();
         String err = byteArrayOutputStream.toString();
         if (StringUtils.hasText(err)) {
             logBuilder.append("执行命令异常: " + err);
         }
-        logBuilder.append("CmdCode: " + exec.getExitStatus() + "\n");
+        logBuilder.append("CmdCode: " + exec.getExitStatus());
     }
 
     private String getVersion() {
