@@ -5,6 +5,7 @@ import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
 import net.atayun.bazooka.deploy.biz.v2.service.app.AppOptService;
 import net.atayun.bazooka.deploy.biz.v2.service.app.step.Step;
+import net.atayun.bazooka.deploy.biz.v2.service.app.step.log.StepLogBuilder;
 import net.atayun.bazooka.rms.api.api.EnvApi;
 import net.atayun.bazooka.rms.api.dto.EnvDto;
 
@@ -21,17 +22,26 @@ public abstract class Step4Platform extends Step {
 
         Platform platform = StrategyNumBean.getBeanInstance(Platform.class, env.getClusterType());
 
-        custom(platform, appOpt, appOptFlowStep);
+        StepLogBuilder logBuilder = new StepLogBuilder();
+        try {
+            customWork(platform, appOpt, appOptFlowStep, logBuilder);
+        } catch (Throwable t) {
+            logBuilder.append(t);
+            throw t;
+        } finally {
+            getStepLogCollector().collect(appOptFlowStep, logBuilder.build());
+        }
 
         getBean(AppOptService.class).updateById(appOpt);
     }
 
     /**
-     * custom
+     * customWork
      *
      * @param platform       platform
      * @param appOpt         appOpt
      * @param appOptFlowStep appOptFlowStep
+     * @param stepLogBuilder stepLogBuilder
      */
-    protected abstract void custom(Platform platform, AppOpt appOpt, AppOptFlowStep appOptFlowStep);
+    protected abstract void customWork(Platform platform, AppOpt appOpt, AppOptFlowStep appOptFlowStep, StepLogBuilder stepLogBuilder);
 }

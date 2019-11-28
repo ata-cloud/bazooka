@@ -32,6 +32,7 @@ public class StepWorker {
         try {
             appOptFlowStep.process();
             flowStepService.update(appOptFlowStep);
+            step.getStepLogCollector().collect(appOptFlowStep, "执行步骤:" + appOptFlowStep.getStep());
             step.doWork(appOpt, appOptFlowStep);
             if (step instanceof SinglePhase) {
                 appOptFlowStep.success();

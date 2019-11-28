@@ -68,4 +68,11 @@ public final class DeployResultCodeConstants {
     public static final String GIT_URI_ERROR = AtaResultCode.DEPLOY_CODE + "0020";
 
     public static final String ILLEGAL_EVENT_ID_ERR_CODE = AtaResultCode.DEPLOY_CODE + "0021";
+    public static final String STEPS_FLOW_ERR_CODE = AtaResultCode.DEPLOY_CODE + "0022";
+    public static final String MISS_COMMIT_INFO = AtaResultCode.DEPLOY_CODE + "0023";
+    public static final String ACCESS_NODE_ERR_CODE = AtaResultCode.DEPLOY_CODE + "0024";
+    public static final String REJECT_APP_ACTION = AtaResultCode.DEPLOY_CODE + "0025";
+    public static final String REJECT_FLOW_EXEC = AtaResultCode.DEPLOY_CODE + "0026";
+
+
 }

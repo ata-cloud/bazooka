@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import javax.validation.constraints.NotNull;
 import java.util.concurrent.*;
 
+import static net.atayun.bazooka.deploy.biz.v2.constant.DeployResultCodeConstants.REJECT_FLOW_EXEC;
+
 /**
  * @author Ping
  */
@@ -46,7 +48,7 @@ public class FlowStepThreadPool {
             FLOW_STEP_THREAD_POOL_EXECUTOR.execute(runnable);
         } catch (RejectedExecutionException ree) {
             log.warn("新任务被拒绝执行", ree);
-            throw new BizException("", "新任务被拒绝执行", ree);
+            throw new BizException(REJECT_FLOW_EXEC, "新任务被拒绝执行", ree);
         }
     }
 }

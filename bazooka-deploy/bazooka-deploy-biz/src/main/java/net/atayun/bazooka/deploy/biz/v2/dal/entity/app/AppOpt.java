@@ -120,6 +120,8 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
         return isSuccess() || isFailure();
     }
 
+    //下列都是detail中的值
+
     public Long getDeployConfigId() {
         return Long.parseLong(detail.get("deployConfigId").toString());
     }
@@ -183,4 +185,6 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
     public Boolean needAuth() {
         return (Boolean) detail.get("needAuth");
     }
+
+    //====================
 }

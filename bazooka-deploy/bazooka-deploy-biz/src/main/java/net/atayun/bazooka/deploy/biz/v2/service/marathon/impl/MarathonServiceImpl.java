@@ -88,7 +88,6 @@ public class MarathonServiceImpl implements MarathonService {
             return;
         }
         if (appOpt.isProcess()) {
-            //保存失败log
             log.warn("发布task失败: {}", marathonTaskFailureCallbackParam.getMessage());
         }
         ClusterConfigDto clusterConf = getBean(EnvApi.class).getEnvConfiguration(appOpt.getEnvId())

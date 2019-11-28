@@ -5,6 +5,7 @@ import net.atayun.bazooka.base.bean.StrategyNumBean;
 import net.atayun.bazooka.base.constant.FlowStepConstants;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
+import net.atayun.bazooka.deploy.biz.v2.service.app.step.log.StepLogBuilder;
 import net.atayun.bazooka.deploy.biz.v2.service.app.step.platform.Platform;
 import net.atayun.bazooka.rms.api.api.EnvApi;
 import net.atayun.bazooka.rms.api.dto.EnvDto;
@@ -25,11 +26,11 @@ public class Step4HealthCheck extends Step implements Callback {
 
         Platform platform = StrategyNumBean.getBeanInstance(Platform.class, env.getClusterType());
 
-        platform.healthCheck(appOpt, appOptFlowStep);
+        platform.healthCheck(appOpt, appOptFlowStep, new StepLogBuilder());
     }
 
     @Override
     public void doWork(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
-
+        getStepLogCollector().collect(appOptFlowStep, "执行健康检查");
     }
 }

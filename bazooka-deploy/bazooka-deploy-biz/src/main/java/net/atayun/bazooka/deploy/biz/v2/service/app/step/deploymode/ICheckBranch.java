@@ -4,6 +4,7 @@ import com.youyu.common.exception.BizException;
 import net.atayun.bazooka.base.git.GitServiceHelp;
 import net.atayun.bazooka.deploy.biz.v2.constant.DeployResultCodeConstants;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
+import net.atayun.bazooka.deploy.biz.v2.service.app.step.log.StepLogBuilder;
 import net.atayun.bazooka.pms.api.dto.AppDeployConfigDto;
 import net.atayun.bazooka.pms.api.dto.AppInfoWithCredential;
 import net.atayun.bazooka.pms.api.feign.AppApi;
@@ -19,7 +20,7 @@ import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
  */
 public interface ICheckBranch {
 
-    default void checkBranch(AppOpt appOpt) {
+    default void checkBranch(AppOpt appOpt, StepLogBuilder stepLogBuilder) {
         AppApi appApi = getBean(AppApi.class);
         AppDeployConfigDto appDeployConfigDto = appApi.getAppDeployConfigInfoById(appOpt.getDeployConfigId())
                 .ifNotSuccessThrowException().getData();
@@ -29,7 +30,7 @@ public interface ICheckBranch {
         String gitBranchDeny = appDeployConfigDto.getGitBranchDeny();
 
         if (StringUtils.isEmpty(gitBranchAllow) && StringUtils.isEmpty(gitBranchDeny)) {
-            //log
+            stepLogBuilder.append("允许所有分支");
         } else {
             if (StringUtils.hasText(gitBranchAllow)) {
                 gitBranchAllow = gitBranchAllow.replace("*", "");

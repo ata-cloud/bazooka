@@ -49,6 +49,7 @@ public class Step4PushDockerImage extends Step4Jenkins {
                     .ifNotSuccessThrowException().getData();
             boolean sameRegistry = data.isSameRegistry();
             if (sameRegistry) {
+                getStepLogCollector().collect(appOptFlowStep, "相同镜像库, 执行记录复制");
                 rmsDockerImageApi.imageCopy(imageId, targetEnvId).ifNotSuccessThrowException();
                 return;
             }
@@ -99,6 +100,7 @@ public class Step4PushDockerImage extends Step4Jenkins {
         if (StringUtils.hasText(targetEnvIdStr)) {
             long targetEnvId = Long.parseLong(targetEnvIdStr);
             long imageId = Long.parseLong((String) custom.get("imageId"));
+            getStepLogCollector().collect(appOptFlowStep, "执行记录复制[" + targetEnvIdStr + "," + imageId + "]");
             rmsDockerImageApi.imageCopy(imageId, targetEnvId).ifNotSuccessThrowException();
         }
     }

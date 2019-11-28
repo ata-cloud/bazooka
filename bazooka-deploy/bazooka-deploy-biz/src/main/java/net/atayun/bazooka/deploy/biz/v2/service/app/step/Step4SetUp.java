@@ -6,6 +6,7 @@ import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
 import net.atayun.bazooka.deploy.biz.v2.service.app.step.deploymode.DeployMode;
 import net.atayun.bazooka.deploy.biz.v2.service.app.step.deploymode.Step4DeployMode;
+import net.atayun.bazooka.deploy.biz.v2.service.app.step.log.StepLogBuilder;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class Step4SetUp extends Step4DeployMode implements SinglePhase {
 
     @Override
-    protected void custom(DeployMode deployMode, AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
-        deployMode.check(appOpt, appOptFlowStep);
+    protected void custom(DeployMode deployMode, AppOpt appOpt, AppOptFlowStep appOptFlowStep, StepLogBuilder stepLogBuilder) {
+        deployMode.check(appOpt, appOptFlowStep, stepLogBuilder);
     }
 }

@@ -30,14 +30,20 @@ public abstract class Step implements Cancel {
      */
     public void updateFlowStepAndPublish(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
         //执行过程中可能被取消
-        FlowStepService flowStepService = getBean(FlowStepService.class);
-        AppOptFlowStep mayCancel = flowStepService.selectById(appOptFlowStep.getId());
-        if (mayCancel.isCancel()) {
-            appOptFlowStep.cancel();
+        try {
+            FlowStepService flowStepService = getBean(FlowStepService.class);
+            AppOptFlowStep mayCancel = flowStepService.selectById(appOptFlowStep.getId());
+            if (mayCancel.isCancel()) {
+                appOptFlowStep.cancel();
+            }
+            //更新
+            flowStepService.update(appOptFlowStep);
+        } finally {
+            String log = "步骤[" + appOptFlowStep.getStep() + "]已完成.(" + appOptFlowStep.getStatus().getDescription() + ")";
+            getStepLogCollector().collect(appOptFlowStep, log);
+            getStepLogCollector().merge(appOptFlowStep);
+            SpringApplicationEventPublisher.publish(new FlowDispatcherEvent(this, new StepWorker(appOpt, appOptFlowStep)));
         }
-        //更新
-        flowStepService.update(appOptFlowStep);
-        SpringApplicationEventPublisher.publish(new FlowDispatcherEvent(this, new StepWorker(appOpt, appOptFlowStep)));
     }
 
     @Override

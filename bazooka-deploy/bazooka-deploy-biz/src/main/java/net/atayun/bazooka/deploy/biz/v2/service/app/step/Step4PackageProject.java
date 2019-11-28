@@ -26,6 +26,7 @@ public class Step4PackageProject extends Step4Jenkins {
     protected Map<String, String> getJobParam(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
         AppDeployConfigDto appDeployConfig = getBean(AppApi.class).getAppDeployConfigInfoById(appOpt.getDeployConfigId())
                 .ifNotSuccessThrowException().getData();
+
         Map<String, String> param = new HashMap<>();
         param.put(JenkinsBuildJobConstants.OPT_ID, appOpt.getId().toString());
         param.put(JenkinsBuildJobConstants.STEP_ID, appOptFlowStep.getId().toString());

@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
+import static net.atayun.bazooka.deploy.biz.v2.constant.DeployResultCodeConstants.STEPS_FLOW_ERR_CODE;
 
 /**
  * @author Ping
@@ -57,7 +58,7 @@ public class FlowDispatcher {
             }
         } catch (Throwable throwable) {
             appOpt.failure();
-            throw new BizException("", "操作异常", throwable);
+            throw new BizException(STEPS_FLOW_ERR_CODE, "步骤流程异常", throwable);
         } finally {
             if (appOpt.isFinish()) {
                 getBean(AppOptService.class).update(appOpt);

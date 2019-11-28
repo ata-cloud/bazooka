@@ -33,10 +33,10 @@ public class Step4PullCode extends Step4Jenkins {
         Map<String, String> param = new HashMap<>();
         param.put(JenkinsBuildJobConstants.OPT_ID, appOpt.getId().toString());
         param.put(JenkinsBuildJobConstants.STEP_ID, appOptFlowStep.getId().toString());
-        param.put(JenkinsBuildJobConstants.BUILD_CALLBACK_URI, jenkinsJobPropertiesHelper.buildCallbackUri());
         param.put(JenkinsBuildJobConstants.SERVICE_NAME, appInfo.getAppCode());
         param.put(JenkinsBuildJobConstants.BRANCH, appOpt.getBranch());
         param.put(JenkinsBuildJobConstants.GIT_REPOSITORY_URL, addUserInfo(appInfo.getGitlabUrl(), appInfo));
+        param.put(JenkinsBuildJobConstants.BUILD_CALLBACK_URI, jenkinsJobPropertiesHelper.buildCallbackUri());
         return param;
     }
 
