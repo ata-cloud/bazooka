@@ -2,8 +2,8 @@ package net.atayun.bazooka.gateway.component.strategy;
 
 import com.youyu.common.api.Result;
 import net.atayun.bazooka.base.dcos.dto.MarathonEventDeployDto;
-import net.atayun.bazooka.deploy.api.AppOperationEventApi;
 import net.atayun.bazooka.deploy.api.param.MarathonCallbackParam;
+import net.atayun.bazooka.deploy.biz.v2.controller.MarathonCallbackController;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
@@ -28,7 +28,7 @@ public class MarathonFinishCallbackHandler implements MarathonCallbackHandler {
     @Override
     public Result handle(Long clusterId, String data) {
         MarathonEventDeployDto marathonEventDeploy = parseObject(data, MarathonEventDeployDto.class);
-        return getBean(AppOperationEventApi.class).marathonCallback(getMarathonCallbackParam(marathonEventDeploy));
+        return getBean(MarathonCallbackController.class).marathonCallback(getMarathonCallbackParam(marathonEventDeploy));
     }
 
 

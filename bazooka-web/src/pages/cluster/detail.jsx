@@ -190,65 +190,70 @@ class ClusterDetail extends React.Component {
               <p>{detail.type && CLUSTER_TYPE_O[detail.type] ? CLUSTER_TYPE_O[detail.type] : ''}</p>
             </div>
           </Col>
-          <Col md={12}>
-            <div className={styles.flex}>
-              <p className={`${styles.textBlack} ${styles.textBlackRight}`}>集群master：</p>
-              <p>
-                {
-                  detail.marathons && detail.marathons.map((item, index) => (
-                    <Fragment key={index}>
-                      {
-                        item.status && CLUSTER_STATUS[item.status] &&
-                        <Badge status={CLUSTER_STATUS[item.status].type} />
-                      }
-                      <a onClick={() => this.onHref(item.url)}>{item.url}</a>
-                      {
-                        index !== detail.marathons.length - 1 && <span> | </span>
-                      }
-                    </Fragment>
-                  ))
-                }
-              </p>
-            </div>
-          </Col>
-          <Col md={6}>
-            <div className={styles.flex}>
-              <p className={styles.textBlack}>状态：</p>
-              <p>
-                {
-                  detail.status && CLUSTER_STATUS[detail.status] &&
-                  <Fragment>
-                    <Icon type={CLUSTER_STATUS[detail.status].icon} style={{ fontSize: 25, color: CLUSTER_STATUS[detail.status].colorValue }} />
-                  </Fragment>
-                }
-              </p>
-            </div>
-          </Col>
-          <Col md={6}>
-            <div className={styles.flex}>
-              <p className={styles.textBlack}>DC/OS版本：</p>
-              <p>{detail.version}</p>
-            </div>
-          </Col>
-          <Col md={12}>
-            <div className={styles.flex}>
-              <p className={`${styles.textBlack} ${styles.textBlackRight}`}>集群LB详情：</p>
-              <div>
-                {
-                  detail.mlbs && detail.mlbs.map((item, index) => (
-                    <p key={index}>
-                      {
-                        item.status && CLUSTER_STATUS[item.status] &&
-                        <Badge status={CLUSTER_STATUS[item.status].type} />
-                      }
-                      <a onClick={() => this.onHref(item.url + ':9090/haproxy?stats')}>{item.url + ':9090/haproxy?stats'}</a>
-                    </p>
-                  ))
-                }
-              </div>
-            </div>
-          </Col>
-          <Col md={12} push={12}>
+          {
+            detail.type !== '2' &&
+            <Fragment>
+              <Col md={12}>
+                <div className={styles.flex}>
+                  <p className={`${styles.textBlack} ${styles.textBlackRight}`}>集群master：</p>
+                  <p>
+                    {
+                      detail.marathons && detail.marathons.map((item, index) => (
+                        <Fragment key={index}>
+                          {
+                            item.status && CLUSTER_STATUS[item.status] &&
+                            <Badge status={CLUSTER_STATUS[item.status].type} />
+                          }
+                          <a onClick={() => this.onHref(item.url)}>{item.url}</a>
+                          {
+                            index !== detail.marathons.length - 1 && <span> | </span>
+                          }
+                        </Fragment>
+                      ))
+                    }
+                  </p>
+                </div>
+              </Col>
+              <Col md={6}>
+                <div className={styles.flex}>
+                  <p className={styles.textBlack}>状态：</p>
+                  <p>
+                    {
+                      detail.status && CLUSTER_STATUS[detail.status] &&
+                      <Fragment>
+                        <Icon type={CLUSTER_STATUS[detail.status].icon} style={{ fontSize: 25, color: CLUSTER_STATUS[detail.status].colorValue }} />
+                      </Fragment>
+                    }
+                  </p>
+                </div>
+              </Col>
+              <Col md={6}>
+                <div className={styles.flex}>
+                  <p className={styles.textBlack}>DC/OS版本：</p>
+                  <p>{detail.version}</p>
+                </div>
+              </Col>
+              <Col md={12}>
+                <div className={styles.flex}>
+                  <p className={`${styles.textBlack} ${styles.textBlackRight}`}>集群LB详情：</p>
+                  <div>
+                    {
+                      detail.mlbs && detail.mlbs.map((item, index) => (
+                        <p key={index}>
+                          {
+                            item.status && CLUSTER_STATUS[item.status] &&
+                            <Badge status={CLUSTER_STATUS[item.status].type} />
+                          }
+                          <a onClick={() => this.onHref(item.url + ':9090/haproxy?stats')}>{item.url + ':9090/haproxy?stats'}</a>
+                        </p>
+                      ))
+                    }
+                  </div>
+                </div>
+              </Col>
+            </Fragment>
+          }
+          <Col md={12} push={detail.type !== '2' ? 12 : null}>
             <div className={styles.flex}>
               <p className={`${styles.textBlack} ${styles.textBlackRight}`}>镜像库：</p>
               <div>
@@ -345,7 +350,7 @@ class ClusterDetail extends React.Component {
           <Fragment>
             {
               nodeType && nodeType.indexOf("public") > -1 ?
-                <span style={{ color: '#aa6704' }}>public</span>:
+                <span style={{ color: '#aa6704' }}>public</span> :
                 <span>private</span>
             }
           </Fragment>

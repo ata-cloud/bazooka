@@ -15,7 +15,13 @@
  */
 package net.atayun.bazooka.pms.biz.service.impl;
 
-import net.atayun.bazooka.deploy.api.AppOperationEventApi;
+import com.youyu.common.enums.BaseResultCode;
+import com.youyu.common.enums.IsDeleted;
+import com.youyu.common.exception.BizException;
+import com.youyu.common.mapper.support.ExampleEnhancer;
+import com.youyu.common.utils.YyAssert;
+import lombok.extern.slf4j.Slf4j;
+import net.atayun.bazooka.deploy.api.AppActionApi;
 import net.atayun.bazooka.deploy.api.dto.AppRunningEventDto;
 import net.atayun.bazooka.pms.api.dto.AppDeployConfigDto;
 import net.atayun.bazooka.pms.api.dto.AppInfoDto;
@@ -35,13 +41,6 @@ import net.atayun.bazooka.rms.api.dto.ClusterAppServiceInfoDto;
 import net.atayun.bazooka.rms.api.param.EnvAppReq;
 import net.atayun.bazooka.upms.api.dto.rsp.UserDetailRspDTO;
 import net.atayun.bazooka.upms.api.feign.UserApi;
-import com.youyu.common.enums.BaseResultCode;
-import com.youyu.common.enums.IsDeleted;
-import com.youyu.common.exception.BizException;
-import com.youyu.common.mapper.support.ExampleEnhancer;
-import com.youyu.common.utils.YyAssert;
-import lombok.extern.slf4j.Slf4j;
-import net.atayun.bazooka.pms.biz.service.*;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Namespace;
@@ -86,7 +85,7 @@ public class AppServiceImpl implements AppService {
     @Autowired
     private AppDeployConfigService appDeployConfigService;
     @Autowired
-    private AppOperationEventApi appOperationEventApi;
+    private AppActionApi appOperationEventApi;
     @Autowired
     private PmsCredentialsService credentialsService;
     @Autowired

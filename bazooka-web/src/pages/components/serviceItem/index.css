@@ -52,8 +52,10 @@
   transform: translate(0, -50%);
 }
 .listItemEnvBox .envItemNameWrap {
-  width: 100%;
+  max-width: 90%;
+  overflow: hidden;
   white-space: nowrap;
+  margin: 0 auto;
 }
 .listItemEnvBox .envItemName {
   margin-bottom: 10px;

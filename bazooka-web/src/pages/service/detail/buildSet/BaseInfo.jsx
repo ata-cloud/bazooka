@@ -35,8 +35,8 @@ class BaseInfo extends React.Component {
                 initialValue: data.configDescription,
                 rules: [
                   {
-                    message: "最大长度100", 
-                    validator: async(rule, value, callback)=> {
+                    message: "最大长度100",
+                    validator: async (rule, value, callback) => {
                       if (value && value.length > 100) {
                         callback('最大长度100')
                       } else {
@@ -61,7 +61,7 @@ class BaseInfo extends React.Component {
             </FormItem>
             <FormItem label="发布配置类型" help="此发布配置的类型，新建发布配置时设置，此处不可修改" colon={false}>
               {getFieldDecorator('deployMode', {
-                initialValue: deployMode === 'BUILD' ? '构建发布' : deployMode === 'DOCKER_IMAGE' ? '镜像发布' : undefined,
+                initialValue: deployMode.indexOf("BUILD") > -1 ? '构建发布' : deployMode === 'DOCKER_IMAGE' ? '镜像发布' : undefined,
               })(<Input placeholder="请输入发布配置类型" disabled />)}
             </FormItem>
           </Col>

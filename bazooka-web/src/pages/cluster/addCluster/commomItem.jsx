@@ -101,14 +101,14 @@ class CommomItem extends React.Component {
     )
   }
   render() {
-    const { onCancel, onSave } = this.props;
+    const { onCancel, onSave, saveLoading } = this.props;
     const { showGitModal } = this.state;
     return (
       <Fragment>
         {this.renderForm()}
         <Col span={24} className={styles.marginT}>
           <Button onClick={onCancel} className={styles.marginR30}>上一步</Button>
-          <Button type="primary" onClick={onSave}>保存</Button>
+          <Button type="primary" onClick={onSave} loading={saveLoading}>保存</Button>
         </Col>
         {showGitModal && <GITMODAL visible={showGitModal} onCancel={this.onGitCancel} credentialType="DOCKER_REGISTRY" onOk={this.onAddGitCredentials} />}
       </Fragment>

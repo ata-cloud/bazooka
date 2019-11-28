@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { Card, Icon, Table, Popconfirm, Divider, Dropdown, Button, Menu, Modal, Form, Input, Spin, message, Select } from 'antd';
 import styles from '@/pages/index.less';
-import { CARD_TITLE_BG, APP_KINDS_O } from "@/common/constant";
+import { CARD_TITLE_BG, APP_KINDS_O, CLUSTER_TYPE_O_ALL } from "@/common/constant";
 import { connect } from 'dva';
 import BuildSet from './buildSet/index';
 import { getUserName, isAdmin } from '@/utils/utils';
@@ -47,11 +47,13 @@ class ServiceSetting extends React.Component {
     if (appDeployConfigListAllNoEnv && !appDeployConfigListAllNoEnv.length) {
       this.onFetchAppDeployConfigListAll('noEnv');
     }
+
   }
   componentDidUpdate(prevProps, prevState) {
     const { data } = this.props;
     if (data.envId !== prevProps.data.envId) {
       this.onFetchAppDeployConfigListAll();
+      this.onFetchAppDeployConfigListAll('noEnv');
       this.onClearData({
         appRunEndpoint: [],
         appDeployConfigList: {},
@@ -76,8 +78,8 @@ class ServiceSetting extends React.Component {
     })
   }
   onFetchAppDeployConfigListAll = (type) => {
-    const { dispatch, data } = this.props;
-    let envId = type == 'noEnv' ? {} : { envId: data.envId }
+    const { dispatch, data, currentEnvO } = this.props;
+    let envId = type == 'noEnv' ? { clusterType: currentEnvO.clusterType} : { envId: data.envId }
     dispatch({
       type: 'service/appDeployConfigListAll',
       payload: {
@@ -138,6 +140,7 @@ class ServiceSetting extends React.Component {
     })
   }
   onShowBuildSet = (deployMode, currentItem) => {
+    console.log('deployMode-->', deployMode)
     this.setState({
       showBuildSet: true,
       deployMode,
@@ -267,10 +270,10 @@ class ServiceSetting extends React.Component {
               initialValue: appBaseInfo.description,
               rules: [
                 {
-                  validator: async(rule, value, callback)=>{
-                    if(value.length > 500) {
+                  validator: async (rule, value, callback) => {
+                    if (value.length > 500) {
                       callback('最多500个字符')
-                    }else {
+                    } else {
                       callback()
                     }
                   }
@@ -312,7 +315,7 @@ class ServiceSetting extends React.Component {
         </div>
         <div className={styles.flexCenter}>
           <p className={styles.basicInfoItem}>服务描述：</p>
-          <p className={styles.flex1} style={{wordBreak: 'break-all'}}>{appBaseInfo.description}</p>
+          <p className={styles.flex1} style={{ wordBreak: 'break-all' }}>{appBaseInfo.description}</p>
         </div>
       </Card>
     )
@@ -326,25 +329,12 @@ class ServiceSetting extends React.Component {
             <Menu.Item key={item.id} onClick={() => this.onShowBuildSet(item.deployMode, { type: 'copy', id: item.id })}>【{item.envName}】 {item.configName}</Menu.Item>
           ))
         }
-        {/* <Menu.Item onClick={() => { this.onShowBuildSet('BUILD') }}>
-          <span>构建发布</span>
-        </Menu.Item>
-        <Menu.Item onClick={() => { this.onShowBuildSet('DOCKER_IMAGE') }}>
-          <span>镜像发布</span>
-        </Menu.Item>
-        <SubMenu title="导入配置">
-          {
-            appDeployConfigListAllNoEnv && appDeployConfigListAllNoEnv.map((item) => (
-              <Menu.Item key={item.id} onClick={() => this.onShowBuildSet(item.deployMode, { type: 'copy', id: item.id })}>【{item.envName}】 {item.configName}</Menu.Item>
-            ))
-          }
-        </SubMenu> */}
       </Menu>
     )
   }
   renderSet() {
-    // const { list } = this.state;
-    const { appDeployConfigListAll, appBaseInfo } = this.props;
+    const { deployMode } = this.state;
+    const { appDeployConfigListAll, appBaseInfo, currentEnvO } = this.props;
     let isMaster = (isAdmin() || appBaseInfo.userType == 'USER_APP_MASTER' || appBaseInfo.userType == 'USER_PROJECT_MASTER');
     let opera = isMaster ? {
       title: '操作',
@@ -385,7 +375,7 @@ class ServiceSetting extends React.Component {
         render: (text, record) => (
           <span>
             {
-              text === 'BUILD' && <span>构建发布</span>
+              text.indexOf('BUILD') > -1 && <span>构建发布</span>
             }
             {
               text === 'DOCKER_IMAGE' && <span>镜像发布</span>
@@ -418,7 +408,7 @@ class ServiceSetting extends React.Component {
             //   </Button>
             // </Dropdown>
             <div>
-              <Button type="primary" onClick={() => { this.onShowBuildSet('BUILD') }} className={styles.marginR}>+ 从代码发布开始</Button>
+              <Button type="primary" onClick={() => { this.onShowBuildSet(CLUSTER_TYPE_O_ALL[currentEnvO.clusterType].buildType || "BUILD") }} className={styles.marginR}>+ 从代码发布开始</Button>
               <Button type="primary" onClick={() => { this.onShowBuildSet('DOCKER_IMAGE') }} className={styles.marginR}>+ 从镜像发布开始</Button>
               <Dropdown overlay={this.renderMenu()}>
                 <Button type="primary">
@@ -473,6 +463,7 @@ class ServiceSetting extends React.Component {
   }
 }
 export default Form.create()(connect(({ service, auth, loading }) => ({
+  currentEnvO: service.currentEnvO,
   appBaseInfo: service.appBaseInfo,
   appRunStatus: service.appRunStatus,
   userAll: auth.userAll,

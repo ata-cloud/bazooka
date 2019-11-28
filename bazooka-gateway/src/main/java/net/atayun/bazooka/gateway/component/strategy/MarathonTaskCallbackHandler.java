@@ -3,7 +3,7 @@ package net.atayun.bazooka.gateway.component.strategy;
 import com.alibaba.fastjson.JSONObject;
 import com.youyu.common.api.Result;
 import net.atayun.bazooka.base.dcos.dto.MarathonEventTaskDto;
-import net.atayun.bazooka.deploy.api.AppOperationEventApi;
+import net.atayun.bazooka.deploy.api.MarathonCallbackApi;
 import net.atayun.bazooka.deploy.api.param.MarathonTaskFailureCallbackParam;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -43,7 +43,7 @@ public class MarathonTaskCallbackHandler implements MarathonCallbackHandler {
         if (start.plus(timeout, ChronoUnit.MINUTES).isAfter(now)) {
             return Result.ok();
         }
-        return getBean(AppOperationEventApi.class).marathonTaskFailureCallback(getMarathonTaskFailureCallbackParam(clusterId, marathonEventTaskDto));
+        return getBean(MarathonCallbackApi.class).marathonTaskFailureCallback(getMarathonTaskFailureCallbackParam(clusterId, marathonEventTaskDto));
     }
 
     private MarathonTaskFailureCallbackParam getMarathonTaskFailureCallbackParam(Long clusterId, MarathonEventTaskDto marathonEventTaskDto) {
