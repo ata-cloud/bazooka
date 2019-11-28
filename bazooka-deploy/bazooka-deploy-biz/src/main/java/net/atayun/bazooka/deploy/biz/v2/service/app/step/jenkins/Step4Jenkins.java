@@ -29,7 +29,8 @@ public abstract class Step4Jenkins extends Step implements Callback {
         String jobName = getJobName();
         stepLogBuilder.append("Job名称:" + jobName);
         Map<String, String> jobParam = getJobParam(appOpt, appOptFlowStep);
-        stepLogBuilder.append("Job输入参数:\n" + jobParam);
+        String log = MessageDesensitizationUtil.jenkins(jobParam.toString());
+        stepLogBuilder.append("Job输入参数:\n" + log);
         try {
             this.jenkinsServerHelper.buildJob(jobName, jobParam);
         } catch (Throwable throwable) {
@@ -56,10 +57,7 @@ public abstract class Step4Jenkins extends Step implements Callback {
         String jobName = (String) output.get("jobName");
         String jenkinsLog = jenkinsServerHelper.getJenkinsLog(jobName, buildNumber);
         //优化
-        String log = MessageDesensitizationUtil.replaceGitCloneCmd(jenkinsLog);
-        log = MessageDesensitizationUtil.replaceDockerCmd(log);
-        log = MessageDesensitizationUtil.replaceUsernameE(log);
-        log = MessageDesensitizationUtil.replacePasswordE(log);
+        String log = MessageDesensitizationUtil.jenkins(jenkinsLog);
         getStepLogCollector().collect(appOptFlowStep, "Job日志:\n" + log);
         getStepLogCollector().collect(appOptFlowStep, "Job输出参数:\n" + output.toString());
     }

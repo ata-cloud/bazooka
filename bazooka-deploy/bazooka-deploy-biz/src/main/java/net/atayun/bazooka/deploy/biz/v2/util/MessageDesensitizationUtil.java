@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  */
 public class MessageDesensitizationUtil {
 
-    private static final Pattern DOCKER_RUN_PATTERN = Pattern.compile("-u\\s+(.+?)\\s+-p\\s+(.+?)");
+    private static final Pattern DOCKER_RUN_PATTERN = Pattern.compile("-u\\s+(.+?)\\s+-p\\s+(.+?)\\s");
     private static final Pattern GIT_CLONE_PATTERN = Pattern.compile(":\\/\\/(.+?)@");
     private static final Pattern USERNAME_PATTERN = Pattern.compile("USERNAME=(.+?),");
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("PASSWORD=(.+?),");
@@ -60,5 +60,12 @@ public class MessageDesensitizationUtil {
             }
         }
         return finalStr;
+    }
+
+    public static String jenkins(String string) {
+        String log = MessageDesensitizationUtil.replaceGitCloneCmd(string);
+        log = MessageDesensitizationUtil.replaceDockerCmd(log);
+        log = MessageDesensitizationUtil.replaceUsernameE(log);
+        return MessageDesensitizationUtil.replacePasswordE(log);
     }
 }
