@@ -26,10 +26,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -212,26 +209,26 @@ public class Platform4Node implements Platform {
                 session.setPassword(credentials.getCredentialValue());
                 session.setConfig("StrictHostKeyChecking", "no");
                 session.connect();
-                exec(session, command);
+                exec(session, command, logBuilder);
                 session.disconnect();
-            } catch (JSchException | IOException e) {
-                throw new BizException(ACCESS_NODE_ERR_CODE, "节点访问异常[" + ip+ "]", e);
+            } catch (JSchException e) {
+                throw new BizException(ACCESS_NODE_ERR_CODE, "节点访问异常[" + ip + "]", e);
             }
         }
     }
 
-    private void exec(Session session, String command) throws JSchException, IOException {
+    private void exec(Session session, String command, StepLogBuilder logBuilder) throws JSchException {
         ChannelExec exec = (ChannelExec) session.openChannel("exec");
         exec.setCommand(command);
-        exec.setErrStream(System.err);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        exec.setErrStream(byteArrayOutputStream);
         exec.connect();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(exec.getInputStream(), StandardCharsets.UTF_8));
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-            System.out.println(line);
-        }
-        System.out.println(exec.getExitStatus());
         exec.disconnect();
+        String err = byteArrayOutputStream.toString();
+        if (StringUtils.hasText(err)) {
+            logBuilder.append("执行命令异常: " + err);
+        }
+        logBuilder.append("CmdCode: " + exec.getExitStatus() + "\n");
     }
 
     private String getVersion() {
@@ -256,22 +253,4 @@ public class Platform4Node implements Platform {
         String[] nodeIdsStr = uuid.split(",");
         return Arrays.stream(nodeIdsStr).map(Long::parseLong).collect(Collectors.toList());
     }
-
-//    private void shell(Session session, String command) throws JSchException, IOException {
-//        ChannelShell channel = (ChannelShell) session.openChannel("shell");
-//        channel.connect();
-//        OutputStream outputStream = channel.getOutputStream();
-//        outputStream.write("sudo su".getBytes());
-//        outputStream.write(command.getBytes());
-//        outputStream.write("exit".getBytes());
-////        outputStream.write("exit".getBytes());
-//        outputStream.flush();
-//        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(channel.getInputStream(), StandardCharsets.UTF_8));
-//        String line;
-//        while ((line = bufferedReader.readLine()) != null) {
-//            System.out.println(line);
-//        }
-//        System.out.println(channel.getExitStatus());
-//        channel.disconnect();
-//    }
 }
