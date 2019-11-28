@@ -23,7 +23,12 @@ public enum FlowStepStatusEnum {
     /**
      * 失败
      */
-    FAILURE("失败");
+    FAILURE("失败"),
+
+    /**
+     * 失败
+     */
+    CANCEL("取消");
 
     private String description;
 

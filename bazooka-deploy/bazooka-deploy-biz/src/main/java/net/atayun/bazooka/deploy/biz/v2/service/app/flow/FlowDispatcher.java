@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
+import static net.atayun.bazooka.deploy.biz.v2.constant.DeployResultCodeConstants.STEPS_FLOW_ERR_CODE;
 
 /**
  * @author Ping
@@ -32,27 +33,34 @@ public class FlowDispatcher {
             return;
         }
 
-        //update
-        FlowStepService flowStepService = getBean(FlowStepService.class);
-        flowStepService.update(appOptFlowStep);
+        if (appOptFlowStep.isCancel() || appOptFlowStep.isFailure()) {
+            appOpt.failure();
+            return;
+        }
 
         try {
             if (appOptFlowStep.isSuccess()) {
-                AppOptFlowStep nextStep = getBean(FlowStepService.class).nextStep(appOptFlowStep);
-                if (nextStep != null) {
+                FlowStepService flowStepService = getBean(FlowStepService.class);
+                AppOptFlowStep nextStep = flowStepService.nextStep(appOptFlowStep);
+                if (nextStep == null) {
+                    appOpt.success();
+                    return;
+                }
+                //还未开始执行就已经被取消
+                if (nextStep.isCancel()) {
+                    appOpt.failure();
+                    return;
+                }
+                if (nextStep.isStandBy()) {
                     nextStep.setInput(appOptFlowStep.getOutput());
                     FlowStepThreadPool.execute(() -> new StepWorker(appOpt, nextStep).doWork());
-                } else {
-                    appOpt.success();
                 }
-            } else if (appOptFlowStep.isFailure()) {
-                appOpt.failure();
             }
         } catch (Throwable throwable) {
             appOpt.failure();
-            throw new BizException("", "操作异常", throwable);
+            throw new BizException(STEPS_FLOW_ERR_CODE, "步骤流程异常", throwable);
         } finally {
-            if (appOpt.isSuccess() || appOpt.isFailure()) {
+            if (appOpt.isFinish()) {
                 getBean(AppOptService.class).update(appOpt);
                 AppStatusOpt.updateAppStatus(appOpt, Boolean.FALSE);
             }

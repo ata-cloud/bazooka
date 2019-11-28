@@ -34,17 +34,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
+import static net.atayun.bazooka.deploy.biz.v2.constant.DeployResultCodeConstants.MISS_COMMIT_INFO;
 
 /**
  * @author Ping
  */
 @Component
 @StrategyNum(superClass = Step.class, number = FlowStepConstants.BUILD_DOCKER_IMAGE)
-public class Step4BuildDockerImage extends Step4Jenkins implements Callback {
+public class Step4BuildDockerImage extends Step4Jenkins {
 
     @Override
     public void callback(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
-        //保存镜像
+        super.callback(appOpt, appOptFlowStep);
+        saveImage(appOpt, appOptFlowStep);
+    }
+
+    private void saveImage(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
         Map<String, Object> output = appOptFlowStep.getOutput();
         String dockerImageTag = (String) output.get("dockerImageTag");
         AppInfoDto appInfo = getBean(AppApi.class).getAppInfoById(appOpt.getAppId())
@@ -56,7 +61,7 @@ public class Step4BuildDockerImage extends Step4Jenkins implements Callback {
         if (commitObj == null) {
             commitObj = getBean(FlowStepService.class).getFromBeforeOutput(appOptFlowStep, "gitCommit");
             if (commitObj == null) {
-                throw new BizException("", "保存镜像信息异常[gitCommit丢失]");
+                throw new BizException(MISS_COMMIT_INFO, "保存镜像信息异常[gitCommit丢失]");
             }
         }
         GitCommit gitCommit = JSONObject.parseObject((String) commitObj, GitCommit.class);

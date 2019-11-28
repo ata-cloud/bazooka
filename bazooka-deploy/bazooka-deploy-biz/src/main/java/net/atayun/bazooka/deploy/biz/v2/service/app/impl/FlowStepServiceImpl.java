@@ -5,6 +5,7 @@ import net.atayun.bazooka.deploy.biz.v2.dal.dao.app.AppOptFlowStepMapper;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
 import net.atayun.bazooka.deploy.biz.v2.dto.app.DeployingFlowDto;
 import net.atayun.bazooka.deploy.biz.v2.service.app.FlowStepService;
+import net.atayun.bazooka.deploy.biz.v2.service.app.step.log.StepLogCollector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -15,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
 
 /**
  * @author Ping
@@ -96,6 +99,7 @@ public class FlowStepServiceImpl implements FlowStepService {
                 break;
             }
         }
+        final StepLogCollector stepLogCollector = getBean(StepLogCollector.class);
         return filter.stream()
                 .map(appOptFlowStep -> {
                     DeployingFlowDto deployingFlowDto = new DeployingFlowDto();
@@ -106,9 +110,14 @@ public class FlowStepServiceImpl implements FlowStepService {
                     if (appOptFlowStep.isSuccess() || appOptFlowStep.isFailure()) {
                         deployingFlowDto.setFinishDatetime(appOptFlowStep.getUpdateTime());
                     }
-                    deployingFlowDto.setLog("");
+                    deployingFlowDto.setLog(stepLogCollector.get(appOptFlowStep));
                     return deployingFlowDto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void cancel(AppOptFlowStep appOptFlowStep) {
+        appOptFlowStepMapper.cancelRestSteps(appOptFlowStep.getOptId(), appOptFlowStep.getStepSeq());
     }
 }

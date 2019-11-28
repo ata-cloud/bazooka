@@ -26,7 +26,9 @@ public interface AppOptService {
 
     void updateById(AppOpt appOpt);
 
-    AppOpt selectByAppDeployUuidAndVersionForMarathon(String uuid, String version);
+    AppOpt selectByAppDeployUuidAndVersionForPlatform(String uuid, String version);
+
+    AppOpt selectByServiceIdAndVersionForPlatform(String uuid, String version);
 
     void update(AppOpt appOpt);
 
@@ -41,4 +43,8 @@ public interface AppOptService {
     AppOpt isProcessing(Long appId, Long envId);
 
     List<AppOptCounts> appOptCountsByProject(Long projectId, LocalDateTime leftDatetime);
+
+    List<AppOpt> selectByStatus(AppOptStatusEnum status);
+
+    void updateStatus(AppOpt appOpt);
 }

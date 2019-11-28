@@ -10,6 +10,8 @@ import net.atayun.bazooka.deploy.biz.v2.constant.MarathonAppConfigConstants;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
 import net.atayun.bazooka.deploy.biz.v2.service.app.AppOptService;
+import net.atayun.bazooka.deploy.biz.v2.service.app.step.deploymode.ICheckResource;
+import net.atayun.bazooka.deploy.biz.v2.service.app.step.log.StepLogBuilder;
 import net.atayun.bazooka.pms.api.dto.AppDeployConfigDto;
 import net.atayun.bazooka.pms.api.dto.AppInfoWithCredential;
 import net.atayun.bazooka.pms.api.feign.AppApi;
@@ -35,7 +37,7 @@ import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
  */
 @Component
 @StrategyNum(superClass = Platform.class, number = "0")
-public class Platform4Marathon implements Platform {
+public class Platform4Marathon implements Platform, ICheckResource {
 
     @Autowired
     private AppApi appApi;
@@ -43,7 +45,7 @@ public class Platform4Marathon implements Platform {
     @Autowired
     private EnvApi envApi;
 
-    void lifeCycle(AppOpt appOpt, Consumer<App> consumer) {
+    void lifeCycle(AppOpt appOpt, Consumer<App> consumer, StepLogBuilder logBuilder) {
         AppOptService appOptService = getBean(AppOptService.class);
 
         //app
@@ -52,6 +54,7 @@ public class Platform4Marathon implements Platform {
         App app = ModelUtils.GSON.fromJson(deployConfig, App.class);
         consumer.accept(app);
         app.getLabels().put(MarathonAppConfigConstants.LABEL_ATA_EVENT_ID, appOpt.getAppId().toString());
+        logBuilder.append("服务配置:\n" + app.toString());
 
         //dcosServiceId
         String dcosServiceId = getDcosServiceId(appOpt);
@@ -65,28 +68,31 @@ public class Platform4Marathon implements Platform {
     }
 
     @Override
-    public void startApp(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
+    public void startApp(AppOpt appOpt, AppOptFlowStep appOptFlowStep, StepLogBuilder logBuilder) {
+        checkPlatformResource(appOpt, logBuilder);
         Consumer<App> consumer = app -> {
             Integer instance = appOpt.getInstance();
             app.setInstances(instance);
         };
-        lifeCycle(appOpt, consumer);
+        lifeCycle(appOpt, consumer, logBuilder);
     }
 
     @Override
-    public void stopApp(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
+    public void stopApp(AppOpt appOpt, AppOptFlowStep appOptFlowStep, StepLogBuilder logBuilder) {
         Consumer<App> consumer = app -> app.setInstances(0);
-        lifeCycle(appOpt, consumer);
+        lifeCycle(appOpt, consumer, logBuilder);
     }
 
     @Override
-    public void restartApp(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
+    public void restartApp(AppOpt appOpt, AppOptFlowStep appOptFlowStep, StepLogBuilder logBuilder) {
+        checkPlatformResource(appOpt, logBuilder);
         lifeCycle(appOpt, app -> {
-        });
+        }, logBuilder);
     }
 
     @Override
-    public void scaleApp(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
+    public void scaleApp(AppOpt appOpt, AppOptFlowStep appOptFlowStep, StepLogBuilder logBuilder) {
+        checkPlatformResource(appOpt, logBuilder);
         Consumer<App> consumer = app -> {
             Integer instance = appOpt.getInstance();
             Double cpu = appOpt.getCpu();
@@ -95,13 +101,15 @@ public class Platform4Marathon implements Platform {
             app.setCpus(cpu);
             app.setMem(mem);
         };
-        lifeCycle(appOpt, consumer);
+        lifeCycle(appOpt, consumer, logBuilder);
     }
 
     @Override
-    public void rollback(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
+    public void rollback(AppOpt appOpt, AppOptFlowStep appOptFlowStep, StepLogBuilder logBuilder) {
+        checkPlatformResource(appOpt, logBuilder);
         App app = ModelUtils.GSON.fromJson(appOpt.getAppDeployConfig(), App.class);
         app.getLabels().put(MarathonAppConfigConstants.LABEL_ATA_EVENT_ID, appOpt.getAppId().toString());
+        logBuilder.append("服务配置:\n" + app.toString());
 
         Marathon marathon = getMarathon(appOpt);
         String dcosServiceId = getDcosServiceId(appOpt);
@@ -112,10 +120,9 @@ public class Platform4Marathon implements Platform {
     }
 
     @Override
-    public void deploy(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
+    public void deploy(AppOpt appOpt, AppOptFlowStep appOptFlowStep, StepLogBuilder logBuilder) {
+        checkPlatformResource(appOpt, logBuilder);
         AppDeployConfigDto appDeployConfig = appApi.getAppDeployConfigInfoById(appOpt.getDeployConfigId())
-                .ifNotSuccessThrowException().getData();
-        ClusterConfigDto clusterConfig = envApi.getEnvConfiguration(appOpt.getEnvId())
                 .ifNotSuccessThrowException().getData();
 
         //dcosServiceId
@@ -131,11 +138,12 @@ public class Platform4Marathon implements Platform {
         if (StringUtils.hasText(appDeployConfig.getStartCommand())) {
             app.setCmd(appDeployConfig.getStartCommand());
         }
-        app.setContainer(getContainer(appDeployConfig, clusterConfig, appOptFlowStep.getInput()));
+        app.setContainer(getContainer(appDeployConfig, appOptFlowStep.getInput()));
         app.setLabels(getLabels(appOpt, appDeployConfig));
         app.setHealthChecks(getHealthChecks(appDeployConfig));
         Map<String, Object> envVariable = Optional.ofNullable(appDeployConfig.getEnvironmentVariable()).orElseGet(HashMap::new);
         app.setEnv(envVariable);
+        logBuilder.append("服务配置:\n" + app.toString());
 
         Marathon marathon = getMarathon(appOpt);
 
@@ -144,7 +152,7 @@ public class Platform4Marathon implements Platform {
     }
 
     @Override
-    public void healthCheck(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
+    public void healthCheck(AppOpt appOpt, AppOptFlowStep appOptFlowStep, StepLogBuilder logBuilder) {
         //...
     }
 
@@ -217,7 +225,7 @@ public class Platform4Marathon implements Platform {
                 .collect(Collectors.toList());
     }
 
-    private Container getContainer(AppDeployConfigDto appDeployConfig, ClusterConfigDto clusterConfig, Map<String, Object> input) {
+    private Container getContainer(AppDeployConfigDto appDeployConfig, Map<String, Object> input) {
         Container container = new Container();
         @NotNull List<PortMapping> portMappingList = appDeployConfig.getPortMappings();
         List<Port> portMappings = new ArrayList<>();

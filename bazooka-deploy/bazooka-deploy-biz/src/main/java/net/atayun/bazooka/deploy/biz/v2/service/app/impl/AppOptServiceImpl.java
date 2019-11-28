@@ -74,9 +74,17 @@ public class AppOptServiceImpl implements AppOptService {
     }
 
     @Override
-    public AppOpt selectByAppDeployUuidAndVersionForMarathon(String uuid, String version) {
+    public AppOpt selectByAppDeployUuidAndVersionForPlatform(String uuid, String version) {
         Example example = new Example(AppOpt.class);
         example.createCriteria().andEqualTo("appDeployUuid", uuid)
+                .andEqualTo("appDeployVersion", version);
+        return appOptMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public AppOpt selectByServiceIdAndVersionForPlatform(String serviceId, String version) {
+        Example example = new Example(AppOpt.class);
+        example.createCriteria().andEqualTo("appRunServiceId", serviceId)
                 .andEqualTo("appDeployVersion", version);
         return appOptMapper.selectOneByExample(example);
     }
@@ -136,5 +144,21 @@ public class AppOptServiceImpl implements AppOptService {
     @Override
     public List<AppOptCounts> appOptCountsByProject(Long projectId, LocalDateTime leftDatetime) {
         return appOptMapper.appOptCountsByProject(projectId, leftDatetime);
+    }
+
+    @Override
+    public List<AppOpt> selectByStatus(AppOptStatusEnum status) {
+        Example example = new Example(AppOpt.class);
+        example.createCriteria()
+                .andEqualTo("status", status);
+        return appOptMapper.selectByExample(example);
+    }
+
+    @Override
+    public void updateStatus(AppOpt appOpt) {
+        AppOpt patch = new AppOpt();
+        patch.setId(appOpt.getId());
+        patch.setStatus(appOpt.getStatus());
+        appOptMapper.updateByPrimaryKeySelective(patch);
     }
 }

@@ -1,9 +1,11 @@
 package net.atayun.bazooka.deploy.biz.v2.service.app.opt;
 
+import net.atayun.bazooka.deploy.biz.v2.config.DeployLogProperties;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
-import net.atayun.bazooka.deploy.biz.v2.enums.FlowStepStatusEnum;
 
 import java.util.Map;
+
+import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
 
 /**
  * @author Ping
@@ -42,16 +44,14 @@ public class AppOptFlowStepBuilder {
     }
 
     public AppOptFlowStep build() {
-
-        //空值校验
-
+        String rootPath = getBean(DeployLogProperties.class).getRootPath();
         AppOptFlowStep appOptFlowStep = new AppOptFlowStep();
         appOptFlowStep.setOptId(optId);
         appOptFlowStep.standBy();
         appOptFlowStep.setStep(step);
         appOptFlowStep.setStepSeq(seq);
         appOptFlowStep.setInput(input);
-        String logPath = "/data/ata/log/" + optId + "/" + step;
+        String logPath = rootPath + "/" + optId + "/" + step;
         appOptFlowStep.setLogPath(logPath);
         return appOptFlowStep;
     }

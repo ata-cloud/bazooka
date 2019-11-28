@@ -5,6 +5,7 @@ import net.atayun.bazooka.base.enums.deploy.DeployModeEnum;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
 import net.atayun.bazooka.deploy.biz.v2.service.app.step.Step;
+import net.atayun.bazooka.deploy.biz.v2.service.app.step.log.StepLogBuilder;
 import net.atayun.bazooka.pms.api.dto.AppDeployConfigDto;
 import net.atayun.bazooka.pms.api.feign.AppApi;
 import net.atayun.bazooka.rms.api.api.EnvApi;
@@ -28,8 +29,16 @@ public abstract class Step4DeployMode extends Step {
                 DeployModeEnum.MODE_BUILD + envDto.getClusterType();
         DeployMode deployMode = StrategyNumBean.getBeanInstance(DeployMode.class, number);
 
-        custom(deployMode, appOpt, appOptFlowStep);
+        StepLogBuilder stepLogBuilder = new StepLogBuilder();
+        try {
+            custom(deployMode, appOpt, appOptFlowStep, stepLogBuilder);
+        } catch (Throwable throwable) {
+            stepLogBuilder.append(throwable);
+            throw throwable;
+        } finally {
+            getStepLogCollector().collect(appOptFlowStep, stepLogBuilder.build());
+        }
     }
 
-    protected abstract void custom(DeployMode deployMode, AppOpt appOpt, AppOptFlowStep appOptFlowStep);
+    protected abstract void custom(DeployMode deployMode, AppOpt appOpt, AppOptFlowStep appOptFlowStep, StepLogBuilder stepLogBuilder);
 }

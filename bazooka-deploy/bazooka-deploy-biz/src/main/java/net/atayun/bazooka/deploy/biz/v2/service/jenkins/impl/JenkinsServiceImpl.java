@@ -59,6 +59,6 @@ public class JenkinsServiceImpl implements JenkinsService {
             }
         }
 
-        step.notification(appOpt, appOptFlowStep);
+        step.updateFlowStepAndPublish(appOpt, appOptFlowStep);
     }
 }

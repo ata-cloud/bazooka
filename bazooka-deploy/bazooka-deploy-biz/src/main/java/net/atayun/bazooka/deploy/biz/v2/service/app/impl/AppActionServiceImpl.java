@@ -5,6 +5,8 @@ import com.youyu.common.api.PageData;
 import com.youyu.common.enums.IsDeleted;
 import com.youyu.common.exception.BizException;
 import com.youyu.common.utils.YyBeanUtils;
+import net.atayun.bazooka.base.bean.StrategyNumBean;
+import net.atayun.bazooka.base.constant.FlowStepConstants;
 import net.atayun.bazooka.base.enums.AppOptEnum;
 import net.atayun.bazooka.deploy.api.dto.AppRunningEventDto;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
@@ -21,8 +23,9 @@ import net.atayun.bazooka.deploy.biz.v2.service.app.AppOptService;
 import net.atayun.bazooka.deploy.biz.v2.service.app.AppStatusOpt;
 import net.atayun.bazooka.deploy.biz.v2.service.app.FlowStepService;
 import net.atayun.bazooka.deploy.biz.v2.service.app.opt.AppOptWorker;
-import net.atayun.bazooka.deploy.biz.v2.service.app.step.platform.Platform4Node;
+import net.atayun.bazooka.deploy.biz.v2.service.app.step.Step;
 import net.atayun.bazooka.deploy.biz.v2.service.app.threadpool.AppActionThreadPool;
+import net.atayun.bazooka.deploy.biz.v2.util.MessageDesensitizationUtil;
 import net.atayun.bazooka.pms.api.dto.AppInfoDto;
 import net.atayun.bazooka.pms.api.dto.PmsAppDeployStatusDto;
 import net.atayun.bazooka.pms.api.feign.AppApi;
@@ -40,7 +43,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
@@ -173,11 +175,8 @@ public class AppActionServiceImpl implements AppActionService {
                     dto.setStatus(appOptWithPlatform.getStatus().getDescription());
                     dto.setStatusCode(appOptWithPlatform.getStatus());
                     dto.setVersion(appOptWithPlatform.getAppDeployVersion());
-//                    String platformConfig = appOptWithPlatform.getAppDeployConfig();
-//                    App app = ModelUtils.GSON.fromJson(marathonConfig, App.class);
-//                    String image = app.getContainer().getDocker().getImage();
-//                    String[] split = image.split(":");
-                    String imageTag = "";
+                    AppOptFlowStep appOptFlowStep = flowStepService.selectByOptIdAndStep(appOptWithPlatform.getEventId(), FlowStepConstants.BUILD_DOCKER_IMAGE);
+                    String imageTag = (String) appOptFlowStep.getOutput().get("dockerImageTag");
                     dto.setImageTag(imageTag);
                     Optional<RmsDockerImageDto> imageDtoOptional = imageTags.stream()
                             .filter(rmsDockerImageDto -> Objects.equals(imageTag, rmsDockerImageDto.getImageTag()))
@@ -209,27 +208,19 @@ public class AppActionServiceImpl implements AppActionService {
         }
         String appDeployConfig = appOpt.getAppDeployConfig();
         if (appOpt.getOpt() == AppOptEnum.NODE_BUILD_DEPLOY) {
-            String[] cmdArr = appDeployConfig.split("&&");
-            if (cmdArr.length > 1) {
-                String loginCmd = cmdArr[0];
-                Matcher matcher = Platform4Node.COMPILE.matcher(loginCmd);
-                if (matcher.find()) {
-                    String username = matcher.group(1);
-                    String password = matcher.group(2);
-                    loginCmd = loginCmd.replace(username, "******")
-                            .replace(password, "******");
-                    cmdArr[0] = loginCmd;
-                }
-            }
-            return "{\"cmd\": \"" + String.join("&&", cmdArr) + "\"}";
+            String cmd = MessageDesensitizationUtil.dockerCmd(appDeployConfig);
+            return "{\"cmd\": \"" + cmd + "\"}";
         }
         return appDeployConfig;
     }
 
     @Override
     public List<AppOptLogDto> getAppOptLog(Long optId) {
-        List<AppOptFlowStep> steps = flowStepService.selectByOptId(optId);
-        return steps.stream().map(step -> new AppOptLogDto(step.getStep(), "")).collect(Collectors.toList());
+        List<AppOptFlowStep> appOptFlowSteps = flowStepService.selectByOptId(optId);
+        return appOptFlowSteps.stream().map(appOptFlowStep -> {
+            Step step = StrategyNumBean.getBeanInstance(Step.class, appOptFlowStep.getStep());
+            return new AppOptLogDto(appOptFlowStep.getStep(), step.getStepLogCollector().get(appOptFlowStep));
+        }).collect(Collectors.toList());
     }
 
     @Override

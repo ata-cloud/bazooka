@@ -31,7 +31,7 @@ import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
  */
 @Component
 @StrategyNum(superClass = Step.class, number = FlowStepConstants.PUSH_DOCKER_IMAGE)
-public class Step4PushDockerImage extends Step4Jenkins implements Callback {
+public class Step4PushDockerImage extends Step4Jenkins {
 
     @Autowired
     private RmsDockerImageApi rmsDockerImageApi;
@@ -49,6 +49,7 @@ public class Step4PushDockerImage extends Step4Jenkins implements Callback {
                     .ifNotSuccessThrowException().getData();
             boolean sameRegistry = data.isSameRegistry();
             if (sameRegistry) {
+                getStepLogCollector().collect(appOptFlowStep, "相同镜像库, 执行记录复制");
                 rmsDockerImageApi.imageCopy(imageId, targetEnvId).ifNotSuccessThrowException();
                 return;
             }
@@ -93,11 +94,13 @@ public class Step4PushDockerImage extends Step4Jenkins implements Callback {
 
     @Override
     public void callback(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
+        super.callback(appOpt, appOptFlowStep);
         Map<String, Object> custom = appOptFlowStep.getOutput();
         String targetEnvIdStr = (String) custom.get("targetEnvId");
         if (StringUtils.hasText(targetEnvIdStr)) {
             long targetEnvId = Long.parseLong(targetEnvIdStr);
             long imageId = Long.parseLong((String) custom.get("imageId"));
+            getStepLogCollector().collect(appOptFlowStep, "执行记录复制[" + targetEnvIdStr + "," + imageId + "]");
             rmsDockerImageApi.imageCopy(imageId, targetEnvId).ifNotSuccessThrowException();
         }
     }
