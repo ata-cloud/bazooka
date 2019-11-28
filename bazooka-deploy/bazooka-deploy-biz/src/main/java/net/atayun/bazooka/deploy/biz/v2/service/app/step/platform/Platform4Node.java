@@ -30,7 +30,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
@@ -42,12 +41,18 @@ import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
 @StrategyNum(superClass = Platform.class, number = "2")
 public class Platform4Node implements Platform {
 
-    public static final Pattern COMPILE = Pattern.compile("-u\\s+(\\w+)\\s+-p\\s+(\\w+)");
-
     @Autowired
     private PmsCredentialsApi pmsCredentialsApi;
 
-    private static final String DEPLOY_COMMAND = "sudo docker run --name=__CONTAINER_NAME__ __PORT_MAPPING__ __ENV__ __VOLUME__ -d __IMAGE_AND_TAG__";
+    private static final String DEPLOY_COMMAND = "sudo docker run " +
+            "--name=__CONTAINER_NAME__ " +
+            "__PORT_MAPPING__ " +
+            "__ENV__ " +
+            "__VOLUME__ " +
+            "--cpus __CPUS__ " +
+            "-m __MEMORY__M " +
+            "-d " +
+            "__IMAGE_AND_TAG__";
     private static final String STOP_COMMAND = "sudo docker stop __CONTAINER_NAME__ && sudo docker rm __CONTAINER_NAME__";
     private static final String RESTART_COMMAND = "sudo docker restart __CONTAINER_NAME__";
 
@@ -181,6 +186,8 @@ public class Platform4Node implements Platform {
                 .replace("__PORT_MAPPING__", port)
                 .replace("__ENV__", env.toString())
                 .replace("__VOLUME__", volume)
+                .replace("__CPUS__", appDeployConfigDto.getCpus().toString())
+                .replace("__MEMORY__", appDeployConfigDto.getMemory().toString())
                 .replace("__IMAGE_AND_TAG__", image);
 
         ClusterConfigDto clusterConfigDto = getBean(EnvApi.class).getEnvConfiguration(appOpt.getEnvId()).ifNotSuccessThrowException().getData();

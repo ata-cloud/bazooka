@@ -22,6 +22,12 @@ public abstract class Step implements Cancel {
 
     protected abstract void doWork(AppOpt appOpt, AppOptFlowStep appOptFlowStep);
 
+    /**
+     * AppOptFlowStep 完成后 需要更新flow step, 并发送FlowDispatcherEvent事件
+     *
+     * @param appOpt         appOpt
+     * @param appOptFlowStep appOptFlowStep
+     */
     public void updateFlowStepAndPublish(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
         //执行过程中可能被取消
         FlowStepService flowStepService = getBean(FlowStepService.class);
