@@ -10,6 +10,8 @@ import net.atayun.bazooka.deploy.biz.v2.service.app.AppOptService;
 import net.atayun.bazooka.deploy.biz.v2.service.app.FlowStepService;
 import net.atayun.bazooka.deploy.biz.v2.service.app.step.Callback;
 import net.atayun.bazooka.deploy.biz.v2.service.app.step.Step;
+import net.atayun.bazooka.deploy.biz.v2.service.app.step.log.StepLogBuilder;
+import net.atayun.bazooka.deploy.biz.v2.service.app.step.log.StepLogCollector;
 import net.atayun.bazooka.deploy.biz.v2.service.jenkins.JenkinsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
 
 /**
  * @author Ping
@@ -51,14 +55,17 @@ public class JenkinsServiceImpl implements JenkinsService {
         appOptFlowStep.setStatus(stepStatusEnum);
 
         Step step = StrategyNumBean.getBeanInstance(Step.class, appOptFlowStep.getStep());
-        if (step instanceof Callback) {
-            try {
+        try {
+            if (step instanceof Callback) {
                 ((Callback) step).callback(appOpt, appOptFlowStep);
-            } catch (Throwable throwable) {
-                appOptFlowStep.failure();
             }
+        } catch (Throwable throwable) {
+            appOptFlowStep.failure();
+            String msg = new StepLogBuilder().append("Jenkins回调异常").append(throwable).build();
+            getBean(StepLogCollector.class).collect(appOptFlowStep, msg);
+            throw throwable;
+        } finally {
+            step.updateFlowStepAndPublish(appOpt, appOptFlowStep);
         }
-
-        step.updateFlowStepAndPublish(appOpt, appOptFlowStep);
     }
 }

@@ -208,7 +208,7 @@ public class AppActionServiceImpl implements AppActionService {
         }
         String appDeployConfig = appOpt.getAppDeployConfig();
         if (appOpt.getOpt() == AppOptEnum.NODE_BUILD_DEPLOY) {
-            String cmd = MessageDesensitizationUtil.dockerCmd(appDeployConfig);
+            String cmd = MessageDesensitizationUtil.replaceDockerCmd(appDeployConfig);
             return "{\"cmd\": \"" + cmd + "\"}";
         }
         return appDeployConfig;

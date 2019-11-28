@@ -18,6 +18,8 @@ import net.atayun.bazooka.deploy.biz.v2.service.app.AppOptService;
 import net.atayun.bazooka.deploy.biz.v2.service.app.FlowStepService;
 import net.atayun.bazooka.deploy.biz.v2.service.app.step.Step;
 import net.atayun.bazooka.deploy.biz.v2.service.app.step.Step4HealthCheck;
+import net.atayun.bazooka.deploy.biz.v2.service.app.step.log.StepLogBuilder;
+import net.atayun.bazooka.deploy.biz.v2.service.app.step.log.StepLogCollector;
 import net.atayun.bazooka.deploy.biz.v2.service.marathon.MarathonService;
 import net.atayun.bazooka.rms.api.api.EnvApi;
 import net.atayun.bazooka.rms.api.dto.ClusterConfigDto;
@@ -74,9 +76,13 @@ public class MarathonServiceImpl implements MarathonService {
             step.callback(appOpt, appOptFlowStep);
         } catch (Throwable throwable) {
             appOptFlowStep.failure();
+            String msg = new StepLogBuilder().append("Marathon回调异常").append(throwable).build();
+            getBean(StepLogCollector.class).collect(appOptFlowStep, msg);
+            throw throwable;
+        } finally {
+            step.updateFlowStepAndPublish(appOpt, appOptFlowStep);
         }
 
-        step.updateFlowStepAndPublish(appOpt, appOptFlowStep);
     }
 
     @Override

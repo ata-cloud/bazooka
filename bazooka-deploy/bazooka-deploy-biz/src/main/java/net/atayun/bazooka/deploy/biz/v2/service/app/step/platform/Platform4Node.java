@@ -204,7 +204,7 @@ public class Platform4Node implements Platform {
                 .ifNotSuccessThrowException().getData();
         for (ClusterNodeRspDto clusterNode : clusterNodes) {
             String ip = clusterNode.getIp();
-            logBuilder.append("节点: " + ip + "CMD: " + MessageDesensitizationUtil.dockerCmd(command));
+            logBuilder.append("节点: " + ip + ", CMD: " + MessageDesensitizationUtil.replaceDockerCmd(command));
             //凭证可能异常
             PmsCredentialsDto credentials = pmsCredentialsApi.getCredentialsDtoById(clusterNode.getCredentialId())
                     .ifNotSuccessThrowException().getData();

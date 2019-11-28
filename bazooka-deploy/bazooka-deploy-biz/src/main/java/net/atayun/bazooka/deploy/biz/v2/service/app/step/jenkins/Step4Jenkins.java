@@ -7,6 +7,7 @@ import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
 import net.atayun.bazooka.deploy.biz.v2.service.app.step.Callback;
 import net.atayun.bazooka.deploy.biz.v2.service.app.step.Step;
 import net.atayun.bazooka.deploy.biz.v2.service.app.step.log.StepLogBuilder;
+import net.atayun.bazooka.deploy.biz.v2.util.MessageDesensitizationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
@@ -41,14 +42,21 @@ public abstract class Step4Jenkins extends Step implements Callback {
 
     protected abstract Map<String, String> getJobParam(AppOpt appOpt, AppOptFlowStep appOptFlowStep);
 
+    /**
+     * 随机获取
+     *
+     * @return name
+     */
     protected abstract String getJobName();
 
     @Override
     public void callback(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
         Map<String, Object> output = appOptFlowStep.getOutput();
         int buildNumber = Integer.parseInt((String) output.get("buildNumber"));
-        String jenkinsLog = jenkinsServerHelper.getJenkinsLog(getJobName(), buildNumber);
-        getStepLogCollector().collect(appOptFlowStep, "Job日志:\n" + jenkinsLog);
+        String jobName = (String) output.get("jobName");
+        String jenkinsLog = jenkinsServerHelper.getJenkinsLog(jobName, buildNumber);
+        String log = MessageDesensitizationUtil.replaceGitCloneCmd(jenkinsLog);
+        getStepLogCollector().collect(appOptFlowStep, "Job日志:\n" + log);
         getStepLogCollector().collect(appOptFlowStep, "Job输出参数:\n" + output.toString());
     }
 }

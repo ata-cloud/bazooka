@@ -33,12 +33,11 @@ public class FlowDispatcher {
             return;
         }
 
-        if (appOptFlowStep.isCancel() || appOptFlowStep.isFailure()) {
-            appOpt.failure();
-            return;
-        }
-
         try {
+            if (appOptFlowStep.isCancel() || appOptFlowStep.isFailure()) {
+                appOpt.failure();
+                return;
+            }
             if (appOptFlowStep.isSuccess()) {
                 FlowStepService flowStepService = getBean(FlowStepService.class);
                 AppOptFlowStep nextStep = flowStepService.nextStep(appOptFlowStep);
