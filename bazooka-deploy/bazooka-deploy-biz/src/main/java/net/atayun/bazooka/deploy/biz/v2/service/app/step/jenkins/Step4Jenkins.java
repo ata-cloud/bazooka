@@ -55,7 +55,9 @@ public abstract class Step4Jenkins extends Step implements Callback {
         int buildNumber = Integer.parseInt((String) output.get("buildNumber"));
         String jobName = (String) output.get("jobName");
         String jenkinsLog = jenkinsServerHelper.getJenkinsLog(jobName, buildNumber);
+        //优化
         String log = MessageDesensitizationUtil.replaceGitCloneCmd(jenkinsLog);
+        log = MessageDesensitizationUtil.replaceDockerCmd(log);
         getStepLogCollector().collect(appOptFlowStep, "Job日志:\n" + log);
         getStepLogCollector().collect(appOptFlowStep, "Job输出参数:\n" + output.toString());
     }
