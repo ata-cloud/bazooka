@@ -39,9 +39,10 @@ public enum RmsResultCode implements IBaseResultCode {
     ENV_NOT_EXISTS("0012", "环境信息不存在"),
     GET_INSTANCE_LOG_EXCEPTION("0013", "获取实例日志信息异常"),
     CLUSTER_NAME_HAVE_IN_DB("0014", "集群名称已经存在"),
-    MASTER_NODE_IP("0015", "master节点Ip地址错误，无法获取集群版本信息"),
-    MASTER_NODE_IP_REPEAT("0016", "master节点Ip列表不能重复"),
-    PUBLIC_AGENT_NODE_IP_REPEAT("0017", "Public agent节点Ip列表不能重复"),
+    MASTER_NODE_IP("0015", "Master节点ip地址错误，无法获取集群版本信息"),
+    MASTER_NODE_IP_REPEAT("0016", "Master节点ip列表不能重复"),
+    PUBLIC_AGENT_NODE_IP_REPEAT("0017", "Public agent节点ip列表不能重复"),
+    MASTER_NODE_IP_ERROR("0018", "Master节点ip地址错误:"),
     ;
 
     private static final String RMS_PREFIX = "0106";

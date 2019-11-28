@@ -20,10 +20,12 @@ import com.youyu.common.api.Result;
 import com.youyu.common.exception.BizException;
 import com.youyu.common.service.AbstractService;
 import com.youyu.common.utils.YyAssert;
+import io.netty.handler.timeout.TimeoutException;
 import lombok.extern.slf4j.Slf4j;
 import mesosphere.marathon.client.model.v2.Task;
 import net.atayun.bazooka.base.dcos.DcosServerBean;
 import net.atayun.bazooka.base.dcos.api.DcosApi;
+import net.atayun.bazooka.base.dcos.api.DcosApiClient;
 import net.atayun.bazooka.base.dcos.api.model.GetLogInfoResponse;
 import net.atayun.bazooka.base.dcos.api.model.GetSlaveStateResponse;
 import net.atayun.bazooka.base.dcos.dto.*;
@@ -636,7 +638,7 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
     public Result createSingleNodeCluster(CreateClusterReq createClusterReq) {
 
         Result result = this.checkClusterInData(createClusterReq);
-        if (null != result){
+        if (null != result) {
             return result;
         }
 
@@ -669,15 +671,15 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
     public Result createMesosCluster(CreateClusterReq createClusterReq) {
 
         Result result = this.checkClusterInData(createClusterReq);
-        if (null != result){
+        if (null != result) {
             return result;
         }
         //Get Version
         DcosApi dcos = dcosServerBean.getInstance(PROTOCOL + createClusterReq.getMasterUrls().get(0));
-        try{
+        try {
             createClusterReq.setVersion(dcos.getInfo().getVersion());
-        }catch (Exception e){
-            return Result.fail(RmsResultCode.MASTER_NODE_IP.getCode(),RmsResultCode.MASTER_NODE_IP.getDesc());
+        } catch (Exception e) {
+            return Result.fail(RmsResultCode.MASTER_NODE_IP.getCode(), RmsResultCode.MASTER_NODE_IP.getDesc());
         }
 
 
@@ -695,12 +697,12 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
     public Result checkClusterInData(CreateClusterReq createClusterReq) {
 
         //集合ip重复判断
-        if (createClusterReq.getType().equals(ClusterTypeEnum.MESOS.getCode())){
-            if (createClusterReq.getMasterUrls().size() > createClusterReq.getMasterUrls().stream().distinct().count()){
-                return Result.fail(RmsResultCode.MASTER_NODE_IP_REPEAT.getCode(),RmsResultCode.MASTER_NODE_IP_REPEAT.getDesc());
+        if (createClusterReq.getType().equals(ClusterTypeEnum.MESOS.getCode())) {
+            if (createClusterReq.getMasterUrls().size() > createClusterReq.getMasterUrls().stream().distinct().count()) {
+                return Result.fail(RmsResultCode.MASTER_NODE_IP_REPEAT.getCode(), RmsResultCode.MASTER_NODE_IP_REPEAT.getDesc());
             }
-            if (createClusterReq.getMlbUrls().size() > createClusterReq.getMlbUrls().stream().distinct().count()){
-                return Result.fail(RmsResultCode.PUBLIC_AGENT_NODE_IP_REPEAT.getCode(),RmsResultCode.PUBLIC_AGENT_NODE_IP_REPEAT.getDesc());
+            if (createClusterReq.getMlbUrls().size() > createClusterReq.getMlbUrls().stream().distinct().count()) {
+                return Result.fail(RmsResultCode.PUBLIC_AGENT_NODE_IP_REPEAT.getCode(), RmsResultCode.PUBLIC_AGENT_NODE_IP_REPEAT.getDesc());
             }
         }
 
@@ -708,7 +710,20 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
         example.createCriteria().andEqualTo("name", createClusterReq.getName());
         List<RmsClusterEntity> list = rmsClusterMapper.selectByExample(example);
         if (list != null && !list.isEmpty()) {
-            return Result.fail(RmsResultCode.CLUSTER_NAME_HAVE_IN_DB.getCode(),RmsResultCode.CLUSTER_NAME_HAVE_IN_DB.getDesc());
+            return Result.fail(RmsResultCode.CLUSTER_NAME_HAVE_IN_DB.getCode(), RmsResultCode.CLUSTER_NAME_HAVE_IN_DB.getDesc());
+        }
+
+        //校验master ip 是否可用
+        if (createClusterReq.getType().equals(ClusterTypeEnum.MESOS.getCode())) {
+            for (String url : createClusterReq.getMasterUrls()) {
+                //Get Version
+                DcosApi dcos = DcosApiClient.getInstance(PROTOCOL + url, 3 * 1000, 3 * 1000);
+                try {
+                    dcos.getInfo().getVersion();
+                } catch (Exception e) {
+                    return Result.fail(RmsResultCode.MASTER_NODE_IP_ERROR.getCode(), RmsResultCode.MASTER_NODE_IP_ERROR.getDesc() + url);
+                }
+            }
         }
         return null;
     }
