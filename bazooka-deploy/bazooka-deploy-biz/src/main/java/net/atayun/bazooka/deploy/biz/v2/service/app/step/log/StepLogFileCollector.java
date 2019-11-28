@@ -103,8 +103,8 @@ public class StepLogFileCollector implements StepLogCollector {
         return Arrays.stream(list)
                 .filter(f -> f.getName().startsWith(prefix))
                 .sorted((l, r) -> {
-                    Integer lInt = Integer.parseInt(l.getName().substring(prefix.length()));
-                    Integer rInt = Integer.parseInt(r.getName().substring(prefix.length()));
+                    Long lInt = Long.parseLong(l.getName().substring(prefix.length()));
+                    Long rInt = Long.parseLong(r.getName().substring(prefix.length()));
                     return lInt.compareTo(rInt);
                 })
                 .collect(Collectors.toList());

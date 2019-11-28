@@ -21,6 +21,7 @@ import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
 public interface ICheckBranch {
 
     default void checkBranch(AppOpt appOpt, StepLogBuilder stepLogBuilder) {
+        stepLogBuilder.append("检查分支: " + appOpt.getBranch());
         AppApi appApi = getBean(AppApi.class);
         AppDeployConfigDto appDeployConfigDto = appApi.getAppDeployConfigInfoById(appOpt.getDeployConfigId())
                 .ifNotSuccessThrowException().getData();

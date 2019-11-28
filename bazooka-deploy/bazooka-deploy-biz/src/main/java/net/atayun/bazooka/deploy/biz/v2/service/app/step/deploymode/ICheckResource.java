@@ -19,6 +19,7 @@ import static net.atayun.bazooka.deploy.biz.v2.constant.DeployResultCodeConstant
 public interface ICheckResource {
 
     default void checkPlatformResource(AppOpt appOpt, StepLogBuilder stepLogBuilder) {
+        stepLogBuilder.append("检查资源");
         AppDeployConfigDto deployConfig = getBean(AppApi.class).getAppDeployConfigInfoById(appOpt.getDeployConfigId())
                 .ifNotSuccessThrowException().getData();
         String configName = deployConfig.getConfigName();
