@@ -28,21 +28,20 @@ public class StepWorker {
 
     public void doWork() {
         Step step = StrategyNumBean.getBeanInstance(Step.class, appOptFlowStep.getStep());
+        FlowStepService flowStepService = getBean(FlowStepService.class);
         try {
             appOptFlowStep.process();
-            getBean(FlowStepService.class).update(appOptFlowStep);
+            flowStepService.update(appOptFlowStep);
             step.doWork(appOpt, appOptFlowStep);
-            appOptFlowStep.success();
+            if (step instanceof SinglePhase) {
+                appOptFlowStep.success();
+            }
         } catch (Throwable throwable) {
             log.warn("步骤异常: ", throwable);
             appOptFlowStep.failure();
         } finally {
-            if (appOptFlowStep.isSuccess()) {
-                if (step instanceof SinglePhase) {
-                    step.notification(appOpt, appOptFlowStep);
-                }
-            } else {
-                step.notification(appOpt, appOptFlowStep);
+            if (appOptFlowStep.isSuccess() || appOptFlowStep.isFailure()) {
+                step.updateFlowStepAndPublish(appOpt, appOptFlowStep);
             }
         }
     }

@@ -4,6 +4,7 @@ import net.atayun.bazooka.base.jenkins.JenkinsJobPropertiesHelper;
 import net.atayun.bazooka.base.jenkins.JenkinsServerHelper;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
+import net.atayun.bazooka.deploy.biz.v2.service.app.step.Callback;
 import net.atayun.bazooka.deploy.biz.v2.service.app.step.Step;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,7 +13,7 @@ import java.util.Map;
 /**
  * @author Ping
  */
-public abstract class Step4Jenkins extends Step {
+public abstract class Step4Jenkins extends Step implements Callback {
 
     @Autowired
     private JenkinsServerHelper jenkinsServerHelper;
@@ -28,4 +29,12 @@ public abstract class Step4Jenkins extends Step {
     protected abstract Map<String, String> getJobParam(AppOpt appOpt, AppOptFlowStep appOptFlowStep);
 
     protected abstract String getJobName();
+
+    @Override
+    public void callback(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
+        Map<String, Object> output = appOptFlowStep.getOutput();
+        int buildNumber = Integer.parseInt((String) output.get("buildNumber"));
+        String jenkinsLog = jenkinsServerHelper.getJenkinsLog(getJobName(), buildNumber);
+        getStepLogCollector().collect(appOptFlowStep, jenkinsLog);
+    }
 }

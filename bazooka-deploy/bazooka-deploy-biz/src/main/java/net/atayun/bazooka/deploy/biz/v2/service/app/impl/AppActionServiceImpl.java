@@ -5,6 +5,7 @@ import com.youyu.common.api.PageData;
 import com.youyu.common.enums.IsDeleted;
 import com.youyu.common.exception.BizException;
 import com.youyu.common.utils.YyBeanUtils;
+import net.atayun.bazooka.base.bean.StrategyNumBean;
 import net.atayun.bazooka.base.constant.FlowStepConstants;
 import net.atayun.bazooka.base.enums.AppOptEnum;
 import net.atayun.bazooka.deploy.api.dto.AppRunningEventDto;
@@ -22,6 +23,7 @@ import net.atayun.bazooka.deploy.biz.v2.service.app.AppOptService;
 import net.atayun.bazooka.deploy.biz.v2.service.app.AppStatusOpt;
 import net.atayun.bazooka.deploy.biz.v2.service.app.FlowStepService;
 import net.atayun.bazooka.deploy.biz.v2.service.app.opt.AppOptWorker;
+import net.atayun.bazooka.deploy.biz.v2.service.app.step.Step;
 import net.atayun.bazooka.deploy.biz.v2.service.app.step.platform.Platform4Node;
 import net.atayun.bazooka.deploy.biz.v2.service.app.threadpool.AppActionThreadPool;
 import net.atayun.bazooka.pms.api.dto.AppInfoDto;
@@ -231,8 +233,11 @@ public class AppActionServiceImpl implements AppActionService {
 
     @Override
     public List<AppOptLogDto> getAppOptLog(Long optId) {
-        List<AppOptFlowStep> steps = flowStepService.selectByOptId(optId);
-        return steps.stream().map(step -> new AppOptLogDto(step.getStep(), "")).collect(Collectors.toList());
+        List<AppOptFlowStep> appOptFlowSteps = flowStepService.selectByOptId(optId);
+        return appOptFlowSteps.stream().map(appOptFlowStep -> {
+            Step step = StrategyNumBean.getBeanInstance(Step.class, appOptFlowStep.getStep());
+            return new AppOptLogDto(appOptFlowStep.getStep(), step.getStepLogCollector().get(appOptFlowStep));
+        }).collect(Collectors.toList());
     }
 
     @Override

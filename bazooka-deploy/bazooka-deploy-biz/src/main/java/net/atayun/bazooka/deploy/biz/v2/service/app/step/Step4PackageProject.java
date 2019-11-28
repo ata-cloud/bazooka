@@ -20,12 +20,7 @@ import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
  */
 @Component
 @StrategyNum(superClass = Step.class, number = FlowStepConstants.PACKAGE_PROJECT)
-public class Step4PackageProject extends Step4Jenkins implements Callback {
-
-    @Override
-    public void callback(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
-        //无特殊处理
-    }
+public class Step4PackageProject extends Step4Jenkins {
 
     @Override
     protected Map<String, String> getJobParam(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {

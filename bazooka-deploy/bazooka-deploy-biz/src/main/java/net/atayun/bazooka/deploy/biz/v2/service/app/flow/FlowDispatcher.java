@@ -32,21 +32,14 @@ public class FlowDispatcher {
             return;
         }
 
-        FlowStepService flowStepService = getBean(FlowStepService.class);
-        //执行过程中可能被取消
-        AppOptFlowStep mayCancel = flowStepService.selectById(appOptFlowStep.getId());
-        if (mayCancel.isCancel()) {
-            appOptFlowStep.cancel();
+        if (appOptFlowStep.isCancel() || appOptFlowStep.isFailure()) {
+            appOpt.failure();
+            return;
         }
-        //更新
-        flowStepService.update(appOptFlowStep);
 
         try {
-            if (appOptFlowStep.isCancel() || appOptFlowStep.isFailure()) {
-                appOpt.failure();
-                return;
-            }
             if (appOptFlowStep.isSuccess()) {
+                FlowStepService flowStepService = getBean(FlowStepService.class);
                 AppOptFlowStep nextStep = flowStepService.nextStep(appOptFlowStep);
                 if (nextStep == null) {
                     appOpt.success();

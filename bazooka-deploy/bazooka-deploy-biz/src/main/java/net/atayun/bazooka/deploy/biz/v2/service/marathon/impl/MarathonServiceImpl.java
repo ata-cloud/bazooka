@@ -76,7 +76,7 @@ public class MarathonServiceImpl implements MarathonService {
             appOptFlowStep.failure();
         }
 
-        step.notification(appOpt, appOptFlowStep);
+        step.updateFlowStepAndPublish(appOpt, appOptFlowStep);
     }
 
     @Override

@@ -2,10 +2,11 @@ package net.atayun.bazooka.deploy.biz.v2.service.app.impl;
 
 import com.youyu.common.exception.BizException;
 import com.youyu.common.utils.YyBeanUtils;
+import net.atayun.bazooka.base.bean.StrategyNumBean;
 import net.atayun.bazooka.base.enums.deploy.DeployModeEnum;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
-import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptCounts;
+import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
 import net.atayun.bazooka.deploy.biz.v2.dto.app.AppOptCountsDto;
 import net.atayun.bazooka.deploy.biz.v2.dto.app.DeployingConfigInfoDto;
 import net.atayun.bazooka.deploy.biz.v2.dto.app.DeployingFlowDto;
@@ -14,6 +15,7 @@ import net.atayun.bazooka.deploy.biz.v2.enums.TimeGranularityEnum;
 import net.atayun.bazooka.deploy.biz.v2.service.app.AppOptService;
 import net.atayun.bazooka.deploy.biz.v2.service.app.FlowService;
 import net.atayun.bazooka.deploy.biz.v2.service.app.FlowStepService;
+import net.atayun.bazooka.deploy.biz.v2.service.app.step.Step;
 import net.atayun.bazooka.pms.api.dto.AppDeployConfigDto;
 import net.atayun.bazooka.pms.api.feign.AppApi;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +77,8 @@ public class FlowServiceImpl implements FlowService {
     @Override
     public String getStepLog(Long optId, Long stepId) {
         AppOptFlowStep appOptFlowStep = flowStepService.selectById(stepId);
-        return "";
+        Step step = StrategyNumBean.getBeanInstance(Step.class, appOptFlowStep.getStep());
+        return step.getStepLogCollector().get(appOptFlowStep);
     }
 
     @Override

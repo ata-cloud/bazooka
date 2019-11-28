@@ -31,7 +31,7 @@ import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
  */
 @Component
 @StrategyNum(superClass = Step.class, number = FlowStepConstants.PUSH_DOCKER_IMAGE)
-public class Step4PushDockerImage extends Step4Jenkins implements Callback {
+public class Step4PushDockerImage extends Step4Jenkins {
 
     @Autowired
     private RmsDockerImageApi rmsDockerImageApi;
@@ -93,6 +93,7 @@ public class Step4PushDockerImage extends Step4Jenkins implements Callback {
 
     @Override
     public void callback(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
+        super.callback(appOpt, appOptFlowStep);
         Map<String, Object> custom = appOptFlowStep.getOutput();
         String targetEnvIdStr = (String) custom.get("targetEnvId");
         if (StringUtils.hasText(targetEnvIdStr)) {

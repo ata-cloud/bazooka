@@ -40,11 +40,17 @@ import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
  */
 @Component
 @StrategyNum(superClass = Step.class, number = FlowStepConstants.BUILD_DOCKER_IMAGE)
-public class Step4BuildDockerImage extends Step4Jenkins implements Callback {
+public class Step4BuildDockerImage extends Step4Jenkins {
 
     @Override
     public void callback(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
+        super.callback(appOpt, appOptFlowStep);
+
         //保存镜像
+        saveImage(appOpt, appOptFlowStep);
+    }
+
+    private void saveImage(AppOpt appOpt, AppOptFlowStep appOptFlowStep) {
         Map<String, Object> output = appOptFlowStep.getOutput();
         String dockerImageTag = (String) output.get("dockerImageTag");
         AppInfoDto appInfo = getBean(AppApi.class).getAppInfoById(appOpt.getAppId())
