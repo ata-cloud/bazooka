@@ -135,7 +135,8 @@ class BuildSet extends React.Component {
       appId: info.appId,
       envId: info.envId,
       deployMode: deployMode,
-      instance: currentEnvO.clusterType !== '2' ? data.instance : data.clusterNodes.length
+      instance: currentEnvO.clusterType !== '2' ? data.instance : data.clusterNodes.length,
+      clusterType: currentEnvO.clusterType
     }
     if (currentItem.type && currentItem.type == 'edit') {
       let res = await service.appDeployConfigUpdate({ ...params, configId: currentItem.id });

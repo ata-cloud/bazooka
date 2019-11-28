@@ -53,6 +53,7 @@ class ServiceSetting extends React.Component {
     const { data } = this.props;
     if (data.envId !== prevProps.data.envId) {
       this.onFetchAppDeployConfigListAll();
+      this.onFetchAppDeployConfigListAll('noEnv');
       this.onClearData({
         appRunEndpoint: [],
         appDeployConfigList: {},
@@ -77,8 +78,8 @@ class ServiceSetting extends React.Component {
     })
   }
   onFetchAppDeployConfigListAll = (type) => {
-    const { dispatch, data } = this.props;
-    let envId = type == 'noEnv' ? {} : { envId: data.envId }
+    const { dispatch, data, currentEnvO } = this.props;
+    let envId = type == 'noEnv' ? { clusterType: currentEnvO.clusterType} : { envId: data.envId }
     dispatch({
       type: 'service/appDeployConfigListAll',
       payload: {
