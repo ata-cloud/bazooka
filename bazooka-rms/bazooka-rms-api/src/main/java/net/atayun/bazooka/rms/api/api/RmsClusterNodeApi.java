@@ -23,6 +23,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -52,7 +53,7 @@ public interface RmsClusterNodeApi {
      */
     @ApiOperation("查询集群所有节点列表信息")
     @PostMapping("/getAllClusterNodes")
-    Result<List<ClusterNodeRspDto>> getAllClusterNodes(@RequestBody ClusterNodeReqDto clusterNodeReqDto);
+    Result<List<ClusterNodeRspDto>> getAllClusterNodes(@RequestParam  Long clusterId);
 
     /**
      * 根据节点ID查询节点信息

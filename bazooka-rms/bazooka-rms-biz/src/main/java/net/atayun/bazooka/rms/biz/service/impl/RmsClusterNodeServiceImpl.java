@@ -82,11 +82,11 @@ public class RmsClusterNodeServiceImpl extends AbstractService<Long, RmsClusterN
     }
 
     @Override
-    public List<ClusterNodeRspDto> getAllClusterNodes(ClusterNodeReqDto clusterNodeReqDto) {
+    public List<ClusterNodeRspDto> getAllClusterNodes(Long clusterId) {
         List<ClusterNodeRspDto> list = new ArrayList<>();
         Example example = new Example(RmsClusterNodeEntity.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("clusterId",clusterNodeReqDto.getClusterId());
+        criteria.andEqualTo("clusterId",clusterId);
         List<RmsClusterNodeEntity> rmsClusterNodeEntities = rmsClusterNodeMapper.selectByExample(example);
         list = copyProperty4List(rmsClusterNodeEntities, ClusterNodeRspDto.class);
         return list;

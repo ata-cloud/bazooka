@@ -24,10 +24,7 @@ import net.atayun.bazooka.rms.api.dto.rsp.ClusterNodeRspDto;
 import net.atayun.bazooka.rms.biz.dal.entity.RmsClusterNodeEntity;
 import net.atayun.bazooka.rms.biz.service.RmsClusterNodeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
@@ -56,8 +53,8 @@ public class RmsClusterNodeController implements RmsClusterNodeApi {
 
     @Override
     @PostMapping("/getAllClusterNodes")
-    public Result<List<ClusterNodeRspDto>> getAllClusterNodes(@RequestBody ClusterNodeReqDto clusterNodeReqDto) {
-        return ok(rmsClusterNodeService.getAllClusterNodes(clusterNodeReqDto));
+    public Result<List<ClusterNodeRspDto>> getAllClusterNodes(@RequestParam Long clusterId) {
+        return ok(rmsClusterNodeService.getAllClusterNodes(clusterId));
     }
 
     @Override
