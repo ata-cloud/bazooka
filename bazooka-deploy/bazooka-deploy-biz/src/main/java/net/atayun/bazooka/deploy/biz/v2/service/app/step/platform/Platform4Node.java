@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
 
 import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
 import static net.atayun.bazooka.deploy.biz.v2.constant.DeployResultCodeConstants.ACCESS_NODE_ERR_CODE;
+import static net.atayun.bazooka.deploy.biz.v2.constant.DeployResultCodeConstants.EXEC_CMD_ERR_CODE;
 
 /**
  * @author Ping
@@ -84,7 +85,7 @@ public class Platform4Node implements Platform {
         stopApp(appOpt, true, logBuilder);
     }
 
-    public void stopApp(AppOpt appOpt, boolean updateAppOpt, StepLogBuilder logBuilder) {
+    public void stopApp(AppOpt appOpt, boolean isStopOpt, StepLogBuilder logBuilder) {
         AppOpt lastAppOpt = getBean(AppOptService.class).selectLastSuccessByAppIdAndEnv(appOpt.getAppId(), appOpt.getEnvId());
         if (lastAppOpt == null) {
             return;
@@ -93,9 +94,15 @@ public class Platform4Node implements Platform {
         String containerName = lastAppOpt.getAppRunServiceId();
         String command = STOP_COMMAND.replace("__CONTAINER_NAME__", containerName);
         List<Long> cNodeIds = getNodeIds(lastAppOpt.getAppDeployUuid());
-        ssh(cNodeIds, command, logBuilder);
+        try {
+            ssh(cNodeIds, command, logBuilder);
+        } catch (Throwable throwable) {
+            if (isStopOpt) {
+                throw throwable;
+            }
+        }
 
-        if (updateAppOpt) {
+        if (isStopOpt) {
             appOpt.setAppDeployConfig(command);
             appOpt.setAppDeployUuid(lastAppOpt.getAppDeployUuid());
             appOpt.setAppDeployVersion(getVersion());
@@ -149,7 +156,7 @@ public class Platform4Node implements Platform {
         String image = (String) input.get("dockerImage");
         String port = "";
         List<PortMapping> portMappings = appDeployConfigDto.getPortMappings();
-        if (CollectionUtils.isEmpty(portMappings)) {
+        if (!CollectionUtils.isEmpty(portMappings)) {
             port = portMappings.stream()
                     .map(portMapping -> " -p " + portMapping.getServicePort() + ":" + portMapping.getContainerPort())
                     .collect(Collectors.joining(" "));
@@ -240,7 +247,11 @@ public class Platform4Node implements Platform {
         if (StringUtils.hasText(err)) {
             logBuilder.append("执行命令异常: " + err);
         }
-        logBuilder.append("CmdCode: " + exec.getExitStatus());
+        int exitStatus = exec.getExitStatus();
+        logBuilder.append("CmdCode: " + exitStatus);
+        if (exitStatus > 0) {
+            throw new BizException(EXEC_CMD_ERR_CODE, "执行命令异常: " + err);
+        }
     }
 
     private String getVersion() {

@@ -20,9 +20,7 @@ import net.atayun.bazooka.rms.api.dto.rsp.ClusterNodeRspDto;
 import com.youyu.common.api.PageData;
 import com.youyu.common.api.Result;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -51,8 +49,8 @@ public interface RmsClusterNodeApi {
      * @Description: 查询集群所有节点列表信息
      */
     @ApiOperation("查询集群所有节点列表信息")
-    @PostMapping("/getAllClusterNodes")
-    Result<List<ClusterNodeRspDto>> getAllClusterNodes(@RequestBody ClusterNodeReqDto clusterNodeReqDto);
+    @GetMapping("/getAllClusterNodes")
+    Result<List<ClusterNodeRspDto>> getAllClusterNodes(@RequestParam  Long clusterId);
 
     /**
      * 根据节点ID查询节点信息
