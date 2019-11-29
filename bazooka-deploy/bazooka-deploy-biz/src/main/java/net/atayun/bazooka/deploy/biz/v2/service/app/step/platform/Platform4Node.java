@@ -85,7 +85,7 @@ public class Platform4Node implements Platform {
         stopApp(appOpt, true, logBuilder);
     }
 
-    public void stopApp(AppOpt appOpt, boolean updateAppOpt, StepLogBuilder logBuilder) {
+    public void stopApp(AppOpt appOpt, boolean isStopOpt, StepLogBuilder logBuilder) {
         AppOpt lastAppOpt = getBean(AppOptService.class).selectLastSuccessByAppIdAndEnv(appOpt.getAppId(), appOpt.getEnvId());
         if (lastAppOpt == null) {
             return;
@@ -94,9 +94,15 @@ public class Platform4Node implements Platform {
         String containerName = lastAppOpt.getAppRunServiceId();
         String command = STOP_COMMAND.replace("__CONTAINER_NAME__", containerName);
         List<Long> cNodeIds = getNodeIds(lastAppOpt.getAppDeployUuid());
-        ssh(cNodeIds, command, logBuilder);
+        try {
+            ssh(cNodeIds, command, logBuilder);
+        } catch (Throwable throwable) {
+            if (isStopOpt) {
+                throw throwable;
+            }
+        }
 
-        if (updateAppOpt) {
+        if (isStopOpt) {
             appOpt.setAppDeployConfig(command);
             appOpt.setAppDeployUuid(lastAppOpt.getAppDeployUuid());
             appOpt.setAppDeployVersion(getVersion());
