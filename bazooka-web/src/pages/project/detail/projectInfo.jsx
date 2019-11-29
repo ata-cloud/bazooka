@@ -367,7 +367,7 @@ class ProjectInfo extends React.Component {
                         {
                           envList.map((item, i) => (
                             <Col span={12} key={item.id} title={item.name}>
-                              <Checkbox value={item.id} disabled={selectedEnvIds.indexOf(item.id) > -1 ? true : false} className={styles.textOverflow} style={{width: '100%'}} >
+                              <Checkbox value={item.id} disabled={selectedEnvIds.indexOf(item.id) > -1 ? true : false} className={styles.textOverflow} style={{width: '98%'}} >
                                 {item.name}
                               </Checkbox>
                             </Col>

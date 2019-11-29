@@ -169,19 +169,19 @@ class Bazooka extends React.Component {
                 <FormItem label="CPU" colon={false}>
                   {getFieldDecorator(`nodeList.${k}.cpu`, {
                     rules: [
-                      { required: true, message: '请输入CPU核数' }
+                    { required: true, message: '请输入CPU核数(整数)', pattern: /^\d*$/ }
                     ]
-                  })(<InputNumber placeholder="请输入CPU核数" style={{ width: '100%' }} />)}
+                  })(<Input placeholder="请输入CPU核数" style={{ width: '100%' }} />)}
                 </FormItem>
               </Col>
               <Col span={4}>
                 <FormItem label="内存" colon={false}>
                   {getFieldDecorator(`nodeList.${k}.memory`, {
                     rules: [
-                      { required: true, message: '请输入内存大小（GiB）' }
+                      { required: true, message: '请输入内存大小（GiB）', pattern:/^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/ }
                     ]
 
-                  })(<InputNumber placeholder="请输入内存大小（GiB）" style={{ width: '100%' }} />)}
+                  })(<Input placeholder="请输入内存大小（GiB）" style={{ width: '100%' }} />)}
                 </FormItem>
               </Col>
               <Col span={5}>

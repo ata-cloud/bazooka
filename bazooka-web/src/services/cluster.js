@@ -1,4 +1,4 @@
-import { requestPost } from '@/utils/request';
+import { requestPost, requestGet } from '@/utils/request';
 const cluster = {
   getClusterPage: async function (params = {pageSize: 100}) {
     return requestPost('/cluster/getClusterPage', params);
@@ -10,7 +10,7 @@ const cluster = {
     return requestPost('/clusterNode/getClusterNodePage', params);
   },
   getClusterNodeAll: async function (params = {}) {
-    return requestPost('/clusterNode/getAllClusterNodes', params);
+    return requestGet('/clusterNode/getAllClusterNodes', params);
   },
   getAvailableResource: async function (params = {}) {
     return requestPost(`/cluster/${params.clusterId}/available-resource`, params);

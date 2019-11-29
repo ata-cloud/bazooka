@@ -140,7 +140,6 @@ class ServiceSetting extends React.Component {
     })
   }
   onShowBuildSet = (deployMode, currentItem) => {
-    console.log('deployMode-->', deployMode)
     this.setState({
       showBuildSet: true,
       deployMode,
