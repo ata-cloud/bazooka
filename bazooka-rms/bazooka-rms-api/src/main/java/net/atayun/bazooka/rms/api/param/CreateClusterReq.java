@@ -3,7 +3,9 @@ package net.atayun.bazooka.rms.api.param;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -23,6 +25,7 @@ public class CreateClusterReq {
     private String type;
 
     @ApiModelProperty("镜像库url")
+    @Size(max = 32,message = "镜像库数据过长")
     @NotNull(message = "镜像库url不能为空")
     private String imageUrl;
 
@@ -42,6 +45,7 @@ public class CreateClusterReq {
     private List<String> mlbUrls;
 
     @ApiModelProperty("节点集合")
+    @Valid
     private List<SingleNodeReq> nodeList;
 }
 

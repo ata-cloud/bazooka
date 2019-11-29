@@ -101,7 +101,7 @@ public interface RmsClusterApi {
      */
     @ApiOperation("新建单节点集群")
     @PostMapping("/createSingleNodeCluster")
-    Result createSingleNodeCluster(CreateClusterReq createClusterReq);
+    Result createSingleNodeCluster(@Valid @RequestBody CreateClusterReq createClusterReq);
 
     /**
      * @create: zhangyingbin 2019/11/8 0008 下午 5:16
@@ -110,7 +110,7 @@ public interface RmsClusterApi {
      */
     @ApiOperation("新建mesos集群")
     @PostMapping("/createMesosCluster")
-    Result createMesosCluster(CreateClusterReq createClusterReq);
+    Result createMesosCluster(@Valid @RequestBody CreateClusterReq createClusterReq);
 
     /**
      * @create: zhangyingbin 2019/11/11 0011 下午 5:32
