@@ -10,6 +10,6 @@ import org.apache.ibatis.annotations.Update;
  */
 public interface AppOptFlowStepMapper extends YyMapper<AppOptFlowStep> {
 
-    @Update("update deploy_app_opt_flow_step set status = 'CANCEL' where aptId = #{optId} and stepSeq >= #{stepSeq};")
+    @Update("update deploy_app_opt_flow_step set status = 'CANCEL' where apt_id = #{optId} and step_seq >= #{stepSeq};")
     void cancelRestSteps(@Param("optId") Long optId, @Param("stepSeq") Integer stepSeq);
 }
