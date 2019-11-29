@@ -22,10 +22,19 @@ class Mesos extends React.Component {
     e && e.preventDefault();
     this.props.form.validateFieldsAndScroll(async (err, values) => {
       if (!err) {
-        this.setState({
-          saveLoading: true
-        })
-        let res = await cluster.createMesosCluster({...values, type: '0', keys: undefined, keys1: undefined, credentialId: values.credentialId=='-1'? undefined: values.credentialId});
+        // this.setState({
+        //   saveLoading: true
+        // });
+        let params = {
+          ...values, 
+          type: '0', 
+          keys: undefined,
+          keys1: undefined,
+          credentialId: values.credentialId=='-1'? undefined: values.credentialId,
+          masterUrls: values.masterUrls.filter(item=>item),
+          mlbUrls: values.mlbUrls.filter(item=>item),
+        }
+        let res = await cluster.createMesosCluster(params);
         if(res && res.code == '1') {
           message.success('添加成功')
           onCancel()
@@ -33,7 +42,6 @@ class Mesos extends React.Component {
         this.setState({
           saveLoading: false
         })
-        // onSave({ ...values })
       }
     });
   }

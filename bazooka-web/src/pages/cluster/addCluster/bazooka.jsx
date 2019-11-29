@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Card, Form, Row, Col, Input, Icon, Select,InputNumber, message } from 'antd';
+import { Card, Form, Row, Col, Input, Icon, Select, InputNumber, message } from 'antd';
 import { connect } from 'dva';
 import CommomItem from './commomItem';
 import styles from '@/pages/index.less';
@@ -39,16 +39,19 @@ class Bazooka extends React.Component {
         this.setState({
           saveLoading: true
         })
-        let res = await cluster.createSingleNodeCluster({...values, type: '2', keys: undefined, credentialId: values.credentialId=='-1'? undefined: values.credentialId})
-        
-        if(res && res.code == '1') {
+        let params = {
+          ...values, type: '2',
+          nodeList: values.nodeList.filter(item => item.nodeIp),
+          keys: undefined, credentialId: values.credentialId == '-1' ? undefined : values.credentialId,
+        };
+        let res = await cluster.createSingleNodeCluster(params)
+        if (res && res.code == '1') {
           message.success('添加成功')
           onCancel()
         }
         this.setState({
           saveLoading: false
         })
-        // onSave({ ...values })
       }
     });
   }
@@ -103,7 +106,7 @@ class Bazooka extends React.Component {
   renderForm() {
     const { onCancel, form } = this.props;
     const { getFieldDecorator } = form;
-    const { saveLoading }= this.state;
+    const { saveLoading } = this.state;
     return (
       <Form onSubmit={this.onSubmit} colon={false} className={styles.marginT}>
         <Row type="flex" align="top" gutter={48}>
@@ -146,8 +149,8 @@ class Bazooka extends React.Component {
               <Col span={4}>
                 <FormItem label="节点ip" colon={false}>
                   {getFieldDecorator(`nodeList.${k}.nodeIp`, {
-                    rules:[
-                      {required: true, message: '请输入节点ip'}
+                    rules: [
+                      { required: true, message: '请输入节点ip' }
                     ]
                   })(<Input placeholder="请输入节点ip" />)}
                 </FormItem>
@@ -156,8 +159,8 @@ class Bazooka extends React.Component {
                 <FormItem label="SSH端口" colon={false}>
                   {getFieldDecorator(`nodeList.${k}.sshPort`, {
                     initialValue: 22,
-                    rules:[
-                      {required: true, message: '请输入ssh端口'}
+                    rules: [
+                      { required: true, message: '请输入ssh端口' }
                     ]
                   })(<Input placeholder="请输入ssh端口" />)}
                 </FormItem>
@@ -165,27 +168,27 @@ class Bazooka extends React.Component {
               <Col span={4}>
                 <FormItem label="CPU" colon={false}>
                   {getFieldDecorator(`nodeList.${k}.cpu`, {
-                   rules:[
-                    {required: true, message: '请输入CPU核数'}
-                  ]
-                  })(<InputNumber placeholder="请输入CPU核数" style={{width: '100%'}}/>)}
+                    rules: [
+                      { required: true, message: '请输入CPU核数' }
+                    ]
+                  })(<InputNumber placeholder="请输入CPU核数" style={{ width: '100%' }} />)}
                 </FormItem>
               </Col>
               <Col span={4}>
                 <FormItem label="内存" colon={false}>
                   {getFieldDecorator(`nodeList.${k}.memory`, {
-                     rules:[
-                      {required: true, message: '请输入内存大小（GiB）'}
+                    rules: [
+                      { required: true, message: '请输入内存大小（GiB）' }
                     ]
-                   
-                  })(<InputNumber placeholder="请输入内存大小（GiB）" style={{width: '100%'}}/>)}
+
+                  })(<InputNumber placeholder="请输入内存大小（GiB）" style={{ width: '100%' }} />)}
                 </FormItem>
               </Col>
               <Col span={5}>
                 <FormItem label="节点登录凭据" colon={false}>
                   {getFieldDecorator(`nodeList.${k}.credentialId`, {
-                     rules:[
-                      {required: true, message: '请选择节点登录凭据'}
+                    rules: [
+                      { required: true, message: '请选择节点登录凭据' }
                     ]
                   })(
                     <Select placeholder="请选择节点登录凭据">
