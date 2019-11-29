@@ -52,7 +52,7 @@ public class RmsClusterNodeController implements RmsClusterNodeApi {
     }
 
     @Override
-    @PostMapping("/getAllClusterNodes")
+    @GetMapping("/getAllClusterNodes")
     public Result<List<ClusterNodeRspDto>> getAllClusterNodes(@RequestParam Long clusterId) {
         return ok(rmsClusterNodeService.getAllClusterNodes(clusterId));
     }
