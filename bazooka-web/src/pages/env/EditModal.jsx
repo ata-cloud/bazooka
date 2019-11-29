@@ -48,7 +48,7 @@ class EnvEditModal extends React.Component {
     const { dispatch } = this.props;
     dispatch({
       type: 'cluster/clusterList',
-      payload: {}
+      payload: {pageSize: 100}
     })
   }
   //获取可分配资源

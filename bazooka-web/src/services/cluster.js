@@ -1,6 +1,6 @@
 import { requestPost } from '@/utils/request';
 const cluster = {
-  getClusterPage: async function (params = {}) {
+  getClusterPage: async function (params = {pageSize: 100}) {
     return requestPost('/cluster/getClusterPage', params);
   },
   getClusterDetail: async function (params = {}) {
