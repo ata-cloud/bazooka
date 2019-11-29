@@ -49,7 +49,7 @@ class ServiceBuild extends React.Component {
     const { buildObj } = this.state;
     const { data, appRunStatus } = this.props;
     if (prevState.buildObj && prevState.buildObj.config !== buildObj.config) {
-      if (buildObj.deployMode.indexOf("BUILD") > -1) {
+      if (buildObj.deployMode && buildObj.deployMode.indexOf("BUILD") > -1) {
         this.onFetchBranch();
         return
       }
