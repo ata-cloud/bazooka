@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
 
 import static net.atayun.bazooka.base.bean.SpringContextBean.getBean;
 import static net.atayun.bazooka.deploy.biz.v2.constant.DeployResultCodeConstants.ACCESS_NODE_ERR_CODE;
+import static net.atayun.bazooka.deploy.biz.v2.constant.DeployResultCodeConstants.EXEC_CMD_ERR_CODE;
 
 /**
  * @author Ping
@@ -240,7 +241,11 @@ public class Platform4Node implements Platform {
         if (StringUtils.hasText(err)) {
             logBuilder.append("执行命令异常: " + err);
         }
-        logBuilder.append("CmdCode: " + exec.getExitStatus());
+        int exitStatus = exec.getExitStatus();
+        logBuilder.append("CmdCode: " + exitStatus);
+        if (exitStatus > 0) {
+            throw new BizException(EXEC_CMD_ERR_CODE, "执行命令异常: " + err);
+        }
     }
 
     private String getVersion() {

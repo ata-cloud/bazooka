@@ -73,6 +73,7 @@ public final class DeployResultCodeConstants {
     public static final String ACCESS_NODE_ERR_CODE = AtaResultCode.DEPLOY_CODE + "0024";
     public static final String REJECT_APP_ACTION = AtaResultCode.DEPLOY_CODE + "0025";
     public static final String REJECT_FLOW_EXEC = AtaResultCode.DEPLOY_CODE + "0026";
+    public static final String EXEC_CMD_ERR_CODE = AtaResultCode.DEPLOY_CODE + "0027";
 
 
 }
