@@ -156,7 +156,7 @@ public class Platform4Node implements Platform {
         String image = (String) input.get("dockerImage");
         String port = "";
         List<PortMapping> portMappings = appDeployConfigDto.getPortMappings();
-        if (CollectionUtils.isEmpty(portMappings)) {
+        if (!CollectionUtils.isEmpty(portMappings)) {
             port = portMappings.stream()
                     .map(portMapping -> " -p " + portMapping.getServicePort() + ":" + portMapping.getContainerPort())
                     .collect(Collectors.joining(" "));
