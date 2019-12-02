@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @Data
 public class SingleNodeReq {
 
-    @Size(max = 32,message = "节点ip数据过长")
+    @Size(max = 128,message = "节点ip数据过长")
     @ApiModelProperty("节点ip")
     private String nodeIp;
 
