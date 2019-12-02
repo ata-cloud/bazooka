@@ -1,4 +1,4 @@
-[English](./README_en.md) | [官网](https://www.fintech.ai)  | [设计文档](docs/design.md) | [使用文档](https://wqtester.github.io/ata-cloudwhitepaper/) | [安装文档](docs/install_local_cluster.md) | [版本更新](docs/releasenodes/)
+[English](./README_en.md) | [设计文档](docs/design.md) | [使用文档](https://wqtester.github.io/ata-cloudwhitepaper/) | [安装文档](docs/install_local_cluster.md) | [版本更新](docs/releasenodes/)
 
 开源社区欢迎您的参与！如果有任何反馈，您可以通过邮件或者QQ等方式联系我们
 
@@ -19,7 +19,7 @@ Bazooka自动化开发运维平台，在[Docker](https://www.docker.com/)，[Mes
 - **系统信息** - 系统基础信息、组件状态和凭据管理
 - **用户管理** - 系统用户管理，角色分配
 
-您也可以通过[系统截图](./user_guide.md)对Bazooka有一个更加直观的认识和理解，或者查看此页面下方的演示视频，也可以访问[官网](https://www.fintech.ai)，获得更详细的信息。
+您也可以通过[系统截图](./user_guide.md)对Bazooka有一个更加直观的认识和理解，或者查看此页面下方的演示视频，获得更详细的信息。
 
 # 安装和部署
 
