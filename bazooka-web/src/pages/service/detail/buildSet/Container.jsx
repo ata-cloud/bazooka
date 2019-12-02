@@ -35,7 +35,7 @@ class Container extends React.Component {
   }
   onFetchNodeAll = async () => {
     const { currentEnvO, dispatch } = this.props;
-    if(currentEnvO.clusterType !== '2') {
+    if (currentEnvO.clusterType !== '2') {
       return
     }
     dispatch({
@@ -187,7 +187,7 @@ class Container extends React.Component {
   }
   render() {
     const { getFieldDecorator, getFieldValue } = this.props.formParent;
-    const { data, currentEnvO, clusterNodeAll } = this.props;
+    const { data, currentEnvO, clusterNodeAll, currentItem } = this.props;
     return (
       <Fragment>
         <div className={`${styles.marginT} ${styles.marginB}`}>
@@ -259,7 +259,7 @@ class Container extends React.Component {
                   </FormItem> :
                   <FormItem label="发布节点"  {...formItemLayout}>
                     {getFieldDecorator('clusterNodes', {
-                      initialValue: data.clusterNodes || [],
+                      initialValue: currentItem.type === 'copy' ? [] : data.clusterNodes ? data.clusterNodes : [],
                       rules: [
                         { required: true, message: "请选择发布节点" }
                       ]

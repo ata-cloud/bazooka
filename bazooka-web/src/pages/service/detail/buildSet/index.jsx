@@ -198,7 +198,7 @@ class BuildSet extends React.Component {
           <Form onSubmit={this.onSubmit}>
             {step === 0 && <BaseInfo formParent={form} data={data} deployMode={deployMode} currentItem={currentItem} />}
             {step === 1 && deployMode.indexOf('BUILD') > -1 && <Compile formParent={form} data={data} />}
-            {step === 2 && <Container formParent={form} data={data} info={info} />}
+            {step === 2 && <Container formParent={form} data={data} info={info} currentItem={currentItem}/>}
             {step === 3 && <ExtarSet formParent={form} data={data} />}
           </Form>
         </div>
