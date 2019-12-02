@@ -32,7 +32,7 @@ class Bazooka extends React.Component {
     })
   }
   onSubmit = (e) => {
-    const { onCancel } = this.props;
+    const { onCancel, onSave } = this.props;
     e && e.preventDefault();
     this.props.form.validateFieldsAndScroll(async (err, values) => {
       if (!err) {
@@ -47,7 +47,8 @@ class Bazooka extends React.Component {
         let res = await cluster.createSingleNodeCluster(params)
         if (res && res.code == '1') {
           message.success('添加成功')
-          onCancel()
+          onCancel();
+          onSave();
         }
         this.setState({
           saveLoading: false
