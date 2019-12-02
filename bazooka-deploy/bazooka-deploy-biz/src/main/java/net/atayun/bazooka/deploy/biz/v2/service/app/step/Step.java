@@ -39,7 +39,7 @@ public abstract class Step implements Cancel {
             //更新
             flowStepService.update(appOptFlowStep);
         } finally {
-            String log = "步骤[" + appOptFlowStep.getStep() + "]已完成.(" + appOptFlowStep.getStatus().getDescription() + ")";
+            String log = "步骤[" + appOptFlowStep.getStep().getDescription() + "]已完成.(" + appOptFlowStep.getStatus().getDescription() + ")";
             getStepLogCollector().collect(appOptFlowStep, log);
             getStepLogCollector().merge(appOptFlowStep);
             SpringApplicationEventPublisher.publish(new FlowDispatcherEvent(this, new StepWorker(appOpt, appOptFlowStep)));

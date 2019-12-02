@@ -1,5 +1,6 @@
 package net.atayun.bazooka.deploy.biz.v2.service.app.opt;
 
+import net.atayun.bazooka.base.enums.FlowStepEnum;
 import net.atayun.bazooka.deploy.biz.v2.config.DeployLogProperties;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
 
@@ -16,7 +17,7 @@ public class AppOptFlowStepBuilder {
 
     private Integer seq;
 
-    private String step;
+    private FlowStepEnum step;
 
     private Map<String, Object> input;
 
@@ -33,7 +34,7 @@ public class AppOptFlowStepBuilder {
         return this;
     }
 
-    public AppOptFlowStepBuilder setStep(String step) {
+    public AppOptFlowStepBuilder setStep(FlowStepEnum step) {
         this.step = step;
         return this;
     }

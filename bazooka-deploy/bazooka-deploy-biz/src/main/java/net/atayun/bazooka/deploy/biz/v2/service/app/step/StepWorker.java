@@ -27,12 +27,12 @@ public class StepWorker {
     }
 
     public void doWork() {
-        Step step = StrategyNumBean.getBeanInstance(Step.class, appOptFlowStep.getStep());
+        Step step = StrategyNumBean.getBeanInstance(Step.class, appOptFlowStep.getStep().name());
         FlowStepService flowStepService = getBean(FlowStepService.class);
         try {
             appOptFlowStep.process();
             flowStepService.update(appOptFlowStep);
-            step.getStepLogCollector().collect(appOptFlowStep, "执行步骤:" + appOptFlowStep.getStep());
+            step.getStepLogCollector().collect(appOptFlowStep, "执行步骤:" + appOptFlowStep.getStep().getDescription());
             step.doWork(appOpt, appOptFlowStep);
             if (step instanceof SinglePhase) {
                 appOptFlowStep.success();

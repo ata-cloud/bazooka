@@ -104,7 +104,7 @@ public class FlowStepServiceImpl implements FlowStepService {
                 .map(appOptFlowStep -> {
                     DeployingFlowDto deployingFlowDto = new DeployingFlowDto();
                     deployingFlowDto.setDeployFlowId(appOptFlowStep.getId());
-                    deployingFlowDto.setDisplayName(appOptFlowStep.getStep());
+                    deployingFlowDto.setDisplayName(appOptFlowStep.getStep().getDescription());
                     deployingFlowDto.setDeployId(appOptFlowStep.getOptId());
                     deployingFlowDto.setStatus(appOptFlowStep.getStatus());
                     if (appOptFlowStep.isSuccess() || appOptFlowStep.isFailure()) {
