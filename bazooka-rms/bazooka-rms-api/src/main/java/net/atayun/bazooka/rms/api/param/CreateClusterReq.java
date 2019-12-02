@@ -25,7 +25,7 @@ public class CreateClusterReq {
     private String type;
 
     @ApiModelProperty("镜像库url")
-    @Size(max = 32,message = "镜像库数据过长")
+    @Size(max = 128,message = "镜像库数据过长")
     @NotNull(message = "镜像库url不能为空")
     private String imageUrl;
 
