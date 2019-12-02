@@ -2,6 +2,7 @@ package net.atayun.bazooka.deploy.biz.v2.service.app.opt;
 
 import net.atayun.bazooka.base.bean.SpringApplicationEventPublisher;
 import net.atayun.bazooka.base.bean.SpringContextBean;
+import net.atayun.bazooka.base.enums.FlowStepEnum;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
 import net.atayun.bazooka.deploy.biz.v2.service.app.FlowStepService;
@@ -33,7 +34,7 @@ public class AppOptWorker {
                 .map(index -> new AppOptFlowStepBuilder()
                         .setOptId(appOpt.getId())
                         .setSeq(index + 1)
-                        .setStep(stepTypes.get(index))
+                        .setStep(FlowStepEnum.valueOf(stepTypes.get(index)))
                         .build())
                 .collect(Collectors.toList());
         FlowStepService flowStepService = SpringContextBean.getBean(FlowStepService.class);

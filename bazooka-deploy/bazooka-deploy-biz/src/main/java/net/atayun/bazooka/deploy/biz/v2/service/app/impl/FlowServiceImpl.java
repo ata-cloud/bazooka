@@ -77,7 +77,7 @@ public class FlowServiceImpl implements FlowService {
     @Override
     public String getStepLog(Long optId, Long stepId) {
         AppOptFlowStep appOptFlowStep = flowStepService.selectById(stepId);
-        Step step = StrategyNumBean.getBeanInstance(Step.class, appOptFlowStep.getStep());
+        Step step = StrategyNumBean.getBeanInstance(Step.class, appOptFlowStep.getStep().name());
         return step.getStepLogCollector().get(appOptFlowStep);
     }
 

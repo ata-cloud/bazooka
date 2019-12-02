@@ -54,7 +54,7 @@ public class JenkinsServiceImpl implements JenkinsService {
         appOptFlowStep.setOutput(new HashMap<>(custom));
         appOptFlowStep.setStatus(stepStatusEnum);
 
-        Step step = StrategyNumBean.getBeanInstance(Step.class, appOptFlowStep.getStep());
+        Step step = StrategyNumBean.getBeanInstance(Step.class, appOptFlowStep.getStep().name());
         try {
             if (step instanceof Callback) {
                 ((Callback) step).callback(appOpt, appOptFlowStep);

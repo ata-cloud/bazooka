@@ -64,7 +64,7 @@ public class CleanDoingEventOnStart implements ApplicationListener<ApplicationRe
                         .filter(AppOptFlowStep::isProcess)
                         .min(Comparator.comparingInt(AppOptFlowStep::getStepSeq))
                         .ifPresent(appOptFlowStep -> {
-                            Step step = StrategyNumBean.getBeanInstance(Step.class, appOptFlowStep.getStep());
+                            Step step = StrategyNumBean.getBeanInstance(Step.class, appOptFlowStep.getStep().name());
                             step.cancel(appOpt, appOptFlowStep);
                         });
             }

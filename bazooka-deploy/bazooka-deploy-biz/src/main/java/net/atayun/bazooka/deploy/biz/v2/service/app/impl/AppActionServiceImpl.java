@@ -218,8 +218,8 @@ public class AppActionServiceImpl implements AppActionService {
     public List<AppOptLogDto> getAppOptLog(Long optId) {
         List<AppOptFlowStep> appOptFlowSteps = flowStepService.selectByOptId(optId);
         return appOptFlowSteps.stream().map(appOptFlowStep -> {
-            Step step = StrategyNumBean.getBeanInstance(Step.class, appOptFlowStep.getStep());
-            return new AppOptLogDto(appOptFlowStep.getStep(), step.getStepLogCollector().get(appOptFlowStep));
+            Step step = StrategyNumBean.getBeanInstance(Step.class, appOptFlowStep.getStep().name());
+            return new AppOptLogDto(appOptFlowStep.getStep().getDescription(), step.getStepLogCollector().get(appOptFlowStep));
         }).collect(Collectors.toList());
     }
 

@@ -3,6 +3,7 @@ package net.atayun.bazooka.deploy.biz.v2.dal.entity.app;
 import com.youyu.common.entity.JdbcMysqlEntity;
 import lombok.Getter;
 import lombok.Setter;
+import net.atayun.bazooka.base.enums.FlowStepEnum;
 import net.atayun.bazooka.deploy.biz.v2.enums.FlowStepStatusEnum;
 
 import javax.persistence.Column;
@@ -21,7 +22,8 @@ public class AppOptFlowStep extends JdbcMysqlEntity<Long> {
 
     private Integer stepSeq;
 
-    private String step;
+    @Column(name = "step")
+    private FlowStepEnum step;
 
     @Column(name = "status")
     private FlowStepStatusEnum status;
