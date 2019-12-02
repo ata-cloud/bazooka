@@ -85,7 +85,7 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
         this.appDeployVersion = template.getAppDeployVersion();
         this.appDeployConfig = template.getAppDeployConfig();
         this.appRunServiceId = template.getAppRunServiceId();
-        this.remark = StrategyNumBean.getBeanInstance(AppOptRemark.class, this.opt.name()).remark(this);
+        this.remark = StrategyNumBean.getBeanInstance(AppOptType.class, this.opt.name()).remark(this);
         this.appDeployUuid = "";
         this.appDeployVersion = "";
         this.appRunServiceId = "";
