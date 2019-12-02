@@ -3,6 +3,7 @@ package net.atayun.bazooka.rms.api.param;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
@@ -22,11 +23,11 @@ public class SingleNodeReq {
     private String sshPort;
 
     @ApiModelProperty("cpu")
-    @Size(max = 3,message = "cpu数据过大")
+    @Max(value = 999 , message = "cpu参数过大")
     private BigDecimal cpu;
 
     @ApiModelProperty("内存")
-    @Size(max = 3,message = "内存数据过大")
+    @Max(value = 999999 , message = "内存参数过大")
     private BigDecimal memory;
 
     @ApiModelProperty("节点登录凭据ID")
