@@ -18,12 +18,15 @@ public class SingleNodeReq {
     private String nodeIp;
 
     @ApiModelProperty("ssh端口号")
+    @Size(max = 5,message = "ssh端口号数据过长")
     private String sshPort;
 
     @ApiModelProperty("cpu")
+    @Size(max = 3,message = "cpu数据过大")
     private BigDecimal cpu;
 
     @ApiModelProperty("内存")
+    @Size(max = 3,message = "内存数据过大")
     private BigDecimal memory;
 
     @ApiModelProperty("节点登录凭据ID")
