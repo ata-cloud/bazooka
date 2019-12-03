@@ -13,6 +13,6 @@ public class AppOptType4Rollback implements AppOptType {
 
     @Override
     public String remark(AppOpt appOpt) {
-        return "回滚至: " + appOpt.getRemark();
+        return "回滚至: " + appOpt.getAppDeployVersion();
     }
 }
