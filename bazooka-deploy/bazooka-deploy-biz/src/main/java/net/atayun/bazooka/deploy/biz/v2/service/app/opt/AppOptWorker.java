@@ -2,15 +2,20 @@ package net.atayun.bazooka.deploy.biz.v2.service.app.opt;
 
 import net.atayun.bazooka.base.bean.SpringApplicationEventPublisher;
 import net.atayun.bazooka.base.bean.SpringContextBean;
+import net.atayun.bazooka.base.constant.FlowStepConstants;
 import net.atayun.bazooka.base.enums.FlowStepEnum;
+import net.atayun.bazooka.deploy.biz.v2.constant.DeployConstants;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
 import net.atayun.bazooka.deploy.biz.v2.service.app.FlowStepService;
 import net.atayun.bazooka.deploy.biz.v2.service.app.flow.FlowDispatcherEvent;
 import net.atayun.bazooka.deploy.biz.v2.service.app.step.StepWorker;
+import net.atayun.bazooka.rms.api.api.EnvApi;
+import net.atayun.bazooka.rms.api.dto.EnvDto;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,6 +34,12 @@ public class AppOptWorker {
         AppOpt appOpt = this.appOpt;
         //可后续拓展为自定义
         List<String> stepTypes = appOpt.getOpt().defaultFlowStepTypes();
+        EnvDto env = SpringContextBean.getBean(EnvApi.class).get(appOpt.getEnvId())
+                .ifNotSuccessThrowException().getData();
+        String clusterType = env.getClusterType();
+        if (Objects.equals(DeployConstants.NODE_CODE, clusterType)) {
+            stepTypes.remove(FlowStepConstants.HEALTH_CHECK);
+        }
 
         List<AppOptFlowStep> flowSteps = Stream.iterate(0, o -> ++o).limit(stepTypes.size())
                 .map(index -> new AppOptFlowStepBuilder()
