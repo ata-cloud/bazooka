@@ -1,6 +1,7 @@
 package net.atayun.bazooka.deploy.biz.v2.service.app.step.deploymode;
 
 import com.youyu.common.exception.BizException;
+import mesosphere.marathon.client.model.v2.App;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.service.app.step.log.StepLogBuilder;
 import net.atayun.bazooka.pms.api.dto.AppDeployConfigDto;
@@ -64,6 +65,49 @@ public interface ICheckResource {
             throw new BizException(ILLEGAL_DISK, msg);
         }
         stepLogBuilder.append("磁盘: [" + deployConfig.getDisk() + "G * " + instance + ", " + envResource.getDisk() + "G]");
+    }
+
+    default void checkPlatformResource(App app, Long envId, StepLogBuilder stepLogBuilder) {
+        if (app.getInstances() <= 0) {
+            return;
+        }
+        stepLogBuilder.append("检查资源");
+        EnvResourceDto envResource = getBean(EnvApi.class).getEnvAvailableResource(envId)
+                .ifNotSuccessThrowException().getData();
+
+        Integer instance = app.getInstances();
+        //cpus
+        double totalShares = app.getCpus() * instance;
+        boolean sharesIsAdequacy = envResource.getCpus()
+                .subtract(new BigDecimal(totalShares))
+                .compareTo(BigDecimal.ZERO) >= 0;
+        if (!sharesIsAdequacy) {
+            String msg = "请确认当前环境下是否有足够的CPU shares";
+            throw new BizException(ILLEGAL_CPU_SHARES, msg);
+        }
+        stepLogBuilder.append("CPU: [" + app.getCpus() + "核 * " + instance + ", " + envResource.getCpus() + "核]");
+
+        //mem
+        double totalMem = app.getMem() * instance;
+        boolean memIsAdequacy = envResource.getMemory()
+                .subtract(new BigDecimal(totalMem))
+                .compareTo(BigDecimal.ZERO) >= 0;
+        if (!memIsAdequacy) {
+            String msg = "请确认当前环境下是否有足够的内存";
+            throw new BizException(ILLEGAL_MEM, msg);
+        }
+        stepLogBuilder.append("内存: [" + app.getMem() + "M * " + instance + ", " + envResource.getMemory() + "M]");
+
+        //disk
+        double totalDisk = app.getDisk() * instance;
+        boolean diskIsAdequacy = envResource.getDisk()
+                .subtract(new BigDecimal(totalDisk))
+                .compareTo(BigDecimal.ZERO) >= 0;
+        if (!diskIsAdequacy) {
+            String msg = "请确认当前环境下是否有足够的磁盘容量";
+            throw new BizException(ILLEGAL_DISK, msg);
+        }
+        stepLogBuilder.append("磁盘: [" + app.getDisk() + "G * " + instance + ", " + envResource.getDisk() + "G]");
     }
 
 }

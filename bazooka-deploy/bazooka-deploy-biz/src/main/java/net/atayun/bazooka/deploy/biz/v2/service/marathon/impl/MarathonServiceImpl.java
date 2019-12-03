@@ -50,7 +50,13 @@ public class MarathonServiceImpl implements MarathonService {
     public void marathonCallback(MarathonCallbackParam marathonCallbackParam) {
         AppOpt appOpt = appOptService.selectByAppDeployUuidAndVersionForPlatform(marathonCallbackParam.getMarathonDeploymentId(), marathonCallbackParam.getMarathonDeploymentVersion());
 
-        if (appOpt == null || appOpt.getOpt() != AppOptEnum.MARATHON_BUILD_DEPLOY) {
+        if (appOpt == null || (appOpt.getOpt() != AppOptEnum.MARATHON_BUILD_DEPLOY &&
+                appOpt.getOpt() != AppOptEnum.START &&
+                appOpt.getOpt() != AppOptEnum.STOP &&
+                appOpt.getOpt() != AppOptEnum.RESTART &&
+                appOpt.getOpt() != AppOptEnum.ROLLBACK &&
+                appOpt.getOpt() != AppOptEnum.SCALE)
+        ) {
             return;
         }
 

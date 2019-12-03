@@ -8,7 +8,6 @@ import net.atayun.bazooka.base.bean.StrategyNumBean;
 import net.atayun.bazooka.base.enums.AppOptEnum;
 import net.atayun.bazooka.deploy.biz.v2.enums.AppOptStatusEnum;
 import net.atayun.bazooka.deploy.biz.v2.param.AppActionParam;
-import net.atayun.bazooka.deploy.biz.v2.service.app.opt.remark.AppOptRemark;
 import net.atayun.bazooka.deploy.biz.v2.service.app.opt.remark.AppOptType;
 import net.atayun.bazooka.pms.api.dto.AppInfoDto;
 
@@ -81,15 +80,11 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
         this.detail = new HashMap<>(jsonObject);
         this.detail.putAll(template.getDetail());
         process();
+        this.remark = StrategyNumBean.getBeanInstance(AppOptType.class, this.opt.name()).remark(template);
         this.appDeployUuid = template.getAppDeployUuid();
         this.appDeployVersion = template.getAppDeployVersion();
         this.appDeployConfig = template.getAppDeployConfig();
         this.appRunServiceId = template.getAppRunServiceId();
-        this.remark = StrategyNumBean.getBeanInstance(AppOptRemark.class, this.opt.name()).remark(this);
-        this.appDeployUuid = "";
-        this.appDeployVersion = "";
-        this.appRunServiceId = "";
-        this.appDeployConfig = "";
     }
 
     public void process() {
