@@ -117,43 +117,71 @@ class Cluster extends React.Component {
                 <Icon type="reload" onClick={(e) => this.onRaload(e)} />
               } onClick={() => { this.onRouteTo('/cluster/detail', { clusterId: item.clusterId }) }}>
                 <div>
-                  <div className={styles.flex}>
-                    <div className={styles.clusterItem}>
-                      <Text strong>状态</Text>
-                      {
-                        CLUSTER_STATUS[item.status] &&
-                        <Fragment>
+                  {
+                    item.type !== '2' ?
+                      <div className={styles.flex}>
+                        <div className={styles.clusterItem}>
+                          <Text strong>状态</Text>
+                          {
+                            CLUSTER_STATUS[item.status] &&
+                            <Fragment>
+                              <div className={styles.midHeight}>
+                                <Icon type={CLUSTER_STATUS[item.status].icon} style={{ fontSize: 30, color: CLUSTER_STATUS[item.status].colorValue }} />
+                              </div>
+                              <Text type="secondary">{CLUSTER_STATUS[item.status].text}</Text>
+                            </Fragment>
+                          }
+                        </div>
+                        <div className={styles.clusterItem}>
+                          <Text strong>环境</Text>
                           <div className={styles.midHeight}>
-                            <Icon type={CLUSTER_STATUS[item.status].icon} style={{ fontSize: 30, color: CLUSTER_STATUS[item.status].colorValue }} />
+                            <strong>{item.envQuantity}</strong>
                           </div>
-                          <Text type="secondary">{CLUSTER_STATUS[item.status].text}</Text>
-                        </Fragment>
-                      }
-                    </div>
-                    <div className={styles.clusterItem}>
-                      <Text strong>环境</Text>
-                      <div className={styles.midHeight}>
-                        <strong>{item.envQuantity}</strong>
+                        </div>
+                        <div className={styles.clusterItem}>
+                          <Text strong>主机</Text>
+                          <div className={styles.midHeight}>
+                            <span className={styles.textSuccess}>{item.normalNodeQuantity}</span>
+                            <span>/</span>
+                            <strong>{item.nodeQuantity}</strong>
+                          </div>
+                          <Text type="secondary">正常/所有</Text>
+                        </div>
+                        <div className={styles.clusterItem}>
+                          <Text strong>容器</Text>
+                          <div className={styles.midHeight}>
+                            <span className={styles.textSuccess}>{item.runningServiceQuantity || 0}</span>
+                            <span>/</span>
+                            <strong>{item.serviceQuantity || 0}</strong></div>
+                          <Text type="secondary">运行中/所有容器</Text>
+                        </div>
+                      </div> :
+                      <div className={styles.flex}>
+                        <div className={styles.clusterItem}>
+                          <Text strong>环境</Text>
+                          <div className={styles.midHeight}>
+                            <strong>{item.envQuantity}</strong>
+                          </div>
+                        </div>
+                        <div className={styles.clusterItem}>
+                          <Text strong>主机</Text>
+                          <div className={styles.midHeight}>
+                            {/* <span className={styles.textSuccess}>{item.normalNodeQuantity}</span>
+                            <span>/</span> */}
+                            <strong>{item.nodeQuantity}</strong>
+                          </div>
+                          {/* <Text type="secondary">正常/所有</Text> */}
+                        </div>
+                        <div className={styles.clusterItem}>
+                          <Text strong>容器</Text>
+                          <div className={styles.midHeight}>
+                            {/* <span className={styles.textSuccess}>{item.runningServiceQuantity || 0}</span>
+                            <span>/</span> */}
+                            <strong>{item.serviceQuantity || 0}</strong></div>
+                          {/* <Text type="secondary">运行中/所有容器</Text> */}
+                        </div>
                       </div>
-                    </div>
-                    <div className={styles.clusterItem}>
-                      <Text strong>主机</Text>
-                      <div className={styles.midHeight}>
-                        <span className={styles.textSuccess}>{item.normalNodeQuantity}</span>
-                        <span>/</span>
-                        <strong>{item.nodeQuantity}</strong>
-                      </div>
-                      <Text type="secondary">正常/所有</Text>
-                    </div>
-                    <div className={styles.clusterItem}>
-                      <Text strong>容器</Text>
-                      <div className={styles.midHeight}>
-                        <span className={styles.textSuccess}>{item.runningServiceQuantity || 0}</span>
-                        <span>/</span>
-                        <strong>{item.serviceQuantity || 0}</strong></div>
-                      <Text type="secondary">运行中/所有容器</Text>
-                    </div>
-                  </div>
+                  }
 
                   <div className={styles.marginT}>
                     <p>环境资源（已分隔给各环境的资源 / 集群总资源）</p>
