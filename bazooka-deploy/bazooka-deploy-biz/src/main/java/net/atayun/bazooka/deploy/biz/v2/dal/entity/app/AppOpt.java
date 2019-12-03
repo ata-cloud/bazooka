@@ -81,15 +81,11 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
         this.detail = new HashMap<>(jsonObject);
         this.detail.putAll(template.getDetail());
         process();
+        this.remark = StrategyNumBean.getBeanInstance(AppOptType.class, this.opt.name()).remark(this);
         this.appDeployUuid = template.getAppDeployUuid();
         this.appDeployVersion = template.getAppDeployVersion();
         this.appDeployConfig = template.getAppDeployConfig();
         this.appRunServiceId = template.getAppRunServiceId();
-        this.remark = StrategyNumBean.getBeanInstance(AppOptType.class, this.opt.name()).remark(this);
-        this.appDeployUuid = "";
-        this.appDeployVersion = "";
-        this.appRunServiceId = "";
-        this.appDeployConfig = "";
     }
 
     public void process() {
