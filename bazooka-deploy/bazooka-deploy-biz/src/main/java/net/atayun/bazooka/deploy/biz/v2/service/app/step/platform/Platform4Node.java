@@ -26,7 +26,6 @@ import net.atayun.bazooka.rms.api.api.RmsContainerApi;
 import net.atayun.bazooka.rms.api.dto.ClusterConfigDto;
 import net.atayun.bazooka.rms.api.dto.EnvDto;
 import net.atayun.bazooka.rms.api.dto.rsp.ClusterNodeRspDto;
-import net.atayun.bazooka.rms.api.enums.ClusterAppServiceStatusEnum;
 import net.atayun.bazooka.rms.api.param.NodeContainerParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -284,7 +283,7 @@ public class Platform4Node implements Platform, ICheckNodeResource {
         nodeContainerParam.setAppId(appId);
         nodeContainerParam.setIp(ip);
         nodeContainerParam.setContainerName(parseName(command));
-        nodeContainerParam.setContainerStatus(ClusterAppServiceStatusEnum.RUNNING);
+        nodeContainerParam.setContainerStatus("TASK_RUNNING");
         nodeContainerParam.setContainerImage(parseImage(command));
         nodeContainerParam.setCpu(parseCpu(command));
         nodeContainerParam.setMemory(parseMem(command));

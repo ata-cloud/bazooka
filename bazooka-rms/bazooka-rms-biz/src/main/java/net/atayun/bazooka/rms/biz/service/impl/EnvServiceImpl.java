@@ -52,6 +52,7 @@ import static net.atayun.bazooka.base.utils.CommonUtil.defaultValue;
 import static net.atayun.bazooka.base.utils.OrikaCopyUtil.copyProperty;
 import static net.atayun.bazooka.rms.api.enums.EnvState.NORMAL;
 import static net.atayun.bazooka.rms.api.enums.RmsResultCode.*;
+import static net.atayun.bazooka.rms.biz.constansts.CommonConstant.TASK_RUNNING;
 import static org.apache.commons.collections.CollectionUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 
@@ -176,12 +177,12 @@ public class EnvServiceImpl extends AbstractService<Long, EnvDto, RmsEnvEntity, 
             if (CollectionUtils.isEmpty(rmsContainers)) {
                 clusterAppServiceInfoDto = new ClusterAppServiceInfoDto(ClusterAppServiceStatusEnum.UNPUBLISHED.getCode());
             } else {
-                List<RmsContainer> running = rmsContainers.stream().filter(rmsContainer -> rmsContainer.getContainerStatus() == ClusterAppServiceStatusEnum.RUNNING).collect(toList());
+                List<RmsContainer> running = rmsContainers.stream().filter(rmsContainer -> Objects.equals(rmsContainer.getContainerStatus(), TASK_RUNNING)).collect(toList());
                 if (CollectionUtils.isEmpty(running)) {
                     clusterAppServiceInfoDto = new ClusterAppServiceInfoDto(ClusterAppServiceStatusEnum.CLOSED.getCode());
                 } else {
                     RmsContainer rmsContainer = rmsContainers.get(0);
-                    clusterAppServiceInfoDto.setStatus(rmsContainer.getContainerStatus().getCode());
+                    clusterAppServiceInfoDto.setStatus(ClusterAppServiceStatusEnum.RUNNING.getCode());
                     clusterAppServiceInfoDto.setCpu(rmsContainer.getCpu());
                     clusterAppServiceInfoDto.setMemory(rmsContainer.getMemory());
                     clusterAppServiceInfoDto.setInstances(running.size());
@@ -198,7 +199,7 @@ public class EnvServiceImpl extends AbstractService<Long, EnvDto, RmsEnvEntity, 
         assertTrue(isNull(record), ENV_NOT_EXISTS);
         RmsClusterDto cluster = clusterService.selectByPrimaryKey(record.getClusterId());
         if (Objects.equals(cluster.getType(), CommonConstant.NODE_CLUSTER_TYPE)) {
-            List<RmsContainer> rmsContainers = rmsContainerService.selectByEnvIdAndAppIdAndStatus(envAppReq.getEnvId(), envAppReq.getAppIdLongValue(), ClusterAppServiceStatusEnum.RUNNING);
+            List<RmsContainer> rmsContainers = rmsContainerService.selectByEnvIdAndAppIdAndStatus(envAppReq.getEnvId(), envAppReq.getAppIdLongValue(), TASK_RUNNING);
             if (CollectionUtils.isEmpty(rmsContainers)) {
                 return new ArrayList<>();
             }
@@ -242,7 +243,7 @@ public class EnvServiceImpl extends AbstractService<Long, EnvDto, RmsEnvEntity, 
         assertTrue(isNull(record), ENV_NOT_EXISTS);
         RmsClusterDto cluster = clusterService.selectByPrimaryKey(record.getClusterId());
         if (Objects.equals(cluster.getType(), CommonConstant.NODE_CLUSTER_TYPE)) {
-            List<RmsContainer> rmsContainers = rmsContainerService.selectByEnvIdAndAppIdAndStatus(envAppReq.getEnvId(), envAppReq.getAppIdLongValue(), ClusterAppServiceStatusEnum.RUNNING);
+            List<RmsContainer> rmsContainers = rmsContainerService.selectByEnvIdAndAppIdAndStatus(envAppReq.getEnvId(), envAppReq.getAppIdLongValue(), TASK_RUNNING);
             if (CollectionUtils.isEmpty(rmsContainers)) {
                 return "";
             }
@@ -264,7 +265,7 @@ public class EnvServiceImpl extends AbstractService<Long, EnvDto, RmsEnvEntity, 
             return rmsContainers.stream().map(rmsContainer -> {
                 ClusterDockerDto clusterDockerDto = new ClusterDockerDto();
                 clusterDockerDto.setUpdateTime(Date.from(rmsContainer.getUpdateTime().toInstant(ZoneOffset.ofHours(8))));
-                clusterDockerDto.setHealthStatus(rmsContainer.getContainerStatus().getCode());
+                clusterDockerDto.setStatus(rmsContainer.getContainerStatus());
                 clusterDockerDto.setHost(rmsContainer.getIp());
                 List<String> ports = new ArrayList<>();
                 for (String port : rmsContainer.getPortMapping()) {

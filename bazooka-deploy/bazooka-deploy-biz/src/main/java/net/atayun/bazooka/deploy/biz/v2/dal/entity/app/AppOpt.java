@@ -145,7 +145,11 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
     //下列都是detail中的值
 
     public Long getDeployConfigId() {
-        return Long.parseLong(detail.get("deployConfigId").toString());
+        Object deployConfigId = detail.get("deployConfigId");
+        if (deployConfigId == null) {
+            return null;
+        }
+        return Long.parseLong(deployConfigId.toString());
     }
 
     public String getBranch() {
@@ -161,11 +165,19 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
     }
 
     public Long getImageId() {
-        return Long.parseLong(detail.get("imageId").toString());
+        Object imageId = detail.get("imageId");
+        if (imageId == null) {
+            return null;
+        }
+        return Long.parseLong(imageId.toString());
     }
 
     public Integer getInstance() {
-        return Integer.parseInt(detail.get("instance").toString());
+        Object instance = detail.get("instance");
+        if (instance == null) {
+            return null;
+        }
+        return Integer.parseInt(instance.toString());
     }
 
     public Double getCpu() {
@@ -189,11 +201,19 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
     }
 
     public Long getTemplateEventId() {
-        return Long.parseLong(detail.get("templateEventId").toString());
+        Object templateEventId = detail.get("templateEventId");
+        if (templateEventId == null) {
+            return null;
+        }
+        return Long.parseLong(templateEventId.toString());
     }
 
     public Long getCredentialId() {
-        return Long.parseLong(detail.get("credentialId").toString());
+        Object credentialId = detail.get("credentialId");
+        if (credentialId == null) {
+            return null;
+        }
+        return Long.parseLong(credentialId.toString());
     }
 
     public String getUsername() {
@@ -205,7 +225,11 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
     }
 
     public Long getTargetEnvId() {
-        return Long.parseLong(detail.get("targetEnvId").toString());
+        Object targetEnvId = detail.get("targetEnvId");
+        if (targetEnvId == null) {
+            return null;
+        }
+        return Long.parseLong(targetEnvId.toString());
     }
 
     public Boolean needAuth() {

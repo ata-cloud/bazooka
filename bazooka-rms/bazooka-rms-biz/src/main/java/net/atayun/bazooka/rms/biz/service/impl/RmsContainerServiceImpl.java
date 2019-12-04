@@ -6,7 +6,6 @@ import net.atayun.bazooka.base.service.BatchService;
 import net.atayun.bazooka.rms.api.dto.EnvResourceDto;
 import net.atayun.bazooka.rms.api.dto.NodeAvailableResourceDto;
 import net.atayun.bazooka.rms.api.dto.ResourceSumDto;
-import net.atayun.bazooka.rms.api.enums.ClusterAppServiceStatusEnum;
 import net.atayun.bazooka.rms.api.param.NodeContainerParam;
 import net.atayun.bazooka.rms.biz.dal.dao.RmsClusterNodeMapper;
 import net.atayun.bazooka.rms.biz.dal.dao.RmsContainerMapper;
@@ -20,6 +19,8 @@ import tk.mybatis.mapper.entity.Example;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static net.atayun.bazooka.rms.biz.constansts.CommonConstant.TASK_KILLED;
 
 /**
  * @author Ping
@@ -84,7 +85,7 @@ public class RmsContainerServiceImpl implements RmsContainerService {
     }
 
     @Override
-    public List<RmsContainer> selectByEnvIdAndAppIdAndStatus(Long envId, Long appId, ClusterAppServiceStatusEnum status) {
+    public List<RmsContainer> selectByEnvIdAndAppIdAndStatus(Long envId, Long appId, String status) {
         Example example = new Example(RmsContainer.class);
         example.createCriteria().andEqualTo("appId", appId)
                 .andEqualTo("envId", envId)
@@ -132,13 +133,13 @@ public class RmsContainerServiceImpl implements RmsContainerService {
         return rmsContainerMapper.selectByExample(example);
     }
 
-    private void updateStatusByAppId(Long envId, Long appId, ClusterAppServiceStatusEnum status) {
-        rmsContainerMapper.updateStatusByEnvIdAndAppId(envId, appId, status.getCode());
+    private void updateStatusByAppId(Long envId, Long appId, String status) {
+        rmsContainerMapper.updateStatusByEnvIdAndAppId(envId, appId, status);
     }
 
     @Override
     public void insert(Long envId, Long appId, AppOptEnum opt, List<NodeContainerParam> nodeContainerParams) {
-        updateStatusByAppId(envId, appId, ClusterAppServiceStatusEnum.CLOSED);
+        updateStatusByAppId(envId, appId, TASK_KILLED);
         if (opt == AppOptEnum.STOP) {
             return;
         }
