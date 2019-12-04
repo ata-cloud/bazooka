@@ -65,11 +65,12 @@ public interface RmsContainerMapper extends YyMapper<RmsContainer> {
     /**
      * updateStatusByAppId
      *
+     * @param envId  envId
      * @param appId  appId
      * @param status status
      */
     @Update("update rms_container " +
             " set container_status = #{status} " +
-            " where app_id = #{appId};")
-    void updateStatusByAppId(@Param("appId") Long appId, @Param("status") String status);
+            " where env_id = #{envId} and app_id = #{appId};")
+    void updateStatusByEnvIdAndAppId(@Param("envId") Long envId, @Param("appId") Long appId, @Param("status") String status);
 }

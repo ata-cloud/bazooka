@@ -26,9 +26,11 @@ public interface RmsContainerService {
 
     List<RmsContainer> selectByAppId(Long appId);
 
-    List<RmsContainer> selectByAppIdAndStatus(Long appId, ClusterAppServiceStatusEnum status);
+    List<RmsContainer> selectByEnvIdAndAppIdAndStatus(Long envId, Long appId, ClusterAppServiceStatusEnum status);
 
     NodeAvailableResourceDto getNodeAvailableResource(List<Long> nodeIds);
 
-    void insert(Long appId, AppOptEnum opt, List<NodeContainerParam> nodeContainerParam);
+    void insert(Long envId, Long appId, AppOptEnum opt, List<NodeContainerParam> nodeContainerParam);
+
+    List<RmsContainer> selectByEnvIdAndAppId(Long envId, Long appIdLongValue);
 }

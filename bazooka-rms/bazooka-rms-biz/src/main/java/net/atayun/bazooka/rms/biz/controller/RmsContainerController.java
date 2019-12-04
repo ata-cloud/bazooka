@@ -30,8 +30,8 @@ public class RmsContainerController implements RmsContainerApi {
     }
 
     @Override
-    public Result insert(@PathVariable("appId") Long appId, @PathVariable("opt") AppOptEnum opt, @Validated @RequestBody List<NodeContainerParam> nodeContainerParams) {
-        rmsContainerService.insert(appId, opt, nodeContainerParams);
+    public Result insert(@PathVariable("envId") Long envId, @PathVariable("appId") Long appId, @PathVariable("opt") AppOptEnum opt, @Validated @RequestBody List<NodeContainerParam> nodeContainerParams) {
+        rmsContainerService.insert(envId, appId, opt, nodeContainerParams);
         return Result.ok();
     }
 }

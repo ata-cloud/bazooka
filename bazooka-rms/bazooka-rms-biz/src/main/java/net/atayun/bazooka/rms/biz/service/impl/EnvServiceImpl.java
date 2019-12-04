@@ -171,7 +171,7 @@ public class EnvServiceImpl extends AbstractService<Long, EnvDto, RmsEnvEntity, 
         assertTrue(isNull(record), ENV_NOT_EXISTS);
         RmsClusterDto cluster = clusterService.selectByPrimaryKey(record.getClusterId());
         if (Objects.equals(cluster.getType(), CommonConstant.NODE_CLUSTER_TYPE)) {
-            List<RmsContainer> rmsContainers = rmsContainerService.selectByAppId(envAppReq.getAppIdLongValue());
+            List<RmsContainer> rmsContainers = rmsContainerService.selectByEnvIdAndAppId(envAppReq.getEnvId(), envAppReq.getAppIdLongValue());
             ClusterAppServiceInfoDto clusterAppServiceInfoDto = new ClusterAppServiceInfoDto();
             if (CollectionUtils.isEmpty(rmsContainers)) {
                 clusterAppServiceInfoDto = new ClusterAppServiceInfoDto(ClusterAppServiceStatusEnum.UNPUBLISHED.getCode());
@@ -198,7 +198,7 @@ public class EnvServiceImpl extends AbstractService<Long, EnvDto, RmsEnvEntity, 
         assertTrue(isNull(record), ENV_NOT_EXISTS);
         RmsClusterDto cluster = clusterService.selectByPrimaryKey(record.getClusterId());
         if (Objects.equals(cluster.getType(), CommonConstant.NODE_CLUSTER_TYPE)) {
-            List<RmsContainer> rmsContainers = rmsContainerService.selectByAppIdAndStatus(envAppReq.getAppIdLongValue(), ClusterAppServiceStatusEnum.RUNNING);
+            List<RmsContainer> rmsContainers = rmsContainerService.selectByEnvIdAndAppIdAndStatus(envAppReq.getEnvId(), envAppReq.getAppIdLongValue(), ClusterAppServiceStatusEnum.RUNNING);
             if (CollectionUtils.isEmpty(rmsContainers)) {
                 return new ArrayList<>();
             }
@@ -242,7 +242,7 @@ public class EnvServiceImpl extends AbstractService<Long, EnvDto, RmsEnvEntity, 
         assertTrue(isNull(record), ENV_NOT_EXISTS);
         RmsClusterDto cluster = clusterService.selectByPrimaryKey(record.getClusterId());
         if (Objects.equals(cluster.getType(), CommonConstant.NODE_CLUSTER_TYPE)) {
-            List<RmsContainer> rmsContainers = rmsContainerService.selectByAppIdAndStatus(envAppReq.getAppIdLongValue(), ClusterAppServiceStatusEnum.RUNNING);
+            List<RmsContainer> rmsContainers = rmsContainerService.selectByEnvIdAndAppIdAndStatus(envAppReq.getEnvId(), envAppReq.getAppIdLongValue(), ClusterAppServiceStatusEnum.RUNNING);
             if (CollectionUtils.isEmpty(rmsContainers)) {
                 return "";
             }
@@ -257,19 +257,19 @@ public class EnvServiceImpl extends AbstractService<Long, EnvDto, RmsEnvEntity, 
         assertTrue(isNull(record), ENV_NOT_EXISTS);
         RmsClusterDto cluster = clusterService.selectByPrimaryKey(record.getClusterId());
         if (Objects.equals(cluster.getType(), CommonConstant.NODE_CLUSTER_TYPE)) {
-            List<RmsContainer> rmsContainers = rmsContainerService.selectByAppId(envAppReq.getAppIdLongValue());
+            List<RmsContainer> rmsContainers = rmsContainerService.selectByEnvIdAndAppId(envAppReq.getEnvId(), envAppReq.getAppIdLongValue());
             if (CollectionUtils.isEmpty(rmsContainers)) {
                 return new ArrayList<>();
             }
             return rmsContainers.stream().map(rmsContainer -> {
                 ClusterDockerDto clusterDockerDto = new ClusterDockerDto();
                 clusterDockerDto.setUpdateTime(Date.from(rmsContainer.getUpdateTime().toInstant(ZoneOffset.ofHours(8))));
-                clusterDockerDto.setStatus(rmsContainer.getContainerStatus().getDesc());
+                clusterDockerDto.setHealthStatus(rmsContainer.getContainerStatus().getCode());
                 clusterDockerDto.setHost(rmsContainer.getIp());
                 List<String> ports = new ArrayList<>();
                 for (String port : rmsContainer.getPortMapping()) {
                     String[] mapping = port.split(":");
-                    ports.add(rmsContainer.getIp() + ":" + mapping[0]);
+                    ports.add(mapping[0]);
                 }
                 clusterDockerDto.setPorts(ports);
                 clusterDockerDto.setCpu(rmsContainer.getCpu());

@@ -362,7 +362,7 @@ public class Platform4Node implements Platform, ICheckNodeResource {
     }
 
     private void updateContainer(AppOpt appOpt, List<NodeContainerParam> params) {
-        getBean(RmsContainerApi.class).insert(appOpt.getAppId(), appOpt.getOpt(), params);
+        getBean(RmsContainerApi.class).insert(appOpt.getEnvId(), appOpt.getAppId(), appOpt.getOpt(), params);
     }
 
     private List<String> parsePortMapping(String command) {

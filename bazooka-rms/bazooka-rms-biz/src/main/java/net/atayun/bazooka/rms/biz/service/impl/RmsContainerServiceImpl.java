@@ -84,9 +84,10 @@ public class RmsContainerServiceImpl implements RmsContainerService {
     }
 
     @Override
-    public List<RmsContainer> selectByAppIdAndStatus(Long appId, ClusterAppServiceStatusEnum status) {
+    public List<RmsContainer> selectByEnvIdAndAppIdAndStatus(Long envId, Long appId, ClusterAppServiceStatusEnum status) {
         Example example = new Example(RmsContainer.class);
         example.createCriteria().andEqualTo("appId", appId)
+                .andEqualTo("envId", envId)
                 .andEqualTo("containerStatus", status);
         List<RmsContainer> rmsContainers = rmsContainerMapper.selectByExample(example);
         return CollectionUtils.isEmpty(rmsContainers) ? new ArrayList<>() : rmsContainers;
@@ -131,13 +132,13 @@ public class RmsContainerServiceImpl implements RmsContainerService {
         return rmsContainerMapper.selectByExample(example);
     }
 
-    private void updateStatusByAppId(Long appId, ClusterAppServiceStatusEnum status) {
-        rmsContainerMapper.updateStatusByAppId(appId, status.getCode());
+    private void updateStatusByAppId(Long envId, Long appId, ClusterAppServiceStatusEnum status) {
+        rmsContainerMapper.updateStatusByEnvIdAndAppId(envId, appId, status.getCode());
     }
 
     @Override
-    public void insert(Long appId, AppOptEnum opt, List<NodeContainerParam> nodeContainerParams) {
-        updateStatusByAppId(appId, ClusterAppServiceStatusEnum.CLOSED);
+    public void insert(Long envId, Long appId, AppOptEnum opt, List<NodeContainerParam> nodeContainerParams) {
+        updateStatusByAppId(envId, appId, ClusterAppServiceStatusEnum.CLOSED);
         if (opt == AppOptEnum.STOP) {
             return;
         }
@@ -151,5 +152,14 @@ public class RmsContainerServiceImpl implements RmsContainerService {
         }).collect(Collectors.toList());
 
         batchService.batchDispose(collect, RmsContainerMapper.class, "insertSelective");
+    }
+
+    @Override
+    public List<RmsContainer> selectByEnvIdAndAppId(Long envId, Long appId) {
+        Example example = new Example(RmsContainer.class);
+        example.createCriteria().andEqualTo("appId", appId)
+                .andEqualTo("envId", envId);
+        List<RmsContainer> rmsContainers = rmsContainerMapper.selectByExample(example);
+        return CollectionUtils.isEmpty(rmsContainers) ? new ArrayList<>() : rmsContainers;
     }
 }
