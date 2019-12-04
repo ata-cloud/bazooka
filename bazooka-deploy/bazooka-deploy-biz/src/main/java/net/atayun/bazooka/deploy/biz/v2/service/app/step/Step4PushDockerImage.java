@@ -80,7 +80,7 @@ public class Step4PushDockerImage extends Step4Jenkins {
             param.put(JenkinsPushDockerImageJobConstants.PASSWORD, credentials.getCredentialValue());
         }
         param.put(JenkinsPushDockerImageJobConstants.DOCKER_IMAGE_NAME, appInfo.getDockerImageName());
-        param.put(JenkinsPushDockerImageJobConstants.DOCKER_IMAGE_TAG, appOpt.getDockerImageTag());
+        param.put(JenkinsPushDockerImageJobConstants.DOCKER_IMAGE_TAG, appOpt.getFinalDockerImageTag());
         param.put(JenkinsPushDockerImageJobConstants.IMAGE_ID, appOpt.getImageId().toString());
         param.put(JenkinsPushDockerImageJobConstants.TARGET_ENV_ID, Optional.ofNullable(appOpt.getTargetEnvId()).map(Object::toString).orElse(""));
         return param;

@@ -13,6 +13,6 @@ public class AppOptType4DeleteImage implements AppOptType {
 
     @Override
     public String remark(AppOpt appOpt) {
-        return "镜像Tag: " + appOpt.getDockerImageTag();
+        return "镜像Tag: " + appOpt.getFinalDockerImageTag();
     }
 }

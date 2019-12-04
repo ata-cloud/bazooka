@@ -103,7 +103,7 @@ public class Platform4Node implements Platform, ICheckNodeResource {
         appOpt.setAppRunServiceId(getServiceId());
         appOpt.setAppDeployVersion(getVersion());
         appOpt.setAppDeployConfig(command);
-        appOpt.setDockerImageTag(lastAppOpt.getDockerImageTag());
+        appOpt.setDockerImageTag(lastAppOpt.getFinalDockerImageTag());
         updateContainer(appOpt, params);
     }
 
@@ -134,7 +134,7 @@ public class Platform4Node implements Platform, ICheckNodeResource {
             appOpt.setAppDeployUuid(lastAppOpt.getAppDeployUuid());
             appOpt.setAppDeployVersion(getVersion());
             appOpt.setAppRunServiceId(containerName);
-            appOpt.setDockerImageTag(lastAppOpt.getDockerImageTag());
+            appOpt.setDockerImageTag(lastAppOpt.getFinalDockerImageTag());
             updateContainer(appOpt, new ArrayList<>());
         }
     }
@@ -152,7 +152,7 @@ public class Platform4Node implements Platform, ICheckNodeResource {
         appOpt.setAppDeployConfig(command);
         appOpt.setAppDeployUuid(lastAppOpt.getAppDeployUuid());
         appOpt.setAppDeployVersion(getVersion());
-        appOpt.setDockerImageTag(lastAppOpt.getDockerImageTag());
+        appOpt.setDockerImageTag(lastAppOpt.getFinalDockerImageTag());
         appOpt.setAppRunServiceId(containerName);
         updateContainer(appOpt, params);
     }

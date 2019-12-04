@@ -73,6 +73,7 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
     @Setter
     private String appDeployConfig;
 
+    @Getter
     @Setter
     private String dockerImageTag;
 
@@ -111,7 +112,7 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
         this.appDeployVersion = template.getAppDeployVersion();
         this.appDeployConfig = template.getAppDeployConfig();
         this.appRunServiceId = template.getAppRunServiceId();
-        this.dockerImageTag = template.getDockerImageTag();
+        this.dockerImageTag = template.getFinalDockerImageTag();
     }
 
     public void process() {
@@ -156,7 +157,7 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
         return (String) detail.get("branch");
     }
 
-    public String getDockerImageTag() {
+    public String getFinalDockerImageTag() {
         String dockerImageTag = (String) detail.get("dockerImageTag");
         if (StringUtils.isEmpty(dockerImageTag)) {
             dockerImageTag = this.dockerImageTag;

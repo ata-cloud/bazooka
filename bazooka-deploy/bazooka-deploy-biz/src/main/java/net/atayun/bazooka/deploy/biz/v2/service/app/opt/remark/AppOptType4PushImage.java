@@ -17,7 +17,7 @@ public class AppOptType4PushImage implements AppOptType {
 
     @Override
     public String remark(AppOpt appOpt) {
-        return "目标镜像库: " + getTargetDockerRegistry(appOpt) + ", Tag: " + appOpt.getDockerImageTag();
+        return "目标镜像库: " + getTargetDockerRegistry(appOpt) + ", Tag: " + appOpt.getFinalDockerImageTag();
     }
 
     public static String getTargetDockerRegistry(AppOpt appOpt) {
