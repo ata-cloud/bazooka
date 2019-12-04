@@ -45,14 +45,15 @@ class Bazooka extends React.Component {
           keys: undefined, credentialId: values.credentialId == '-1' ? undefined : values.credentialId,
         };
         let res = await cluster.createSingleNodeCluster(params)
+        this.setState({
+          saveLoading: false
+        })
         if (res && res.code == '1') {
           message.success('添加成功')
           onCancel();
           onSave();
         }
-        this.setState({
-          saveLoading: false
-        })
+        
       }
     });
   }

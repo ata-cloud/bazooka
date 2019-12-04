@@ -76,12 +76,12 @@ class GitItem extends React.Component {
     )
   }
   renderForm() {
-    const { onCancel, form, credentialsList, projectId } = this.props;
+    const { onCancel, form, credentialsList, projectId, loading } = this.props;
     const { getFieldDecorator } = form;
     return (
       <Form onSubmit={this.onSubmit}>
         <Row type="flex" align="top" gutter={120}>
-          <Commom onCancel={onCancel} onSave={this.onSubmit} formItem={form} projectId={projectId}>
+          <Commom onCancel={onCancel} onSave={this.onSubmit} formItem={form} projectId={projectId} loading={loading}>
             <Col md={12} sm={24}>
               <FormItem label="代码仓库地址" extra={
                 <Fragment>
