@@ -1,14 +1,12 @@
 package net.atayun.bazooka.deploy.biz.v2.dal.dao.app;
 
 import com.youyu.common.mapper.YyMapper;
-import net.atayun.bazooka.base.enums.AppOptEnum;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
+import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptCounts;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptHis;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptWithPlatform;
-import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptCounts;
-import net.atayun.bazooka.deploy.biz.v2.enums.AppOptStatusEnum;
-import net.atayun.bazooka.deploy.biz.v2.param.AppOptHisPlatformParam;
 import net.atayun.bazooka.deploy.biz.v2.param.AppOptHisParam;
+import net.atayun.bazooka.deploy.biz.v2.param.AppOptHisPlatformParam;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -41,7 +39,8 @@ public interface AppOptMapper extends YyMapper<AppOpt> {
             "d.detail, " +
             "d.status, " +
             "d.app_deploy_config, " +
-            "d.app_deploy_version " +
+            "d.app_deploy_version, " +
+            "d.docker_image_tag " +
             "from deploy_app_opt d " +
             "where d.app_id = #{pageData.appId} and d.env_id = #{pageData.envId} " +
             "and d.status = 'SUCCESS' " +

@@ -31,4 +31,6 @@ public final class CommonConstant {
      * yes
      */
     public static String IF_YES = "1";
+
+    public static final String NODE_CLUSTER_TYPE = "2";
 }

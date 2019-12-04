@@ -156,6 +156,6 @@ public enum AppOptEnum {
     }
 
     public static List<AppOptEnum> lastSuccessList() {
-        return Arrays.asList(IMAGE_DEPLOY, MARATHON_BUILD_DEPLOY, NODE_BUILD_DEPLOY, ROLLBACK);
+        return Arrays.asList(IMAGE_DEPLOY, MARATHON_BUILD_DEPLOY, NODE_BUILD_DEPLOY, ROLLBACK, SCALE);
     }
 }

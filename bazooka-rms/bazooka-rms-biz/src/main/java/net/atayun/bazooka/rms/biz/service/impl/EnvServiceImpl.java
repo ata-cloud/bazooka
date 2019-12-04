@@ -15,32 +15,32 @@
  */
 package net.atayun.bazooka.rms.biz.service.impl;
 
+import com.youyu.common.service.AbstractService;
 import net.atayun.bazooka.base.mlb.MlbServiceBean;
 import net.atayun.bazooka.base.mlb.MlbServiceDto;
+import net.atayun.bazooka.rms.api.dto.*;
+import net.atayun.bazooka.rms.api.enums.ClusterAppServiceStatusEnum;
+import net.atayun.bazooka.rms.api.param.*;
+import net.atayun.bazooka.rms.biz.constansts.CommonConstant;
 import net.atayun.bazooka.rms.biz.dal.dao.RmsEnvLogMapper;
 import net.atayun.bazooka.rms.biz.dal.dao.RmsEnvMapper;
+import net.atayun.bazooka.rms.biz.dal.entity.RmsContainer;
 import net.atayun.bazooka.rms.biz.dal.entity.RmsEnvEntity;
 import net.atayun.bazooka.rms.biz.dal.entity.RmsEnvLogEntity;
 import net.atayun.bazooka.rms.biz.enums.ClusterStatusEnum;
 import net.atayun.bazooka.rms.biz.enums.OptType;
-import net.atayun.bazooka.rms.biz.service.EnvService;
-import net.atayun.bazooka.rms.biz.service.RmsClusterAppService;
-import net.atayun.bazooka.rms.biz.service.RmsClusterConfigService;
-import net.atayun.bazooka.rms.biz.service.RmsClusterService;
-import com.youyu.common.service.AbstractService;
-import net.atayun.bazooka.rms.api.dto.*;
-import net.atayun.bazooka.rms.api.param.*;
+import net.atayun.bazooka.rms.biz.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
+import java.time.ZoneOffset;
+import java.util.*;
+import java.util.stream.Collectors;
 
-import static net.atayun.bazooka.base.utils.CommonUtil.defaultValue;
-import static net.atayun.bazooka.base.utils.OrikaCopyUtil.copyProperty;
-import static net.atayun.bazooka.rms.api.enums.EnvState.NORMAL;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.youyu.common.utils.YyAssert.assertTrue;
 import static java.math.BigDecimal.ZERO;
@@ -48,6 +48,9 @@ import static java.text.MessageFormat.format;
 import static java.util.Objects.isNull;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
+import static net.atayun.bazooka.base.utils.CommonUtil.defaultValue;
+import static net.atayun.bazooka.base.utils.OrikaCopyUtil.copyProperty;
+import static net.atayun.bazooka.rms.api.enums.EnvState.NORMAL;
 import static net.atayun.bazooka.rms.api.enums.RmsResultCode.*;
 import static org.apache.commons.collections.CollectionUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
@@ -76,6 +79,9 @@ public class EnvServiceImpl extends AbstractService<Long, EnvDto, RmsEnvEntity, 
 
     @Autowired
     private RmsEnvLogMapper envLogMapper;
+
+    @Autowired
+    private RmsContainerService rmsContainerService;
 
     private static final String APP_ID_FORMAT = "/{0}/{1}";
 
@@ -161,9 +167,28 @@ public class EnvServiceImpl extends AbstractService<Long, EnvDto, RmsEnvEntity, 
 
     @Override
     public ClusterAppServiceInfoDto getClusterAppServiceInfo(EnvAppReq envAppReq) {
-
         RmsEnvEntity record = this.selectEntityByPrimaryKey(envAppReq.getEnvId());
         assertTrue(isNull(record), ENV_NOT_EXISTS);
+        RmsClusterDto cluster = clusterService.selectByPrimaryKey(record.getClusterId());
+        if (Objects.equals(cluster.getType(), CommonConstant.NODE_CLUSTER_TYPE)) {
+            List<RmsContainer> rmsContainers = rmsContainerService.selectByAppId(envAppReq.getAppIdLongValue());
+            ClusterAppServiceInfoDto clusterAppServiceInfoDto = new ClusterAppServiceInfoDto();
+            if (CollectionUtils.isEmpty(rmsContainers)) {
+                clusterAppServiceInfoDto = new ClusterAppServiceInfoDto(ClusterAppServiceStatusEnum.UNPUBLISHED.getCode());
+            } else {
+                List<RmsContainer> running = rmsContainers.stream().filter(rmsContainer -> rmsContainer.getContainerStatus() == ClusterAppServiceStatusEnum.RUNNING).collect(toList());
+                if (CollectionUtils.isEmpty(running)) {
+                    clusterAppServiceInfoDto = new ClusterAppServiceInfoDto(ClusterAppServiceStatusEnum.CLOSED.getCode());
+                } else {
+                    RmsContainer rmsContainer = rmsContainers.get(0);
+                    clusterAppServiceInfoDto.setStatus(rmsContainer.getContainerStatus().getCode());
+                    clusterAppServiceInfoDto.setCpu(rmsContainer.getCpu());
+                    clusterAppServiceInfoDto.setMemory(rmsContainer.getMemory());
+                    clusterAppServiceInfoDto.setInstances(running.size());
+                }
+            }
+            return clusterAppServiceInfoDto;
+        }
         return clusterAppService.getClusterAppServiceInfo(record.getClusterId(), getAppIdFormat(record.getCode(), envAppReq.getAppId()));
     }
 
@@ -171,6 +196,43 @@ public class EnvServiceImpl extends AbstractService<Long, EnvDto, RmsEnvEntity, 
     public List<ClusterAppServiceHostDto> getClusterAppServiceHosts(EnvAppReq envAppReq) {
         RmsEnvEntity record = this.selectEntityByPrimaryKey(envAppReq.getEnvId());
         assertTrue(isNull(record), ENV_NOT_EXISTS);
+        RmsClusterDto cluster = clusterService.selectByPrimaryKey(record.getClusterId());
+        if (Objects.equals(cluster.getType(), CommonConstant.NODE_CLUSTER_TYPE)) {
+            List<RmsContainer> rmsContainers = rmsContainerService.selectByAppIdAndStatus(envAppReq.getAppIdLongValue(), ClusterAppServiceStatusEnum.RUNNING);
+            if (CollectionUtils.isEmpty(rmsContainers)) {
+                return new ArrayList<>();
+            }
+            LinkedHashMap<String, List<String>> map = rmsContainers.stream()
+                    .filter(rmsContainer -> !CollectionUtils.isEmpty(rmsContainer.getPortMapping()))
+                    .map(rmsContainer -> rmsContainer.getPortMapping().stream()
+                            .map(port -> rmsContainer.getIp() + ":" + port))
+                    .flatMap(stringStream -> stringStream)
+                    .collect(Collectors.groupingBy(str -> {
+                        String[] split = str.split(":");
+                        if (split.length != 3) {
+                            return "";
+                        }
+                        return split[2];
+                    }, LinkedHashMap::new, toList()));
+
+
+            List<ClusterAppServiceHostDto> list = new ArrayList<>();
+            if (!CollectionUtils.isEmpty(map)) {
+                for (Map.Entry<String, List<String>> stringListEntry : map.entrySet()) {
+                    if (StringUtils.isEmpty(stringListEntry.getKey())) {
+                        continue;
+                    }
+                    ClusterAppServiceHostDto clusterAppServiceHostDto = new ClusterAppServiceHostDto();
+                    clusterAppServiceHostDto.setContainerPort(stringListEntry.getKey());
+                    List<String> collect = stringListEntry.getValue().stream().map(val -> {
+                        String[] split = val.split(":");
+                        return split[0] + ":" + split[1];
+                    }).collect(toList());
+                    clusterAppServiceHostDto.setMlbHosts(collect);
+                }
+            }
+            return list;
+        }
         return clusterAppService.getClusterAppServiceHosts(record.getClusterId(), getAppIdFormat(record.getCode(), envAppReq.getAppId()));
     }
 
@@ -178,6 +240,14 @@ public class EnvServiceImpl extends AbstractService<Long, EnvDto, RmsEnvEntity, 
     public String getClusterAppImage(EnvAppReq envAppReq) {
         RmsEnvEntity record = this.selectEntityByPrimaryKey(envAppReq.getEnvId());
         assertTrue(isNull(record), ENV_NOT_EXISTS);
+        RmsClusterDto cluster = clusterService.selectByPrimaryKey(record.getClusterId());
+        if (Objects.equals(cluster.getType(), CommonConstant.NODE_CLUSTER_TYPE)) {
+            List<RmsContainer> rmsContainers = rmsContainerService.selectByAppIdAndStatus(envAppReq.getAppIdLongValue(), ClusterAppServiceStatusEnum.RUNNING);
+            if (CollectionUtils.isEmpty(rmsContainers)) {
+                return "";
+            }
+            return rmsContainers.get(0).getContainerImage();
+        }
         return clusterAppService.getClusterAppImage(record.getClusterId(), getAppIdFormat(record.getCode(), envAppReq.getAppId()));
     }
 
@@ -185,6 +255,28 @@ public class EnvServiceImpl extends AbstractService<Long, EnvDto, RmsEnvEntity, 
     public List<ClusterDockerDto> getClusterDockers(EnvAppReq envAppReq) {
         RmsEnvEntity record = this.selectEntityByPrimaryKey(envAppReq.getEnvId());
         assertTrue(isNull(record), ENV_NOT_EXISTS);
+        RmsClusterDto cluster = clusterService.selectByPrimaryKey(record.getClusterId());
+        if (Objects.equals(cluster.getType(), CommonConstant.NODE_CLUSTER_TYPE)) {
+            List<RmsContainer> rmsContainers = rmsContainerService.selectByAppId(envAppReq.getAppIdLongValue());
+            if (CollectionUtils.isEmpty(rmsContainers)) {
+                return new ArrayList<>();
+            }
+            return rmsContainers.stream().map(rmsContainer -> {
+                ClusterDockerDto clusterDockerDto = new ClusterDockerDto();
+                clusterDockerDto.setUpdateTime(Date.from(rmsContainer.getUpdateTime().toInstant(ZoneOffset.ofHours(8))));
+                clusterDockerDto.setStatus(rmsContainer.getContainerStatus().getDesc());
+                clusterDockerDto.setHost(rmsContainer.getIp());
+                List<String> ports = new ArrayList<>();
+                for (String port : rmsContainer.getPortMapping()) {
+                    String[] mapping = port.split(":");
+                    ports.add(rmsContainer.getIp() + ":" + mapping[0]);
+                }
+                clusterDockerDto.setPorts(ports);
+                clusterDockerDto.setCpu(rmsContainer.getCpu());
+                clusterDockerDto.setMemory(rmsContainer.getMemory());
+                return clusterDockerDto;
+            }).collect(Collectors.toList());
+        }
         return clusterService.getClusterDockers(record.getClusterId(), getAppIdFormat(record.getCode(), envAppReq.getAppId()));
     }
 
@@ -372,6 +464,13 @@ public class EnvServiceImpl extends AbstractService<Long, EnvDto, RmsEnvEntity, 
 
         // save env log info
         saveEnvLog(record, OptType.DELETE);
+    }
+
+    @Override
+    public int selectCountByClusterId(Long clusterId) {
+        RmsEnvEntity rmsEnvEntity = new RmsEnvEntity();
+        rmsEnvEntity.setClusterId(clusterId);
+        return this.mapper.selectCount(rmsEnvEntity);
     }
 
     private void saveEnvLog(RmsEnvEntity envEntity, OptType optType) {

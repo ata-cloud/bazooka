@@ -44,5 +44,7 @@ public class AppOptWithPlatform {
 
     private String appDeployVersion;
 
+    private String dockerImageTag;
+
     private Map<String, Object> detail;
 }

@@ -20,7 +20,6 @@ import com.youyu.common.api.Result;
 import com.youyu.common.exception.BizException;
 import com.youyu.common.service.AbstractService;
 import com.youyu.common.utils.YyAssert;
-import io.netty.handler.timeout.TimeoutException;
 import lombok.extern.slf4j.Slf4j;
 import mesosphere.marathon.client.model.v2.Task;
 import net.atayun.bazooka.base.dcos.DcosServerBean;
@@ -39,6 +38,7 @@ import net.atayun.bazooka.rms.api.enums.RmsResultCode;
 import net.atayun.bazooka.rms.api.param.CreateClusterReq;
 import net.atayun.bazooka.rms.api.param.SingleNodeReq;
 import net.atayun.bazooka.rms.biz.component.strategy.cluster.ClusterComponentRefreshStrategy;
+import net.atayun.bazooka.rms.biz.constansts.CommonConstant;
 import net.atayun.bazooka.rms.biz.dal.dao.RmsClusterAppMapper;
 import net.atayun.bazooka.rms.biz.dal.dao.RmsClusterConfigMapper;
 import net.atayun.bazooka.rms.biz.dal.dao.RmsClusterMapper;
@@ -46,10 +46,12 @@ import net.atayun.bazooka.rms.biz.dal.dao.RmsClusterNodeMapper;
 import net.atayun.bazooka.rms.biz.dal.entity.RmsClusterConfigEntity;
 import net.atayun.bazooka.rms.biz.dal.entity.RmsClusterEntity;
 import net.atayun.bazooka.rms.biz.dal.entity.RmsClusterNodeEntity;
+import net.atayun.bazooka.rms.api.dto.ResourceSumDto;
 import net.atayun.bazooka.rms.biz.enums.ClusterTypeEnum;
 import net.atayun.bazooka.rms.biz.service.EnvService;
 import net.atayun.bazooka.rms.biz.service.RmsClusterConfigService;
 import net.atayun.bazooka.rms.biz.service.RmsClusterService;
+import net.atayun.bazooka.rms.biz.service.RmsContainerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 import org.springframework.stereotype.Service;
@@ -130,6 +132,9 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
     @Autowired
     private RmsClusterAppMapper rmsClusterAppMapper;
 
+    @Autowired
+    private RmsContainerService rmsContainerService;
+
     @Override
     public void refreshClusterInfo(RmsClusterService rmsClusterService) {
         List<RmsClusterEntity> rmsClusterEntities = rmsClusterMapper.selectAll();
@@ -164,12 +169,35 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
         List<RmsClusterEntity> rmsClusterEntities = rmsClusterMapper.selectAllInPage(pageData);
         for (RmsClusterEntity rmsClusterEntity : rmsClusterEntities) {
             ClusterRspDto clusterRspDto = copyProperty(rmsClusterEntity, ClusterRspDto.class);
-
-            fillClusterRsp(rmsClusterEntity, clusterRspDto);
+            if (Objects.equals(rmsClusterEntity.getType(), CommonConstant.NODE_CLUSTER_TYPE)) {
+                fillNodeClusterRsp(rmsClusterEntity, clusterRspDto);
+            } else {
+                fillClusterRsp(rmsClusterEntity, clusterRspDto);
+            }
             clusters.add(clusterRspDto);
         }
         pageData.setRows(clusters);
         return pageData;
+    }
+
+    private void fillNodeClusterRsp(RmsClusterEntity rmsClusterEntity, ClusterRspDto clusterRspDto) {
+
+        Long clusterId = rmsClusterEntity.getId();
+        int envs = envService.selectCountByClusterId(clusterId);
+        clusterRspDto.setEnvQuantity(envs);
+
+        ResourceSumDto resourceSumDto = rmsContainerService.sumResourceByClusterId(clusterId);
+        clusterRspDto.setEnvCpu(resourceSumDto.getCpu());
+        clusterRspDto.setEnvMemory(resourceSumDto.getMemory());
+        clusterRspDto.setEnvDisk(resourceSumDto.getDisk());
+
+        List<Integer> nodeQuantities = rmsClusterNodeMapper.getNormalAndAllClusterNodeQuantity(clusterId);
+        clusterRspDto.setNormalNodeQuantity(0);
+        clusterRspDto.setNodeQuantity(nodeQuantities.get(1));
+
+        int containers = rmsContainerService.sumContainerByClusterId(clusterId);
+        clusterRspDto.setRunningServiceQuantity(0);
+        clusterRspDto.setServiceQuantity(containers);
     }
 
     @Override
@@ -188,10 +216,21 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
         clusterDetailRspDto.setMlbs(copyProperty4List(rmsClusterConfigEntities.stream().filter(r -> eq(r.getType(), MLB.getCode())).collect(toList()), ClusterConfigDetailRspDto.class));
         clusterDetailRspDto.setDockerHubs(copyProperty4List(rmsClusterConfigEntities.stream().filter(r -> eq(r.getType(), DOCKER_HUB.getCode())).collect(toList()), ClusterConfigDetailRspDto.class));
 
-        List<EnvResourceDto> envResources = envService.listClusterEnvUsedResource(clusterId);
-        //增加未使用的资源信息
-        EnvResourceDto unusedEnvResource = getClusterUnusedResource(clusterId);
-        envResources.add(unusedEnvResource);
+        List<EnvResourceDto> envResources;
+        if (Objects.equals(rmsClusterEntity.getType(), CommonConstant.NODE_CLUSTER_TYPE)) {
+            envResources = rmsContainerService.sumResourceByClusterIdGroupByEnv(clusterId);
+            ResourceSumDto resourceSumDto = rmsContainerService.sumResourceByClusterId(clusterId);
+            EnvResourceDto envResourceDto = new EnvResourceDto();
+            envResourceDto.setCpus((rmsClusterEntity.getCpu().subtract(resourceSumDto.getCpu())).max(ZERO));
+            envResourceDto.setMemory((rmsClusterEntity.getMemory().subtract(resourceSumDto.getMemory())).max(ZERO));
+            envResourceDto.setDisk((rmsClusterEntity.getDisk().subtract(resourceSumDto.getDisk())).max(ZERO));
+            envResources.add(envResourceDto);
+        } else {
+            envResources = envService.listClusterEnvUsedResource(clusterId);
+            //增加未使用的资源信息
+            EnvResourceDto unusedEnvResource = getClusterUnusedResource(clusterId);
+            envResources.add(unusedEnvResource);
+        }
 
         clusterDetailRspDto.setEnvResources(envResources);
         return clusterDetailRspDto;
@@ -713,7 +752,7 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
             Iterator<SingleNodeReq> sListIterator = createClusterReq.getNodeList().iterator();
             while (sListIterator.hasNext()) {
                 SingleNodeReq singleNodeReq = sListIterator.next();
-                if (singleNodeReq == null){
+                if (singleNodeReq == null) {
                     sListIterator.remove();
                 }
             }
