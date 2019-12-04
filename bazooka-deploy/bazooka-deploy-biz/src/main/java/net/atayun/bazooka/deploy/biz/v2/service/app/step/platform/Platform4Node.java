@@ -69,9 +69,9 @@ public class Platform4Node implements Platform, ICheckNodeResource {
 
     private final Pattern envVariablePattern = Pattern.compile("-e\\s(\\S+?=\\S+?)\\s+");
 
-    private final Pattern imagePattern = Pattern.compile("-d\\s+(\\S)+\\s+");
+    private final Pattern imagePattern = Pattern.compile("-d\\s+(\\S+)\\s+");
 
-    private final Pattern namePattern = Pattern.compile("--name=(\\S)+\\s+");
+    private final Pattern namePattern = Pattern.compile("--name=(\\S+)\\s");
 
     @Autowired
     private PmsCredentialsApi pmsCredentialsApi;
