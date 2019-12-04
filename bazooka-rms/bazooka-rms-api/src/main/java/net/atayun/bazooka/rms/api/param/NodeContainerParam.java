@@ -26,7 +26,7 @@ public class NodeContainerParam {
 
     private String containerName;
 
-    private ClusterAppServiceStatusEnum containerStatus;
+    private String containerStatus;
 
     private String containerImage;
 

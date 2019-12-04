@@ -26,7 +26,7 @@ public interface RmsContainerService {
 
     List<RmsContainer> selectByAppId(Long appId);
 
-    List<RmsContainer> selectByEnvIdAndAppIdAndStatus(Long envId, Long appId, ClusterAppServiceStatusEnum status);
+    List<RmsContainer> selectByEnvIdAndAppIdAndStatus(Long envId, Long appId, String status);
 
     NodeAvailableResourceDto getNodeAvailableResource(List<Long> nodeIds);
 

@@ -26,7 +26,6 @@ import net.atayun.bazooka.rms.api.api.RmsContainerApi;
 import net.atayun.bazooka.rms.api.dto.ClusterConfigDto;
 import net.atayun.bazooka.rms.api.dto.EnvDto;
 import net.atayun.bazooka.rms.api.dto.rsp.ClusterNodeRspDto;
-import net.atayun.bazooka.rms.api.enums.ClusterAppServiceStatusEnum;
 import net.atayun.bazooka.rms.api.param.NodeContainerParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -90,10 +89,9 @@ public class Platform4Node implements Platform, ICheckNodeResource {
 
     @Override
     public void startApp(AppOpt appOpt, AppOptFlowStep appOptFlowStep, StepLogBuilder logBuilder) {
-        AppDeployConfigDto appDeployConfigDto = getBean(AppApi.class).getAppDeployConfigInfoById(appOpt.getDeployConfigId())
-                .ifNotSuccessThrowException().getData();
-
         AppOpt lastAppOpt = getBean(AppOptService.class).selectLastSuccessByAppIdAndEnv(appOpt.getAppId(), appOpt.getEnvId());
+        AppDeployConfigDto appDeployConfigDto = getBean(AppApi.class).getAppDeployConfigInfoById(lastAppOpt.getDeployConfigId())
+                .ifNotSuccessThrowException().getData();
 
         String command = lastAppOpt.getAppDeployConfig();
         List<Long> clusterNodeIds = appDeployConfigDto.getClusterNodes();
@@ -104,7 +102,7 @@ public class Platform4Node implements Platform, ICheckNodeResource {
         appOpt.setAppRunServiceId(getServiceId());
         appOpt.setAppDeployVersion(getVersion());
         appOpt.setAppDeployConfig(command);
-        appOpt.setDockerImageTag(lastAppOpt.getDockerImageTag());
+        appOpt.setDockerImageTag(lastAppOpt.getFinalDockerImageTag());
         updateContainer(appOpt, params);
     }
 
@@ -135,7 +133,7 @@ public class Platform4Node implements Platform, ICheckNodeResource {
             appOpt.setAppDeployUuid(lastAppOpt.getAppDeployUuid());
             appOpt.setAppDeployVersion(getVersion());
             appOpt.setAppRunServiceId(containerName);
-            appOpt.setDockerImageTag(lastAppOpt.getDockerImageTag());
+            appOpt.setDockerImageTag(lastAppOpt.getFinalDockerImageTag());
             updateContainer(appOpt, new ArrayList<>());
         }
     }
@@ -153,7 +151,7 @@ public class Platform4Node implements Platform, ICheckNodeResource {
         appOpt.setAppDeployConfig(command);
         appOpt.setAppDeployUuid(lastAppOpt.getAppDeployUuid());
         appOpt.setAppDeployVersion(getVersion());
-        appOpt.setDockerImageTag(lastAppOpt.getDockerImageTag());
+        appOpt.setDockerImageTag(lastAppOpt.getFinalDockerImageTag());
         appOpt.setAppRunServiceId(containerName);
         updateContainer(appOpt, params);
     }
@@ -284,7 +282,7 @@ public class Platform4Node implements Platform, ICheckNodeResource {
         nodeContainerParam.setAppId(appId);
         nodeContainerParam.setIp(ip);
         nodeContainerParam.setContainerName(parseName(command));
-        nodeContainerParam.setContainerStatus(ClusterAppServiceStatusEnum.RUNNING);
+        nodeContainerParam.setContainerStatus("TASK_RUNNING");
         nodeContainerParam.setContainerImage(parseImage(command));
         nodeContainerParam.setCpu(parseCpu(command));
         nodeContainerParam.setMemory(parseMem(command));

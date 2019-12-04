@@ -30,8 +30,7 @@ public class RmsContainer extends JdbcMysqlEntity<Long> {
 
     private String containerName;
 
-    @Column(name = "container_status")
-    private ClusterAppServiceStatusEnum containerStatus;
+    private String containerStatus;
 
     private String containerImage;
 

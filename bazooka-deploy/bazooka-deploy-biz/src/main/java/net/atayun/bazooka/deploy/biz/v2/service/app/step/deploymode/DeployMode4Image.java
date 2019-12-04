@@ -39,7 +39,7 @@ public class DeployMode4Image implements DeployMode {
                 .ifNotSuccessThrowException().getData();
         String dockerImageName = appInfoDto.getDockerImageName();
 
-        String dockerImageTag = appOpt.getDockerImageTag();
+        String dockerImageTag = appOpt.getFinalDockerImageTag();
 
         String image = dockerHubUrl + "/" + dockerImageName + ":" + dockerImageTag;
 

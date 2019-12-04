@@ -33,4 +33,8 @@ public final class CommonConstant {
     public static String IF_YES = "1";
 
     public static final String NODE_CLUSTER_TYPE = "2";
+
+    public static final String TASK_RUNNING = "TASK_RUNNING";
+
+    public static final String TASK_KILLED = "TASK_KILLED";
 }
