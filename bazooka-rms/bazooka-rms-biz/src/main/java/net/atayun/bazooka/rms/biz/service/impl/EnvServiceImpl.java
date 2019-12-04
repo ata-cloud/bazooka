@@ -230,6 +230,7 @@ public class EnvServiceImpl extends AbstractService<Long, EnvDto, RmsEnvEntity, 
                         return split[0] + ":" + split[1];
                     }).collect(toList());
                     clusterAppServiceHostDto.setMlbHosts(collect);
+                    list.add(clusterAppServiceHostDto);
                 }
             }
             return list;
