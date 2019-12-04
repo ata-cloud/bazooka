@@ -89,10 +89,9 @@ public class Platform4Node implements Platform, ICheckNodeResource {
 
     @Override
     public void startApp(AppOpt appOpt, AppOptFlowStep appOptFlowStep, StepLogBuilder logBuilder) {
-        AppDeployConfigDto appDeployConfigDto = getBean(AppApi.class).getAppDeployConfigInfoById(appOpt.getDeployConfigId())
-                .ifNotSuccessThrowException().getData();
-
         AppOpt lastAppOpt = getBean(AppOptService.class).selectLastSuccessByAppIdAndEnv(appOpt.getAppId(), appOpt.getEnvId());
+        AppDeployConfigDto appDeployConfigDto = getBean(AppApi.class).getAppDeployConfigInfoById(lastAppOpt.getDeployConfigId())
+                .ifNotSuccessThrowException().getData();
 
         String command = lastAppOpt.getAppDeployConfig();
         List<Long> clusterNodeIds = appDeployConfigDto.getClusterNodes();
