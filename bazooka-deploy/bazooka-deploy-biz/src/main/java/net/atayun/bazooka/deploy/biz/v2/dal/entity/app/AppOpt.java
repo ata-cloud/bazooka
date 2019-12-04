@@ -10,6 +10,7 @@ import net.atayun.bazooka.deploy.biz.v2.enums.AppOptStatusEnum;
 import net.atayun.bazooka.deploy.biz.v2.param.AppActionParam;
 import net.atayun.bazooka.deploy.biz.v2.service.app.opt.remark.AppOptType;
 import net.atayun.bazooka.pms.api.dto.AppInfoDto;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Table;
@@ -19,37 +20,61 @@ import java.util.Map;
 /**
  * @author Ping
  */
-@Getter
-@Setter
 @Table(name = "deploy_app_opt")
 public class AppOpt extends JdbcMysqlEntity<Long> {
-
+    @Getter
+    @Setter
     private Long appId;
 
+    @Getter
+    @Setter
     private String appName;
 
+    @Getter
+    @Setter
     private Long projectId;
 
+    @Getter
+    @Setter
     private Long envId;
 
+    @Getter
+    @Setter
     @Column(name = "opt")
     private AppOptEnum opt;
 
+    @Getter
+    @Setter
     @Column(name = "detail")
     private Map<String, Object> detail;
 
+    @Getter
+    @Setter
     @Column(name = "status")
     private AppOptStatusEnum status;
 
+    @Getter
+    @Setter
     private String remark;
 
+    @Getter
+    @Setter
     private String appDeployUuid;
 
+    @Getter
+    @Setter
     private String appDeployVersion;
 
+    @Getter
+    @Setter
     private String appRunServiceId;
 
+    @Getter
+    @Setter
     private String appDeployConfig;
+
+    @Setter
+    private String dockerImageTag;
 
     public AppOpt() {
     }
@@ -68,6 +93,7 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
         this.appDeployVersion = "";
         this.appRunServiceId = "";
         this.appDeployConfig = "";
+        this.dockerImageTag = (String) this.detail.get("dockerImageTag");
     }
 
     public AppOpt(AppActionParam appActionParam, AppInfoDto appInfo, AppOpt template) {
@@ -85,6 +111,7 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
         this.appDeployVersion = template.getAppDeployVersion();
         this.appDeployConfig = template.getAppDeployConfig();
         this.appRunServiceId = template.getAppRunServiceId();
+        this.dockerImageTag = template.getDockerImageTag();
     }
 
     public void process() {
@@ -126,7 +153,11 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
     }
 
     public String getDockerImageTag() {
-        return (String) detail.get("dockerImageTag");
+        String dockerImageTag = (String) detail.get("dockerImageTag");
+        if (StringUtils.isEmpty(dockerImageTag)) {
+            dockerImageTag = this.dockerImageTag;
+        }
+        return dockerImageTag;
     }
 
     public Long getImageId() {

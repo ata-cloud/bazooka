@@ -175,8 +175,7 @@ public class AppActionServiceImpl implements AppActionService {
                     dto.setStatus(appOptWithPlatform.getStatus().getDescription());
                     dto.setStatusCode(appOptWithPlatform.getStatus());
                     dto.setVersion(appOptWithPlatform.getAppDeployVersion());
-                    AppOptFlowStep appOptFlowStep = flowStepService.selectByOptIdAndStep(appOptWithPlatform.getEventId(), FlowStepConstants.BUILD_DOCKER_IMAGE);
-                    String imageTag = (String) appOptFlowStep.getOutput().get("dockerImageTag");
+                    String imageTag = appOptWithPlatform.getDockerImageTag();
                     dto.setImageTag(imageTag);
                     Optional<RmsDockerImageDto> imageDtoOptional = imageTags.stream()
                             .filter(rmsDockerImageDto -> Objects.equals(imageTag, rmsDockerImageDto.getImageTag()))

@@ -271,5 +271,12 @@ public class Platform4Marathon implements Platform, ICheckResource {
         appOpt.setAppDeployUuid(dcosResult.getDeploymentId());
         appOpt.setAppDeployVersion(dcosResult.getVersion());
         appOpt.setAppRunServiceId(dcosServiceId);
+        appOpt.setDockerImageTag(getImageTag(app));
+    }
+
+    private String getImageTag(App app) {
+        String image = app.getContainer().getDocker().getImage();
+        String[] arr = image.split(":");
+        return arr[arr.length - 1];
     }
 }

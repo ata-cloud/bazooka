@@ -10,6 +10,7 @@ import net.atayun.bazooka.deploy.biz.v2.constant.JenkinsPushDockerImageJobConsta
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
 import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
 import net.atayun.bazooka.deploy.biz.v2.param.GitCommit;
+import net.atayun.bazooka.deploy.biz.v2.service.app.AppOptService;
 import net.atayun.bazooka.deploy.biz.v2.service.app.FlowStepService;
 import net.atayun.bazooka.deploy.biz.v2.service.app.step.jenkins.Step4Jenkins;
 import net.atayun.bazooka.pms.api.PmsCredentialsApi;
@@ -82,6 +83,8 @@ public class Step4BuildDockerImage extends Step4Jenkins {
         rmsDockerImageDto.setSource(DockerImageSource.Build);
         rmsDockerImageDto.setImageCreateTime(LocalDateTime.now());
         getBean(RmsDockerImageApi.class).create(rmsDockerImageDto).ifNotSuccessThrowException();
+        appOpt.setDockerImageTag(dockerImageTag);
+        getBean(AppOptService.class).update(appOpt);
     }
 
     @Override

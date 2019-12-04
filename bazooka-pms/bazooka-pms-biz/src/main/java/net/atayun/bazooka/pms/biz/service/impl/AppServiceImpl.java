@@ -332,7 +332,7 @@ public class AppServiceImpl implements AppService {
         if (!ObjectUtils.isEmpty(pmsProjectEnvRelationEntities)) {
             pmsProjectEnvRelationEntities.stream()
                     .forEach(projectEnv -> {
-                        ClusterAppServiceInfoDto appServiceInfoDto = this.envApi.getClusterAppServiceInfo(new EnvAppReq(projectEnv.getEnvId(), appInfoDto.getDcosServiceId())).ifNotSuccessThrowException().getData();
+                        ClusterAppServiceInfoDto appServiceInfoDto = this.envApi.getClusterAppServiceInfo(new EnvAppReq(projectEnv.getEnvId(), appInfoDto.getDcosServiceId(), appId)).ifNotSuccessThrowException().getData();
                         //状态 0:未发布 1:已关闭 2:启动中 3:运行中
                         String appStatus = appServiceInfoDto.getStatus();
                         YyAssert.paramCheck("2".equals(appStatus), "服务正在启动中，不能删除！");

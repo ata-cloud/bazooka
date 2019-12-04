@@ -24,6 +24,8 @@ import net.atayun.bazooka.rms.api.enums.ClusterAppServiceStatusEnum;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import static java.math.BigDecimal.ZERO;
+
 /**
  * @author pqq
  * @version v1.0
@@ -53,4 +55,14 @@ public class ClusterAppServiceInfoDto implements Serializable {
 
     @ApiModelProperty("实例数")
     private Integer instances;
+
+    public ClusterAppServiceInfoDto() {
+    }
+
+    public ClusterAppServiceInfoDto(String status) {
+        this.setStatus(status);
+        this.setCpu(ZERO);
+        this.setMemory(ZERO);
+        this.setInstances(0);
+    }
 }
