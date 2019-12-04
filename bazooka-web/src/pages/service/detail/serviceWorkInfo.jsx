@@ -559,7 +559,6 @@ class ServiceWorkInfo extends React.Component {
       {
         title: '状态',
         dataIndex: 'status',
-        className: currentEnvO.clusterType === '2' ? styles.hidden : null,
         render: (text, record) => (
           <Fragment>
             {
@@ -572,6 +571,7 @@ class ServiceWorkInfo extends React.Component {
       {
         title: '健康检查',
         dataIndex: 'healthStatus',
+        className: currentEnvO.clusterType === '2' ? styles.hidden : '',
         render: (text, record) => (
           <Fragment>
             {
@@ -621,7 +621,7 @@ class ServiceWorkInfo extends React.Component {
         title: '日志',
         dataIndex: 'log',
         key: 'log',
-        className: currentEnvO.clusterType === '2' ? styles.hidden : null,
+        className: currentEnvO.clusterType === '2' ? styles.hidden : '',
         render: (text, record) => (
           <a onClick={() => { this.onShowLogDetail(record) }}>查看日志</a>
         )

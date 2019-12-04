@@ -216,7 +216,7 @@ class Detail extends React.Component {
   }
   onOparaChange = async (e) => {
     let deployType = e.target.value;
-   
+
     if (deployType == "START") {
       this.setState({
         showStartModal: true
@@ -229,7 +229,7 @@ class Detail extends React.Component {
         deployType
       })
     }
-    
+
 
   }
   onFetchAppOperate = async (deployType, detail = {}) => {
@@ -283,15 +283,17 @@ class Detail extends React.Component {
   }
   onOk = (e) => {
     e.preventDefault();
+    let params = {};
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         this.onSetDeployTypes('START');
         this.setState({
           deployType: 'START'
         })
-        this.onFetchAppOperate('START', values)
+        params = { instance: 1, ...values }
       }
     });
+    this.onFetchAppOperate('START', params)
   }
   onStartModalCancel = () => {
     this.setState({
@@ -354,7 +356,7 @@ class Detail extends React.Component {
   renderStartModal() {
     const { showStartModal } = this.state;
     const { getFieldDecorator } = this.props.form;
-    const { currentEnvO, appRunStatus }= this.props;
+    const { currentEnvO, appRunStatus } = this.props;
     return (
       <Modal
         title="启动服务"
@@ -378,7 +380,7 @@ class Detail extends React.Component {
                   </FormItem>
                 </Form>
               </Fragment> :
-              <p>服务当前为已关闭状态，启动服务后容器实例个数将恢复为<span className={styles.textError}> {appRunStatus.instances}</span></p>
+              <p>服务当前为已关闭状态，该操作会在发布配置中已配置的节点上启动服务</p>
           }
         </Fragment>
 

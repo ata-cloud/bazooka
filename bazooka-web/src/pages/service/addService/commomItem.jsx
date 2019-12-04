@@ -95,7 +95,7 @@ class CommomItem extends React.Component {
               rules: [
                 {
                   validator: async (rule, value, callback)=>{
-                    if(value.length > 500) {
+                    if(value && value.length > 500) {
                       callback('最多500个字符')
                     }else {
                       callback()
