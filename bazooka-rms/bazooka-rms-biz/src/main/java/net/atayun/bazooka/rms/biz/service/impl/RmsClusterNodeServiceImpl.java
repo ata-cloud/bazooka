@@ -15,6 +15,9 @@
  */
 package net.atayun.bazooka.rms.biz.service.impl;
 
+import com.youyu.common.api.PageData;
+import com.youyu.common.service.AbstractService;
+import lombok.extern.slf4j.Slf4j;
 import net.atayun.bazooka.base.dcos.dto.NodeDto;
 import net.atayun.bazooka.base.dcos.dto.NodeHealthDto;
 import net.atayun.bazooka.base.dcos.dto.NodeHealthInfoDto;
@@ -23,13 +26,15 @@ import net.atayun.bazooka.base.service.BatchService;
 import net.atayun.bazooka.rms.api.dto.RmsClusterNodeDto;
 import net.atayun.bazooka.rms.api.dto.req.ClusterNodeReqDto;
 import net.atayun.bazooka.rms.api.dto.rsp.ClusterNodeRspDto;
+import net.atayun.bazooka.rms.biz.constansts.CommonConstant;
+import net.atayun.bazooka.rms.biz.dal.dao.RmsClusterMapper;
 import net.atayun.bazooka.rms.biz.dal.dao.RmsClusterNodeMapper;
+import net.atayun.bazooka.rms.biz.dal.entity.ContainerAndResourceSumEntity;
 import net.atayun.bazooka.rms.biz.dal.entity.RmsClusterConfigEntity;
+import net.atayun.bazooka.rms.biz.dal.entity.RmsClusterEntity;
 import net.atayun.bazooka.rms.biz.dal.entity.RmsClusterNodeEntity;
 import net.atayun.bazooka.rms.biz.service.RmsClusterNodeService;
-import com.youyu.common.api.PageData;
-import com.youyu.common.service.AbstractService;
-import lombok.extern.slf4j.Slf4j;
+import net.atayun.bazooka.rms.biz.service.RmsContainerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -37,11 +42,13 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.alibaba.fastjson.JSON.parseObject;
 import static net.atayun.bazooka.base.constant.CommonConstants.PROTOCOL;
 import static net.atayun.bazooka.base.dcos.DcosServerBean.NODE_URL_HEALTH_SUFFIX;
 import static net.atayun.bazooka.base.dcos.DcosServerBean.NODE_URL_SUFFIX;
+import static net.atayun.bazooka.base.utils.OrikaCopyUtil.copyProperty;
 import static net.atayun.bazooka.base.utils.OrikaCopyUtil.copyProperty4List;
 import static net.atayun.bazooka.base.utils.StringUtil.eq;
 import static org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace;
@@ -67,6 +74,12 @@ public class RmsClusterNodeServiceImpl extends AbstractService<Long, RmsClusterN
     @Autowired
     private RmsClusterNodeMapper rmsClusterNodeMapper;
 
+    @Autowired
+    private RmsClusterMapper rmsClusterMapper;
+
+    @Autowired
+    private RmsContainerService rmsContainerService;
+
 
     @Override
     public List<RmsClusterNodeEntity> refreshClusterNodeInfo(RmsClusterConfigEntity rmsClusterConfigEntity) {
@@ -86,7 +99,7 @@ public class RmsClusterNodeServiceImpl extends AbstractService<Long, RmsClusterN
         List<ClusterNodeRspDto> list = new ArrayList<>();
         Example example = new Example(RmsClusterNodeEntity.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("clusterId",clusterId);
+        criteria.andEqualTo("clusterId", clusterId);
         List<RmsClusterNodeEntity> rmsClusterNodeEntities = rmsClusterNodeMapper.selectByExample(example);
         list = copyProperty4List(rmsClusterNodeEntities, ClusterNodeRspDto.class);
         return list;
@@ -98,8 +111,21 @@ public class RmsClusterNodeServiceImpl extends AbstractService<Long, RmsClusterN
         RmsClusterNodeEntity queryRmsClusterNodeEntity = new RmsClusterNodeEntity();
         queryRmsClusterNodeEntity.setClusterId(clusterNodeReqDto.getClusterId());
         List<RmsClusterNodeEntity> rmsClusterNodeEntities = rmsClusterNodeMapper.selectInPage(queryRmsClusterNodeEntity, pageData);
-
-        pageData.setRows(copyProperty4List(rmsClusterNodeEntities, ClusterNodeRspDto.class));
+        RmsClusterEntity rmsClusterEntity = rmsClusterMapper.selectByPrimaryKey(clusterNodeReqDto.getClusterId());
+        if (Objects.equals(CommonConstant.NODE_CLUSTER_TYPE, rmsClusterEntity.getClusterId())) {
+            List<ClusterNodeRspDto> data = new ArrayList<>();
+            for (RmsClusterNodeEntity rmsClusterNodeEntity : rmsClusterNodeEntities) {
+                ContainerAndResourceSumEntity containerAndResourceSumEntity = rmsContainerService.sumContainerAndResourceByNode(rmsClusterNodeEntity.getId());
+                ClusterNodeRspDto clusterNodeRspDto = copyProperty(rmsClusterNodeEntity, ClusterNodeRspDto.class);
+                clusterNodeRspDto.setContainerQuantity(containerAndResourceSumEntity.getCount());
+                clusterNodeRspDto.setUsedCpu(containerAndResourceSumEntity.getCpu());
+                clusterNodeRspDto.setUsedMemory(containerAndResourceSumEntity.getMemory());
+                clusterNodeRspDto.setUsedDisk(containerAndResourceSumEntity.getDisk());
+            }
+            pageData.setRows(data);
+        } else {
+            pageData.setRows(copyProperty4List(rmsClusterNodeEntities, ClusterNodeRspDto.class));
+        }
         return pageData;
     }
 

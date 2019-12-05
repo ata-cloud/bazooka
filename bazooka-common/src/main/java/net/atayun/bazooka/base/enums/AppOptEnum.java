@@ -115,7 +115,7 @@ public enum AppOptEnum {
     /**
      * 推送镜像
      */
-    PUSH_IMAGE("删除镜像", true) {
+    PUSH_IMAGE("推送镜像", true) {
         @Override
         public List<String> defaultFlowStepTypes() {
             return Collections.singletonList(PUSH_DOCKER_IMAGE);
@@ -156,6 +156,6 @@ public enum AppOptEnum {
     }
 
     public static List<AppOptEnum> lastSuccessList() {
-        return Arrays.asList(IMAGE_DEPLOY, MARATHON_BUILD_DEPLOY, NODE_BUILD_DEPLOY, ROLLBACK);
+        return Arrays.asList(IMAGE_DEPLOY, MARATHON_BUILD_DEPLOY, NODE_BUILD_DEPLOY, ROLLBACK, SCALE);
     }
 }

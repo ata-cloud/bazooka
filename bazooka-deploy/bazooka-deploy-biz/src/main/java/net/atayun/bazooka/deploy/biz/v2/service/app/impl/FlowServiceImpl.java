@@ -65,7 +65,7 @@ public class FlowServiceImpl implements FlowService {
         deployingConfigInfoDto.setEventId(appOpt.getId());
         deployingConfigInfoDto.setDeployConfigId(appOpt.getDeployConfigId());
         deployingConfigInfoDto.setBranch(appOpt.getBranch());
-        deployingConfigInfoDto.setDockerImageTag(appOpt.getDockerImageTag());
+        deployingConfigInfoDto.setDockerImageTag(appOpt.getFinalDockerImageTag());
         AppDeployConfigDto data = getBean(AppApi.class).getAppDeployConfigInfoById(appOpt.getDeployConfigId())
                 .ifNotSuccessThrowException()
                 .getData();

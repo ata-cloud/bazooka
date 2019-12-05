@@ -8,9 +8,9 @@ import net.atayun.bazooka.base.bean.StrategyNumBean;
 import net.atayun.bazooka.base.enums.AppOptEnum;
 import net.atayun.bazooka.deploy.biz.v2.enums.AppOptStatusEnum;
 import net.atayun.bazooka.deploy.biz.v2.param.AppActionParam;
-import net.atayun.bazooka.deploy.biz.v2.service.app.opt.remark.AppOptRemark;
 import net.atayun.bazooka.deploy.biz.v2.service.app.opt.remark.AppOptType;
 import net.atayun.bazooka.pms.api.dto.AppInfoDto;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Table;
@@ -20,37 +20,62 @@ import java.util.Map;
 /**
  * @author Ping
  */
-@Getter
-@Setter
 @Table(name = "deploy_app_opt")
 public class AppOpt extends JdbcMysqlEntity<Long> {
-
+    @Getter
+    @Setter
     private Long appId;
 
+    @Getter
+    @Setter
     private String appName;
 
+    @Getter
+    @Setter
     private Long projectId;
 
+    @Getter
+    @Setter
     private Long envId;
 
+    @Getter
+    @Setter
     @Column(name = "opt")
     private AppOptEnum opt;
 
+    @Getter
+    @Setter
     @Column(name = "detail")
     private Map<String, Object> detail;
 
+    @Getter
+    @Setter
     @Column(name = "status")
     private AppOptStatusEnum status;
 
+    @Getter
+    @Setter
     private String remark;
 
+    @Getter
+    @Setter
     private String appDeployUuid;
 
+    @Getter
+    @Setter
     private String appDeployVersion;
 
+    @Getter
+    @Setter
     private String appRunServiceId;
 
+    @Getter
+    @Setter
     private String appDeployConfig;
+
+    @Getter
+    @Setter
+    private String dockerImageTag;
 
     public AppOpt() {
     }
@@ -69,6 +94,7 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
         this.appDeployVersion = "";
         this.appRunServiceId = "";
         this.appDeployConfig = "";
+        this.dockerImageTag = (String) this.detail.get("dockerImageTag");
     }
 
     public AppOpt(AppActionParam appActionParam, AppInfoDto appInfo, AppOpt template) {
@@ -81,15 +107,12 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
         this.detail = new HashMap<>(jsonObject);
         this.detail.putAll(template.getDetail());
         process();
+        this.remark = StrategyNumBean.getBeanInstance(AppOptType.class, this.opt.name()).remark(template);
         this.appDeployUuid = template.getAppDeployUuid();
         this.appDeployVersion = template.getAppDeployVersion();
         this.appDeployConfig = template.getAppDeployConfig();
         this.appRunServiceId = template.getAppRunServiceId();
-        this.remark = StrategyNumBean.getBeanInstance(AppOptRemark.class, this.opt.name()).remark(this);
-        this.appDeployUuid = "";
-        this.appDeployVersion = "";
-        this.appRunServiceId = "";
-        this.appDeployConfig = "";
+        this.dockerImageTag = template.getFinalDockerImageTag();
     }
 
     public void process() {
@@ -123,23 +146,39 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
     //下列都是detail中的值
 
     public Long getDeployConfigId() {
-        return Long.parseLong(detail.get("deployConfigId").toString());
+        Object deployConfigId = detail.get("deployConfigId");
+        if (deployConfigId == null) {
+            return null;
+        }
+        return Long.parseLong(deployConfigId.toString());
     }
 
     public String getBranch() {
         return (String) detail.get("branch");
     }
 
-    public String getDockerImageTag() {
-        return (String) detail.get("dockerImageTag");
+    public String getFinalDockerImageTag() {
+        String dockerImageTag = (String) detail.get("dockerImageTag");
+        if (StringUtils.isEmpty(dockerImageTag)) {
+            dockerImageTag = this.dockerImageTag;
+        }
+        return dockerImageTag;
     }
 
     public Long getImageId() {
-        return Long.parseLong(detail.get("imageId").toString());
+        Object imageId = detail.get("imageId");
+        if (imageId == null) {
+            return null;
+        }
+        return Long.parseLong(imageId.toString());
     }
 
     public Integer getInstance() {
-        return Integer.parseInt(detail.get("instance").toString());
+        Object instance = detail.get("instance");
+        if (instance == null) {
+            return null;
+        }
+        return Integer.parseInt(instance.toString());
     }
 
     public Double getCpu() {
@@ -163,11 +202,19 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
     }
 
     public Long getTemplateEventId() {
-        return Long.parseLong(detail.get("templateEventId").toString());
+        Object templateEventId = detail.get("templateEventId");
+        if (templateEventId == null) {
+            return null;
+        }
+        return Long.parseLong(templateEventId.toString());
     }
 
     public Long getCredentialId() {
-        return Long.parseLong(detail.get("credentialId").toString());
+        Object credentialId = detail.get("credentialId");
+        if (credentialId == null) {
+            return null;
+        }
+        return Long.parseLong(credentialId.toString());
     }
 
     public String getUsername() {
@@ -179,7 +226,11 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
     }
 
     public Long getTargetEnvId() {
-        return Long.parseLong(detail.get("targetEnvId").toString());
+        Object targetEnvId = detail.get("targetEnvId");
+        if (targetEnvId == null) {
+            return null;
+        }
+        return Long.parseLong(targetEnvId.toString());
     }
 
     public Boolean needAuth() {

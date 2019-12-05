@@ -137,6 +137,8 @@ public interface EnvService extends IService<EnvDto, RmsEnvEntity> {
      * @param envId
      */
     void delete(Long envId);
+
+    int selectCountByClusterId(Long clusterId);
 }
 
 

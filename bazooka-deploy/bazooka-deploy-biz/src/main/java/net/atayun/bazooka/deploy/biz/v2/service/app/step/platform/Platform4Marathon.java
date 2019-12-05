@@ -54,6 +54,7 @@ public class Platform4Marathon implements Platform, ICheckResource {
         App app = ModelUtils.GSON.fromJson(deployConfig, App.class);
         consumer.accept(app);
         app.getLabels().put(MarathonAppConfigConstants.LABEL_ATA_EVENT_ID, appOpt.getAppId().toString());
+        checkPlatformResource(app, appOpt.getEnvId(), logBuilder);
         logBuilder.append("服务配置:\n" + app.toString());
 
         //dcosServiceId
@@ -69,7 +70,6 @@ public class Platform4Marathon implements Platform, ICheckResource {
 
     @Override
     public void startApp(AppOpt appOpt, AppOptFlowStep appOptFlowStep, StepLogBuilder logBuilder) {
-        checkPlatformResource(appOpt, logBuilder);
         Consumer<App> consumer = app -> {
             Integer instance = appOpt.getInstance();
             app.setInstances(instance);
@@ -85,14 +85,12 @@ public class Platform4Marathon implements Platform, ICheckResource {
 
     @Override
     public void restartApp(AppOpt appOpt, AppOptFlowStep appOptFlowStep, StepLogBuilder logBuilder) {
-        checkPlatformResource(appOpt, logBuilder);
         lifeCycle(appOpt, app -> {
         }, logBuilder);
     }
 
     @Override
     public void scaleApp(AppOpt appOpt, AppOptFlowStep appOptFlowStep, StepLogBuilder logBuilder) {
-        checkPlatformResource(appOpt, logBuilder);
         Consumer<App> consumer = app -> {
             Integer instance = appOpt.getInstance();
             Double cpu = appOpt.getCpu();
@@ -106,9 +104,9 @@ public class Platform4Marathon implements Platform, ICheckResource {
 
     @Override
     public void rollback(AppOpt appOpt, AppOptFlowStep appOptFlowStep, StepLogBuilder logBuilder) {
-        checkPlatformResource(appOpt, logBuilder);
         App app = ModelUtils.GSON.fromJson(appOpt.getAppDeployConfig(), App.class);
         app.getLabels().put(MarathonAppConfigConstants.LABEL_ATA_EVENT_ID, appOpt.getAppId().toString());
+        checkPlatformResource(app, appOpt.getEnvId(), logBuilder);
         logBuilder.append("服务配置:\n" + app.toString());
 
         Marathon marathon = getMarathon(appOpt);
@@ -121,7 +119,6 @@ public class Platform4Marathon implements Platform, ICheckResource {
 
     @Override
     public void deploy(AppOpt appOpt, AppOptFlowStep appOptFlowStep, StepLogBuilder logBuilder) {
-        checkPlatformResource(appOpt, logBuilder);
         AppDeployConfigDto appDeployConfig = appApi.getAppDeployConfigInfoById(appOpt.getDeployConfigId())
                 .ifNotSuccessThrowException().getData();
 
@@ -143,6 +140,7 @@ public class Platform4Marathon implements Platform, ICheckResource {
         app.setHealthChecks(getHealthChecks(appDeployConfig));
         Map<String, Object> envVariable = Optional.ofNullable(appDeployConfig.getEnvironmentVariable()).orElseGet(HashMap::new);
         app.setEnv(envVariable);
+        checkPlatformResource(app, appOpt.getEnvId(), logBuilder);
         logBuilder.append("服务配置:\n" + app.toString());
 
         Marathon marathon = getMarathon(appOpt);
@@ -273,5 +271,12 @@ public class Platform4Marathon implements Platform, ICheckResource {
         appOpt.setAppDeployUuid(dcosResult.getDeploymentId());
         appOpt.setAppDeployVersion(dcosResult.getVersion());
         appOpt.setAppRunServiceId(dcosServiceId);
+        appOpt.setDockerImageTag(getImageTag(app));
+    }
+
+    private String getImageTag(App app) {
+        String image = app.getContainer().getDocker().getImage();
+        String[] arr = image.split(":");
+        return arr[arr.length - 1];
     }
 }

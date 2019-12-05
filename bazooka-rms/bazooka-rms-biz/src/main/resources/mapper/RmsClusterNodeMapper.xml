@@ -13,8 +13,8 @@
         SELECT count(1) FROM rms_cluster_node t where t.cluster_id = #{clusterId}
     </select>
 
-    <select id="getHostByNodeId" parameterType="string" resultType="java.lang.String">
-        select ip from rms_cluster_node where node_id = #{nodeId}
+    <select id="getHostByClusterIdAndNodeId" resultType="java.lang.String">
+        select ip from rms_cluster_node where node_id = #{nodeId} and cluster_id = #{clusterId}
     </select>
 
 </mapper>

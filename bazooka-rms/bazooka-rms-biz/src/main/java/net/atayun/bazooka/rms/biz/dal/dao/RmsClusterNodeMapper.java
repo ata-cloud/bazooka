@@ -15,8 +15,9 @@
  */
 package net.atayun.bazooka.rms.biz.dal.dao;
 
-import net.atayun.bazooka.rms.biz.dal.entity.RmsClusterNodeEntity;
 import com.youyu.common.mapper.YyMapper;
+import net.atayun.bazooka.rms.biz.dal.entity.RmsClusterNodeEntity;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -30,6 +31,7 @@ public interface RmsClusterNodeMapper extends YyMapper<RmsClusterNodeEntity> {
 
     /**
      * 删除集群节点信息
+     *
      * @param clusterId
      */
     void deleteClusterNodeByClusterId(Long clusterId);
@@ -45,10 +47,11 @@ public interface RmsClusterNodeMapper extends YyMapper<RmsClusterNodeEntity> {
     /**
      * 根据节点nodeId查询主机ip地址
      *
-     * @param nodeId
+     * @param clusterId clusterId
+     * @param nodeId    nodeId
      * @return
      */
-    String getHostByNodeId(String nodeId);
+    String getHostByClusterIdAndNodeId(@Param("clusterId") Long clusterId, @Param("nodeId") String nodeId);
 }
 
 

@@ -26,9 +26,16 @@ class AddCluster extends React.Component {
       showType: ''
     })
   }
-  // onSave = () => {
-  //   this.setState
-  // }
+  onSave = () => {
+    this.onFetchList();
+  }
+  onFetchList = (payload = { pageSize: 100 }) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'cluster/clusterList',
+      payload
+    })
+  }
   renderMesos() {
     return (
       <Card>
@@ -146,10 +153,10 @@ class AddCluster extends React.Component {
           </Fragment>
         }
         {
-          showType === 'Mesos' && <Mesos onCancel={this.onCancel} />
+          showType === 'Mesos' && <Mesos onCancel={this.onCancel} onSave={this.onSave}/>
         }
         {
-          showType === 'Bazooka' && <Bazooka onCancel={this.onCancel} />
+          showType === 'Bazooka' && <Bazooka onCancel={this.onCancel} onSave={this.onSave}/>
         }
 
       </PageHeaderWrapper>
@@ -157,6 +164,6 @@ class AddCluster extends React.Component {
   }
 }
 
-export default connect(({ service }) => ({
+export default connect(({ cluster }) => ({
 
 }))(AddCluster);

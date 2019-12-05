@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Card, Form, Row, Col, Input, Icon,message } from 'antd';
+import { Card, Form, Row, Col, Input, Icon, message } from 'antd';
 import { connect } from 'dva';
 import CommomItem from './commomItem';
 import styles from '@/pages/index.less';
@@ -18,34 +18,35 @@ class Mesos extends React.Component {
   }
   componentDidMount() { }
   onSubmit = (e) => {
-    const { onCancel } = this.props;
+    const { onCancel, onSave } = this.props;
     e && e.preventDefault();
     this.props.form.validateFieldsAndScroll(async (err, values) => {
       if (!err) {
-        // this.setState({
-        //   saveLoading: true
-        // });
+        this.setState({
+          saveLoading: true
+        });
         let params = {
-          ...values, 
-          type: '0', 
+          ...values,
+          type: '0',
           keys: undefined,
           keys1: undefined,
-          credentialId: values.credentialId=='-1'? undefined: values.credentialId,
-          masterUrls: values.masterUrls.filter(item=>item),
-          mlbUrls: values.mlbUrls.filter(item=>item),
+          credentialId: values.credentialId == '-1' ? undefined : values.credentialId,
+          masterUrls: values.masterUrls.filter(item => item),
+          mlbUrls: values.mlbUrls.filter(item => item),
         }
         let res = await cluster.createMesosCluster(params);
-        if(res && res.code == '1') {
-          message.success('添加成功')
-          onCancel()
-        }
         this.setState({
           saveLoading: false
         })
+        if (res && res.code == '1') {
+          message.success('添加成功')
+          onCancel();
+          onSave();
+        }
       }
     });
   }
- 
+
   addKey = (type) => {
     const { getFieldValue, setFieldsValue } = this.props.form;
     const keys = getFieldValue(type);
@@ -78,7 +79,7 @@ class Mesos extends React.Component {
   renderForm() {
     const { onCancel, form, credentialsList } = this.props;
     const { getFieldDecorator } = form;
-    const { saveLoading }= this.state;
+    const { saveLoading } = this.state;
     return (
       <Form onSubmit={this.onSubmit} colon={false} className={styles.marginT}>
         <Row type="flex" align="top" gutter={48}>
@@ -126,8 +127,8 @@ class Mesos extends React.Component {
             <div className={styles.flex} key={k}>
               <FormItem className={styles.flex1}>
                 {getFieldDecorator(`masterUrls.${k}`, {
-                  rules:[
-                    {required: true, message: '请输入master节点ip'}
+                  rules: [
+                    { required: true, message: '请输入master节点ip' }
                   ]
                 })(<Input placeholder="请输入master节点ip" />)}
               </FormItem>
@@ -151,8 +152,8 @@ class Mesos extends React.Component {
             <div className={styles.flex} key={k}>
               <FormItem className={styles.flex1}>
                 {getFieldDecorator(`mlbUrls.${k}`, {
-                  rules:[
-                    {required: true, message: '请输入public agent节点ip'}
+                  rules: [
+                    { required: true, message: '请输入public agent节点ip' }
                   ]
                 })(<Input placeholder="请输入public agent节点ip" />)}
               </FormItem>

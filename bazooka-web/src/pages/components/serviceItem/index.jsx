@@ -29,7 +29,7 @@ class ServiceItem extends React.Component {
     if (!list.length || list.length <= 3) {
       return
     }
-    let moveNumber = list.length%3;
+    let moveNumber = list.length - 3;
     let leftArrow = document.getElementById(`left${item.id}`), rightArrow = document.getElementById(`right${item.id}`);
     switch (type) {
       case 'left': {
@@ -39,7 +39,7 @@ class ServiceItem extends React.Component {
         }
         ele.style.left = `${left + 33.5}%`;
         rightArrow.style.color = '#1890ff';
-        if(left + 33.5 === 0) {
+        if (left + 33.5 === 0) {
           leftArrow.style.color = '#bbb';
         }
       } break;
@@ -51,7 +51,7 @@ class ServiceItem extends React.Component {
         }
         ele.style.left = `-${left + 33.5}%`;
         leftArrow.style.color = '#1890ff';
-        if(left + 33.5 === moveNumber * 33.5) {
+        if (left + 33.5 === moveNumber * 33.5) {
           rightArrow.style.color = '#bbb';
         }
       } break;

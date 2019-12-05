@@ -469,7 +469,8 @@ public class AppController implements AppApi {
     public Result<AppEnvInfoVo> getAppRuntimeInfo(@PathVariable Long appId, @PathVariable Long envId) {
         AppInfoDto appInfoDto = this.getAppInfoDtoIncludeProjectInfo(appId);
         EnvDto envDto = this.envApi.get(envId).ifNotSuccessThrowException().getData();
-        ClusterAppServiceInfoDto clusterAppServiceInfoDto = this.envApi.getClusterAppServiceInfo(new EnvAppReq(envId, appInfoDto.getDcosServiceId())).ifNotSuccessThrowException().getData();
+        ClusterAppServiceInfoDto clusterAppServiceInfoDto = this.envApi.getClusterAppServiceInfo(new EnvAppReq(envId,
+                appInfoDto.getDcosServiceId(), appId)).ifNotSuccessThrowException().getData();
 
         return Result.ok(new AppEnvInfoVo(
                 appId,
@@ -495,7 +496,7 @@ public class AppController implements AppApi {
         AppInfoDto appInfoDto = this.appInfoService.selectByPrimaryKey(appId);
         YyAssert.paramCheck(ObjectUtils.isEmpty(appInfoDto), "服务ID不存在！");
 
-        Result<List<ClusterAppServiceHostDto>> clusterAppServiceHosts = this.envApi.getClusterAppServiceHosts(new EnvAppReq(envId, appInfoDto.getDcosServiceId()));
+        Result<List<ClusterAppServiceHostDto>> clusterAppServiceHosts = this.envApi.getClusterAppServiceHosts(new EnvAppReq(envId, appInfoDto.getDcosServiceId(), appId));
 
         return clusterAppServiceHosts;
     }
@@ -507,7 +508,7 @@ public class AppController implements AppApi {
         AppInfoDto appInfoDto = this.appInfoService.selectByPrimaryKey(appId);
         YyAssert.paramCheck(ObjectUtils.isEmpty(appInfoDto), "服务ID不存在！");
 
-        Result<List<ClusterDockerDto>> listResult = this.envApi.getClusterDockers(new EnvAppReq(envId, appInfoDto.getDcosServiceId()));
+        Result<List<ClusterDockerDto>> listResult = this.envApi.getClusterDockers(new EnvAppReq(envId, appInfoDto.getDcosServiceId(), appId));
         return listResult;
     }
 
@@ -517,7 +518,7 @@ public class AppController implements AppApi {
     public Result<RmsDockerImageDto> getAppCurrentImageInfo(@PathVariable Long appId, @PathVariable Long envId) {
         AppInfoDto appInfoDto = this.appInfoService.selectOne(new AppInfoEntity(appId, IsDeleted.NOT_DELETED));
         YyAssert.paramCheck(ObjectUtils.isEmpty(appInfoDto), "服务ID不存在或已删除！");
-        String imageFullName = this.envApi.getClusterAppImage(new EnvAppReq(envId, appInfoDto.getDcosServiceId())).ifNotSuccessThrowException().getData();
+        String imageFullName = this.envApi.getClusterAppImage(new EnvAppReq(envId, appInfoDto.getDcosServiceId(), appId)).ifNotSuccessThrowException().getData();
         if (StringUtils.hasText(imageFullName)) {
             String registry = imageFullName.substring(0, imageFullName.indexOf("/"));
             String imageName = imageFullName.substring(imageFullName.indexOf("/") + 1, imageFullName.lastIndexOf(":"));

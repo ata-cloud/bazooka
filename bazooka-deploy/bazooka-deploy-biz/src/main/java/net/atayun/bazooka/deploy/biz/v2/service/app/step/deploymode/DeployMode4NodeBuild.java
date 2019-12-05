@@ -12,11 +12,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @StrategyNum(superClass = DeployMode.class, number = DeployModeEnum.MODE_BUILD + "2")
-public class DeployMode4NodeBuild implements DeployMode, ICheckBranch {
+public class DeployMode4NodeBuild implements DeployMode, ICheckBranch, ICheckNodeResource {
 
     @Override
     public void check(AppOpt appOpt, AppOptFlowStep appOptFlowStep, StepLogBuilder stepLogBuilder) {
         checkBranch(appOpt, stepLogBuilder);
+        checkNodeResource(appOpt, stepLogBuilder);
     }
 
 }

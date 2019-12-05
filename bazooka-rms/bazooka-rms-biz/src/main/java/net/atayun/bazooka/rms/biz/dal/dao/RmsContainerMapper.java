@@ -1,33 +1,76 @@
-/*
- *    Copyright 2018-2019 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
 package net.atayun.bazooka.rms.biz.dal.dao;
 
-import net.atayun.bazooka.rms.biz.dal.entity.RmsContainerEntity;
 import com.youyu.common.mapper.YyMapper;
+import net.atayun.bazooka.rms.biz.dal.entity.ContainerAndResourceSumEntity;
+import net.atayun.bazooka.rms.biz.dal.entity.ResourceSumEntity;
+import net.atayun.bazooka.rms.biz.dal.entity.ResourceSumEnvGroupEntity;
+import net.atayun.bazooka.rms.biz.dal.entity.RmsContainer;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
 
 /**
- *  代码生成器
- *
- * @author 技术平台
- * @date 2019-07-18
+ * @author Ping
  */
-public interface RmsContainerMapper extends YyMapper<RmsContainerEntity> {
+public interface RmsContainerMapper extends YyMapper<RmsContainer> {
 
+    /**
+     * sumResourceByClusterId
+     *
+     * @param clusterId clusterId
+     * @return ResourceSumEntity
+     */
+    @Select("select " +
+            "sum(cpu) cpu, " +
+            "sum(memory) memory, " +
+            "sum(disk) disk " +
+            "from rms_container where cluster_id = #{clusterId} and container_status = '3' group by cluster_id;")
+    ResourceSumEntity selectResourceByClusterId(@Param("clusterId") Long clusterId);
+
+    /**
+     * sumResourceByClusterIdGroupByEnv
+     *
+     * @param clusterId clusterId
+     * @return
+     */
+    @Select("select " +
+            "rc.env_id id, " +
+            "re.code, " +
+            "re.name, " +
+            "sum(rc.cpu) cpus, " +
+            "sum(rc.memory) memory, " +
+            "sum(rc.disk) disk " +
+            "from rms_container rc " +
+            "inner join rms_env re on rc.env_id = re.id and rc.cluster_id = re.cluster_id " +
+            "where rc.cluster_id = #{clusterId} and rc.container_status = '3' " +
+            "group by rc.env_id, re.name, re.code;")
+    List<ResourceSumEnvGroupEntity> sumResourceByClusterIdGroupByEnv(@Param("clusterId") Long clusterId);
+
+    /**
+     * sumContainerAndResourceByNode
+     *
+     * @param nodeId nodeId
+     * @return ContainerAndResourceSumEntity
+     */
+    @Select("select " +
+            "count(container_name) count, " +
+            "sum(cpu) cpu, " +
+            "sum(memory) memory, " +
+            "sum(disk) disk " +
+            "from rms_container where node_id = #{nodeId} and container_status = '3' group by node_id;")
+    ContainerAndResourceSumEntity sumContainerAndResourceByNode(@Param("nodeId") Long nodeId);
+
+    /**
+     * updateStatusByAppId
+     *
+     * @param envId  envId
+     * @param appId  appId
+     * @param status status
+     */
+    @Update("update rms_container " +
+            " set container_status = #{status} " +
+            " where env_id = #{envId} and app_id = #{appId};")
+    void updateStatusByEnvIdAndAppId(@Param("envId") Long envId, @Param("appId") Long appId, @Param("status") String status);
 }
-
-
-
-

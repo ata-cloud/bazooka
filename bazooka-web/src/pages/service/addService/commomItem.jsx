@@ -95,7 +95,7 @@ class CommomItem extends React.Component {
               rules: [
                 {
                   validator: async (rule, value, callback)=>{
-                    if(value.length > 500) {
+                    if(value && value.length > 500) {
                       callback('最多500个字符')
                     }else {
                       callback()
@@ -110,13 +110,13 @@ class CommomItem extends React.Component {
     )
   }
   render() {
-    const { onCancel, onSave } = this.props;
+    const { onCancel, onSave, loading } = this.props;
     return (
       <Fragment>
         {this.renderForm()}
         <Col span={24} className={styles.marginT}>
           <Button onClick={onCancel} className={styles.marginR30}>上一步</Button>
-          <Button type="primary" onClick={onSave}>保存</Button>
+          <Button type="primary" onClick={onSave} loading={loading}>保存</Button>
         </Col>
       </Fragment>
     );
