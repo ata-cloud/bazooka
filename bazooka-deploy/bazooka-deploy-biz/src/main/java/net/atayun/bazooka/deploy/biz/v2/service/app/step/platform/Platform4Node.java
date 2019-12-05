@@ -145,7 +145,7 @@ public class Platform4Node implements Platform, ICheckNodeResource {
         String containerName = lastAppOpt.getAppRunServiceId();
         String command = RESTART_COMMAND.replace("__CONTAINER_NAME__", containerName);
         List<Long> nodeIds = getNodeIds(lastAppOpt.getAppDeployUuid());
-        checkResource(command, nodeIds, logBuilder);
+        checkResource(lastAppOpt.getAppDeployConfig(), nodeIds, logBuilder);
         List<NodeContainerParam> params = ssh(appOpt, nodeIds, command, logBuilder);
 
         appOpt.setAppDeployConfig(command);
