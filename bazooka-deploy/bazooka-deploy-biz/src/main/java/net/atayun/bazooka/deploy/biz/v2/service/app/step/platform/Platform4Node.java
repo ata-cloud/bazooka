@@ -270,16 +270,17 @@ public class Platform4Node implements Platform, ICheckNodeResource {
     }
 
     private List<NodeContainerParam> buildNodeContainerParams(AppOpt appOpt, List<Long> nodeIds, String command) {
+        List<NodeContainerParam> params = new ArrayList<>();
+        if (appOpt.getOpt() == AppOptEnum.STOP) {
+            return new ArrayList<>();
+        }
         EnvDto env = getBean(EnvApi.class).get(appOpt.getEnvId()).ifNotSuccessThrowException().getData();
         List<ClusterNodeRspDto> clusterNodes = getBean(RmsClusterNodeApi.class).getClusterNodeInfoByNodeIds(nodeIds)
                 .ifNotSuccessThrowException().getData();
-        List<NodeContainerParam> params = new ArrayList<>();
         for (ClusterNodeRspDto clusterNode : clusterNodes) {
-            if (appOpt.getOpt() != AppOptEnum.STOP) {
-                NodeContainerParam nodeContainerParam = buildNodeContainerParam(env.getClusterId(), env.getId(),
-                        clusterNode.getId(), appOpt.getAppId(), clusterNode.getIp(), command);
-                params.add(nodeContainerParam);
-            }
+            NodeContainerParam nodeContainerParam = buildNodeContainerParam(env.getClusterId(), env.getId(),
+                    clusterNode.getId(), appOpt.getAppId(), clusterNode.getIp(), command);
+            params.add(nodeContainerParam);
         }
         return params;
     }
