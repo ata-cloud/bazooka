@@ -96,7 +96,8 @@ public class Platform4Node implements Platform, ICheckNodeResource {
         String command = lastAppOpt.getAppDeployConfig();
         List<Long> clusterNodeIds = appDeployConfigDto.getClusterNodes();
         checkResource(command, clusterNodeIds, logBuilder);
-        List<NodeContainerParam> params = ssh(appOpt, clusterNodeIds, command, logBuilder);
+        List<NodeContainerParam> params = buildNodeContainerParams(appOpt, clusterNodeIds, command);
+        ssh(clusterNodeIds, command, logBuilder);
 
         appOpt.setAppDeployUuid(getUuid(clusterNodeIds));
         appOpt.setAppRunServiceId(getServiceId());
@@ -121,7 +122,7 @@ public class Platform4Node implements Platform, ICheckNodeResource {
         String command = STOP_COMMAND.replace("__CONTAINER_NAME__", containerName);
         List<Long> cNodeIds = getNodeIds(lastAppOpt.getAppDeployUuid());
         try {
-            ssh(appOpt, cNodeIds, command, logBuilder);
+            ssh(cNodeIds, command, logBuilder);
         } catch (Throwable throwable) {
             if (isStopOpt) {
                 throw throwable;
@@ -145,8 +146,9 @@ public class Platform4Node implements Platform, ICheckNodeResource {
         String containerName = lastAppOpt.getAppRunServiceId();
         String command = RESTART_COMMAND.replace("__CONTAINER_NAME__", containerName);
         List<Long> nodeIds = getNodeIds(lastAppOpt.getAppDeployUuid());
-        checkResource(command, nodeIds, logBuilder);
-        List<NodeContainerParam> params = ssh(appOpt, nodeIds, command, logBuilder);
+        checkResource(lastAppOpt.getAppDeployConfig(), nodeIds, logBuilder);
+        List<NodeContainerParam> params = buildNodeContainerParams(appOpt, nodeIds, lastAppOpt.getAppDeployConfig());
+        ssh(nodeIds, command, logBuilder);
 
         appOpt.setAppDeployConfig(command);
         appOpt.setAppDeployUuid(lastAppOpt.getAppDeployUuid());
@@ -170,7 +172,8 @@ public class Platform4Node implements Platform, ICheckNodeResource {
         List<Long> nodeIds = getNodeIds(appOpt.getAppDeployUuid());
         String command = appOpt.getAppDeployConfig();
         checkResource(command, nodeIds, logBuilder);
-        List<NodeContainerParam> params = ssh(appOpt, nodeIds, command, logBuilder);
+        List<NodeContainerParam> params = buildNodeContainerParams(appOpt, nodeIds, command);
+        ssh(nodeIds, command, logBuilder);
 
         appOpt.setAppDeployVersion(getVersion());
         updateContainer(appOpt, params);
@@ -227,7 +230,8 @@ public class Platform4Node implements Platform, ICheckNodeResource {
         }
         List<Long> clusterNodeIds = appDeployConfigDto.getClusterNodes();
         checkResource(command, clusterNodeIds, logBuilder);
-        List<NodeContainerParam> params = ssh(appOpt, clusterNodeIds, command, logBuilder);
+        List<NodeContainerParam> params = buildNodeContainerParams(appOpt, clusterNodeIds, command);
+        ssh(clusterNodeIds, command, logBuilder);
 
         appOpt.setAppDeployUuid(getUuid(clusterNodeIds));
         appOpt.setAppDeployVersion(getVersion());
@@ -241,11 +245,9 @@ public class Platform4Node implements Platform, ICheckNodeResource {
         //...
     }
 
-    private List<NodeContainerParam> ssh(AppOpt appOpt, List<Long> nodeIds, String command, StepLogBuilder logBuilder) {
-        EnvDto env = getBean(EnvApi.class).get(appOpt.getEnvId()).ifNotSuccessThrowException().getData();
+    private void ssh(List<Long> nodeIds, String command, StepLogBuilder logBuilder) {
         List<ClusterNodeRspDto> clusterNodes = getBean(RmsClusterNodeApi.class).getClusterNodeInfoByNodeIds(nodeIds)
                 .ifNotSuccessThrowException().getData();
-        List<NodeContainerParam> params = new ArrayList<>();
         for (ClusterNodeRspDto clusterNode : clusterNodes) {
             String ip = clusterNode.getIp();
             logBuilder.append("节点: " + ip + ", CMD: " + MessageDesensitizationUtil.replaceDockerCmd(command));
@@ -261,14 +263,24 @@ public class Platform4Node implements Platform, ICheckNodeResource {
                 session.connect();
                 exec(session, command, logBuilder);
                 session.disconnect();
-                if (appOpt.getOpt() != AppOptEnum.STOP) {
-                    NodeContainerParam nodeContainerParam = buildNodeContainerParam(env.getClusterId(), env.getId(),
-                            clusterNode.getId(), appOpt.getAppId(), clusterNode.getIp(), command);
-                    params.add(nodeContainerParam);
-                }
             } catch (JSchException | IOException e) {
                 throw new BizException(ACCESS_NODE_ERR_CODE, "节点访问异常[" + ip + "]", e);
             }
+        }
+    }
+
+    private List<NodeContainerParam> buildNodeContainerParams(AppOpt appOpt, List<Long> nodeIds, String command) {
+        List<NodeContainerParam> params = new ArrayList<>();
+        if (appOpt.getOpt() == AppOptEnum.STOP) {
+            return new ArrayList<>();
+        }
+        EnvDto env = getBean(EnvApi.class).get(appOpt.getEnvId()).ifNotSuccessThrowException().getData();
+        List<ClusterNodeRspDto> clusterNodes = getBean(RmsClusterNodeApi.class).getClusterNodeInfoByNodeIds(nodeIds)
+                .ifNotSuccessThrowException().getData();
+        for (ClusterNodeRspDto clusterNode : clusterNodes) {
+            NodeContainerParam nodeContainerParam = buildNodeContainerParam(env.getClusterId(), env.getId(),
+                    clusterNode.getId(), appOpt.getAppId(), clusterNode.getIp(), command);
+            params.add(nodeContainerParam);
         }
         return params;
     }
