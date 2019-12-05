@@ -52,6 +52,7 @@ import static net.atayun.bazooka.base.utils.CommonUtil.defaultValue;
 import static net.atayun.bazooka.base.utils.OrikaCopyUtil.copyProperty;
 import static net.atayun.bazooka.rms.api.enums.EnvState.NORMAL;
 import static net.atayun.bazooka.rms.api.enums.RmsResultCode.*;
+import static net.atayun.bazooka.rms.biz.constansts.CommonConstant.TASK_KILLED;
 import static net.atayun.bazooka.rms.biz.constansts.CommonConstant.TASK_RUNNING;
 import static org.apache.commons.collections.CollectionUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
@@ -199,11 +200,30 @@ public class EnvServiceImpl extends AbstractService<Long, EnvDto, RmsEnvEntity, 
         assertTrue(isNull(record), ENV_NOT_EXISTS);
         RmsClusterDto cluster = clusterService.selectByPrimaryKey(record.getClusterId());
         if (Objects.equals(cluster.getType(), CommonConstant.NODE_CLUSTER_TYPE)) {
-            List<RmsContainer> rmsContainers = rmsContainerService.selectByEnvIdAndAppIdAndStatus(envAppReq.getEnvId(), envAppReq.getAppIdLongValue(), TASK_RUNNING);
+            List<RmsContainer> rmsContainers = rmsContainerService.selectByEnvIdAndAppId(envAppReq.getEnvId(), envAppReq.getAppIdLongValue());
             if (CollectionUtils.isEmpty(rmsContainers)) {
                 return new ArrayList<>();
             }
-            LinkedHashMap<String, List<String>> map = rmsContainers.stream()
+            LinkedHashMap<String, List<RmsContainer>> rmsContainerMap = rmsContainers.stream().
+                    collect(Collectors.groupingBy(RmsContainer::getContainerStatus, LinkedHashMap::new, toList()));
+            List<RmsContainer> running = rmsContainerMap.get(TASK_RUNNING);
+            if (CollectionUtils.isEmpty(running)) {
+                List<RmsContainer> killed = rmsContainerMap.get(TASK_KILLED);
+                if (CollectionUtils.isEmpty(killed)) {
+                    return new ArrayList<>();
+                }
+                RmsContainer rmsContainer = killed.get(killed.size() - 1);
+                return Optional.ofNullable(rmsContainer.getPortMapping()).orElseGet(ArrayList::new).stream()
+                        .map(port -> {
+                            ClusterAppServiceHostDto clusterAppServiceHostDto = new ClusterAppServiceHostDto();
+                            clusterAppServiceHostDto.setContainerPort(port.split(":")[1]);
+                            clusterAppServiceHostDto.setMlbHosts(new ArrayList<>());
+                            return clusterAppServiceHostDto;
+                        })
+                        .collect(Collectors.toList());
+            }
+
+            LinkedHashMap<String, List<String>> map = running.stream()
                     .filter(rmsContainer -> !CollectionUtils.isEmpty(rmsContainer.getPortMapping()))
                     .map(rmsContainer -> rmsContainer.getPortMapping().stream()
                             .map(port -> rmsContainer.getIp() + ":" + port))
@@ -244,9 +264,16 @@ public class EnvServiceImpl extends AbstractService<Long, EnvDto, RmsEnvEntity, 
         assertTrue(isNull(record), ENV_NOT_EXISTS);
         RmsClusterDto cluster = clusterService.selectByPrimaryKey(record.getClusterId());
         if (Objects.equals(cluster.getType(), CommonConstant.NODE_CLUSTER_TYPE)) {
-            List<RmsContainer> rmsContainers = rmsContainerService.selectByEnvIdAndAppIdAndStatus(envAppReq.getEnvId(), envAppReq.getAppIdLongValue(), TASK_RUNNING);
+            List<RmsContainer> rmsContainers = rmsContainerService.selectByEnvIdAndAppId(envAppReq.getEnvId(), envAppReq.getAppIdLongValue());
             if (CollectionUtils.isEmpty(rmsContainers)) {
                 return "";
+            }
+            LinkedHashMap<String, List<RmsContainer>> collect = rmsContainers.stream().
+                    collect(Collectors.groupingBy(RmsContainer::getContainerStatus, LinkedHashMap::new, toList()));
+            List<RmsContainer> running = collect.get(TASK_RUNNING);
+            if (CollectionUtils.isEmpty(running)) {
+                List<RmsContainer> killed = collect.get(TASK_KILLED);
+                return CollectionUtils.isEmpty(killed) ? "" : killed.get(killed.size() - 1).getContainerImage();
             }
             return rmsContainers.get(0).getContainerImage();
         }

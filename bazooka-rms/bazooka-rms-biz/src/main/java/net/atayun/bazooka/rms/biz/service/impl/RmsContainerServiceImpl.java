@@ -71,7 +71,7 @@ public class RmsContainerServiceImpl implements RmsContainerService {
     }
 
     @Override
-    public ContainerAndResourceSumEntity sumContainerAndResourceByNode(String nodeId) {
+    public ContainerAndResourceSumEntity sumContainerAndResourceByNode(Long nodeId) {
         ContainerAndResourceSumEntity containerAndResourceSumEntity = rmsContainerMapper.sumContainerAndResourceByNode(nodeId);
         return containerAndResourceSumEntity == null ? new ContainerAndResourceSumEntity() : containerAndResourceSumEntity;
     }
@@ -160,6 +160,7 @@ public class RmsContainerServiceImpl implements RmsContainerService {
         Example example = new Example(RmsContainer.class);
         example.createCriteria().andEqualTo("appId", appId)
                 .andEqualTo("envId", envId);
+        example.orderBy("id").asc();
         List<RmsContainer> rmsContainers = rmsContainerMapper.selectByExample(example);
         return CollectionUtils.isEmpty(rmsContainers) ? new ArrayList<>() : rmsContainers;
     }

@@ -49,7 +49,7 @@ public interface ICheckNodeResource {
                 throw new BizException(ILLEGAL_CPU_SHARES, "节点[" + clusterNode.getIp() + "]CPU核数不足");
             }
             if (Optional.ofNullable(available.getMemory()).orElse(BigDecimal.ZERO).subtract(new BigDecimal(deployConfig.getMemory())).compareTo(BigDecimal.ZERO) < 0) {
-                throw new BizException(ILLEGAL_MEM, "节点[" + clusterNode.getIp() + "]内存核数不足");
+                throw new BizException(ILLEGAL_MEM, "节点[" + clusterNode.getIp() + "]内存不足");
             }
 //            if (Optional.ofNullable(available.getDisk()).orElse(BigDecimal.ZERO).subtract(new BigDecimal(deployConfig.getDisk())).compareTo(BigDecimal.ZERO) < 0) {
 //                throw new BizException(ILLEGAL_DISK, "节点[" + clusterNode.getIp() + "]磁盘核数不足");
@@ -78,7 +78,7 @@ public interface ICheckNodeResource {
                 throw new BizException(ILLEGAL_CPU_SHARES, "节点[" + clusterNode.getIp() + "]CPU核数不足");
             }
             if (Optional.ofNullable(available.getMemory()).orElse(BigDecimal.ZERO).subtract(mem).compareTo(BigDecimal.ZERO) < 0) {
-                throw new BizException(ILLEGAL_MEM, "节点[" + clusterNode.getIp() + "]内存核数不足");
+                throw new BizException(ILLEGAL_MEM, "节点[" + clusterNode.getIp() + "]内存不足");
             }
         }
     }

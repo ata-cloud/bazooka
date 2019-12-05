@@ -22,7 +22,7 @@ public interface RmsContainerService {
 
     List<EnvResourceDto> sumResourceByClusterIdGroupByEnv(Long clusterId);
 
-    ContainerAndResourceSumEntity sumContainerAndResourceByNode(String nodeId);
+    ContainerAndResourceSumEntity sumContainerAndResourceByNode(Long nodeId);
 
     List<RmsContainer> selectByAppId(Long appId);
 
