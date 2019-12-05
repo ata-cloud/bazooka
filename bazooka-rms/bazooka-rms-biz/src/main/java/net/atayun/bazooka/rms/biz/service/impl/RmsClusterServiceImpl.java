@@ -732,6 +732,7 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
 
         //校验master ip 是否可用
         if (createClusterReq.getType().equals(ClusterTypeEnum.MESOS.getCode())) {
+            String frameworkId =  DcosApiClient.getInstance(PROTOCOL + createClusterReq.getMasterUrls().get(0), 3 * 1000, 3 * 1000).getInfo().getFrameworkId();
             for (String url : createClusterReq.getMasterUrls()) {
                 //Get Version
                 DcosApi dcos = DcosApiClient.getInstance(PROTOCOL + url, 3 * 1000, 3 * 1000);
@@ -739,6 +740,9 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
                     dcos.getInfo().getVersion();
                 } catch (Exception e) {
                     return Result.fail(RmsResultCode.MASTER_NODE_IP_ERROR.getCode(), RmsResultCode.MASTER_NODE_IP_ERROR.getDesc() + url);
+                }
+                if (!frameworkId.equals(dcos.getInfo().getFrameworkId())){
+                    return Result.fail(RmsResultCode.CLISTER_NOT_SAME.getCode(), RmsResultCode.CLISTER_NOT_SAME.getDesc());
                 }
             }
         }

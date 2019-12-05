@@ -44,6 +44,7 @@ public enum RmsResultCode implements IBaseResultCode {
     PUBLIC_AGENT_NODE_IP_REPEAT("0017", "Public agent节点ip列表不能重复"),
     MASTER_NODE_IP_ERROR("0018", "Master节点ip地址错误:"),
     NODE_IP_REPEAT("0019","节点ip不能重复"),
+    CLISTER_NOT_SAME("0020","Master ip 不属于同一个集群"),
     ;
 
     private static final String RMS_PREFIX = "0106";
