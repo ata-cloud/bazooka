@@ -182,15 +182,27 @@ public class AppOpt extends JdbcMysqlEntity<Long> {
     }
 
     public Double getCpu() {
-        return (Double) detail.get("cpu");
+        Object cpu = detail.get("cpu");
+        if (cpu == null) {
+            return null;
+        }
+        return Double.parseDouble(cpu.toString());
     }
 
     public Double getMemory() {
-        return (Double) detail.get("memory");
+        Object cpu = detail.get("memory");
+        if (cpu == null) {
+            return null;
+        }
+        return Double.parseDouble(cpu.toString());
     }
 
     public Double getDisk() {
-        return (Double) detail.get("disk");
+        Object cpu = detail.get("disk");
+        if (cpu == null) {
+            return null;
+        }
+        return Double.parseDouble(cpu.toString());
     }
 
     public String getTargetDockerRegistry() {
