@@ -46,7 +46,6 @@ import net.atayun.bazooka.rms.biz.dal.dao.RmsClusterNodeMapper;
 import net.atayun.bazooka.rms.biz.dal.entity.RmsClusterConfigEntity;
 import net.atayun.bazooka.rms.biz.dal.entity.RmsClusterEntity;
 import net.atayun.bazooka.rms.biz.dal.entity.RmsClusterNodeEntity;
-import net.atayun.bazooka.rms.api.dto.ResourceSumDto;
 import net.atayun.bazooka.rms.biz.enums.ClusterTypeEnum;
 import net.atayun.bazooka.rms.biz.service.EnvService;
 import net.atayun.bazooka.rms.biz.service.RmsClusterConfigService;
@@ -195,8 +194,8 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
         clusterRspDto.setNormalNodeQuantity(0);
         clusterRspDto.setNodeQuantity(nodeQuantities.get(1));
 
-        int containers = rmsContainerService.sumContainerByClusterId(clusterId);
-        clusterRspDto.setRunningServiceQuantity(0);
+        int containers = rmsContainerService.sumRunningContainerByClusterId(clusterId);
+        clusterRspDto.setRunningServiceQuantity(containers);
         clusterRspDto.setServiceQuantity(containers);
     }
 
@@ -771,7 +770,7 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
 
         //校验master ip 是否可用
         if (createClusterReq.getType().equals(ClusterTypeEnum.MESOS.getCode())) {
-            String frameworkId =  DcosApiClient.getInstance(PROTOCOL + createClusterReq.getMasterUrls().get(0), 3 * 1000, 3 * 1000).getInfo().getFrameworkId();
+            String frameworkId = DcosApiClient.getInstance(PROTOCOL + createClusterReq.getMasterUrls().get(0), 3 * 1000, 3 * 1000).getInfo().getFrameworkId();
             for (String url : createClusterReq.getMasterUrls()) {
                 //Get Version
                 DcosApi dcos = DcosApiClient.getInstance(PROTOCOL + url, 3 * 1000, 3 * 1000);
@@ -780,7 +779,7 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
                 } catch (Exception e) {
                     return Result.fail(RmsResultCode.MASTER_NODE_IP_ERROR.getCode(), RmsResultCode.MASTER_NODE_IP_ERROR.getDesc() + url);
                 }
-                if (!frameworkId.equals(dcos.getInfo().getFrameworkId())){
+                if (!frameworkId.equals(dcos.getInfo().getFrameworkId())) {
                     return Result.fail(RmsResultCode.CLISTER_NOT_SAME.getCode(), RmsResultCode.CLISTER_NOT_SAME.getDesc());
                 }
             }
