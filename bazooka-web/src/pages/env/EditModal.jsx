@@ -16,7 +16,7 @@ const formItemLayout = {
   },
   wrapperCol: {
     xs: { span: 24 },
-    sm: { span: 8 },
+    sm: { span: 16 },
   },
 };
 class EnvEditModal extends React.Component {
