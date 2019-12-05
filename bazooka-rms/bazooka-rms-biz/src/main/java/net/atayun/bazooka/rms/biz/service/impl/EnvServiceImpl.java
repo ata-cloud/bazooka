@@ -273,7 +273,7 @@ public class EnvServiceImpl extends AbstractService<Long, EnvDto, RmsEnvEntity, 
             List<RmsContainer> running = collect.get(TASK_RUNNING);
             if (CollectionUtils.isEmpty(running)) {
                 List<RmsContainer> killed = collect.get(TASK_KILLED);
-                return CollectionUtils.isEmpty(killed) ? "" : killed.get(killed.size() - 1).getContainerStatus();
+                return CollectionUtils.isEmpty(killed) ? "" : killed.get(killed.size() - 1).getContainerImage();
             }
             return rmsContainers.get(0).getContainerImage();
         }
