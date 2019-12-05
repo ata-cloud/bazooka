@@ -467,7 +467,11 @@ public class AppServiceImpl implements AppService {
 
         //bazooka 单节点发布，必须选择节点、节点必须在集群的范围
         YyAssert.paramCheck("2".equals(deployConfigDto.getClusterType()) && ObjectUtils.isEmpty(deployConfigDto.getClusterNodes()), "Bazooka单节点集群发布必须选择发布节点信息！");
-        YyAssert.paramCheck("2".equals(deployConfigDto.getClusterType()) && deployConfigDto.getInstance() != deployConfigDto.getClusterNodes().size(), "实例个数(" + deployConfigDto.getInstance() + ")与所选节点数(" + deployConfigDto.getClusterNodes().size() + ")不符！");
+
+        boolean instanceNotEqNode = "2".equals(deployConfigDto.getClusterType()) && deployConfigDto.getInstance() != deployConfigDto.getClusterNodes().size();
+        if (instanceNotEqNode) {
+            throw new BizException(BaseResultCode.REQUEST_PARAMS_WRONG, "实例个数(" + deployConfigDto.getInstance() + ")与所选节点数(" + deployConfigDto.getClusterNodes().size() + ")不符！");
+        }
 
         if ("2".equals(deployConfigDto.getClusterType()) && !ObjectUtils.isEmpty(deployConfigDto.getClusterNodes())) {
 
