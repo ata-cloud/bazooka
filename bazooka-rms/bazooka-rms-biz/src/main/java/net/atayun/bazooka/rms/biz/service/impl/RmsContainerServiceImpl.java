@@ -160,6 +160,7 @@ public class RmsContainerServiceImpl implements RmsContainerService {
         Example example = new Example(RmsContainer.class);
         example.createCriteria().andEqualTo("appId", appId)
                 .andEqualTo("envId", envId);
+        example.orderBy("id").asc();
         List<RmsContainer> rmsContainers = rmsContainerMapper.selectByExample(example);
         return CollectionUtils.isEmpty(rmsContainers) ? new ArrayList<>() : rmsContainers;
     }
