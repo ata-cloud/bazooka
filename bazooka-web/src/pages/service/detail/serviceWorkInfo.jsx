@@ -479,7 +479,7 @@ class ServiceWorkInfo extends React.Component {
                     </p>
                   }
                   {
-                    appRunCurrentImage.registry &&
+                    appRunCurrentImage.registry && currentEnvO.clusterType !== '2' &&
                     <p>
                       <Icon type="cloud-download" style={{ color: '#1890ff' }} onClick={this.onShowPushModal} />
                     </p>
@@ -741,11 +741,11 @@ class ServiceWorkInfo extends React.Component {
         }
         width={showLogAllScreen ? '100vw' : 1000}
         onCancel={this.onLogModalCancel}
-        className={showLogAllScreen ? styles.modalAll : null}
-        style={showLogAllScreen ? { top: 0, paddingBottom: 0 } : null}
+        className={showLogAllScreen ? styles.modalAll : ''}
+        style={showLogAllScreen ? { top: 0, paddingBottom: 0 } : ''}
       >
 
-        <div id="log" className={`${styles.modalScrollHas} ${showLogAllScreen ? styles.height100 : null}`} ref={c => this._container = c} onScrollCapture={this.onScroll}>
+        <div id="log" className={`${styles.modalScrollHas} ${showLogAllScreen ? styles.height100 : ''}`} ref={c => this._container = c} onScrollCapture={this.onScroll}>
           {
             logTopLoading && <Spin className={styles.spin} />
           }
