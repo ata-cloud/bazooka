@@ -71,7 +71,7 @@ public class RmsContainerServiceImpl implements RmsContainerService {
     }
 
     @Override
-    public ContainerAndResourceSumEntity sumContainerAndResourceByNode(String nodeId) {
+    public ContainerAndResourceSumEntity sumContainerAndResourceByNode(Long nodeId) {
         ContainerAndResourceSumEntity containerAndResourceSumEntity = rmsContainerMapper.sumContainerAndResourceByNode(nodeId);
         return containerAndResourceSumEntity == null ? new ContainerAndResourceSumEntity() : containerAndResourceSumEntity;
     }

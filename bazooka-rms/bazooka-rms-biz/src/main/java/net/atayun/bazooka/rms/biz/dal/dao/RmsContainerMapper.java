@@ -60,7 +60,7 @@ public interface RmsContainerMapper extends YyMapper<RmsContainer> {
             "sum(memory) memory, " +
             "sum(disk) disk " +
             "from rms_container where node_id = #{nodeId} and container_status = '3' group by node_id;")
-    ContainerAndResourceSumEntity sumContainerAndResourceByNode(@Param("nodeId") String nodeId);
+    ContainerAndResourceSumEntity sumContainerAndResourceByNode(@Param("nodeId") Long nodeId);
 
     /**
      * updateStatusByAppId

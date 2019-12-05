@@ -115,7 +115,7 @@ public class RmsClusterNodeServiceImpl extends AbstractService<Long, RmsClusterN
         if (Objects.equals(CommonConstant.NODE_CLUSTER_TYPE, rmsClusterEntity.getClusterId())) {
             List<ClusterNodeRspDto> data = new ArrayList<>();
             for (RmsClusterNodeEntity rmsClusterNodeEntity : rmsClusterNodeEntities) {
-                ContainerAndResourceSumEntity containerAndResourceSumEntity = rmsContainerService.sumContainerAndResourceByNode(rmsClusterNodeEntity.getNodeId());
+                ContainerAndResourceSumEntity containerAndResourceSumEntity = rmsContainerService.sumContainerAndResourceByNode(rmsClusterNodeEntity.getId());
                 ClusterNodeRspDto clusterNodeRspDto = copyProperty(rmsClusterNodeEntity, ClusterNodeRspDto.class);
                 clusterNodeRspDto.setContainerQuantity(containerAndResourceSumEntity.getCount());
                 clusterNodeRspDto.setUsedCpu(containerAndResourceSumEntity.getCpu());

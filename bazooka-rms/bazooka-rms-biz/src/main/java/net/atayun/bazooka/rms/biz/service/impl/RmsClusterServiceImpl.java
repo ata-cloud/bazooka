@@ -535,7 +535,7 @@ public class RmsClusterServiceImpl extends AbstractService<Long, RmsClusterDto, 
         clusterDocker.setMemory(mesosTaskInfoDto.getResources().getMem());
         clusterDocker.setSlaveId(mesosTaskInfoDto.getSlaveId());
         clusterDocker.setFrameworkId(mesosTaskInfoDto.getFrameworkId());
-        String host = rmsClusterNodeMapper.getHostByNodeId(mesosTaskInfoDto.getSlaveId());
+        String host = rmsClusterNodeMapper.getHostByClusterIdAndNodeId(clusterId, mesosTaskInfoDto.getSlaveId());
         clusterDocker.setHost(host);
 
         List<MesosTaskContainerDockerPortMappingDto> portMappings = mesosTaskInfoDto.getContainer().getDocker().getPortMappings();
