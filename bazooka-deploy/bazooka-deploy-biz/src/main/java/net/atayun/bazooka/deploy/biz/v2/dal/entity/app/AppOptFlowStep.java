@@ -8,6 +8,7 @@ import net.atayun.bazooka.deploy.biz.v2.enums.FlowStepStatusEnum;
 
 import javax.persistence.Column;
 import javax.persistence.Table;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -74,5 +75,9 @@ public class AppOptFlowStep extends JdbcMysqlEntity<Long> {
 
     public boolean isCancel() {
         return this.status == FlowStepStatusEnum.CANCEL;
+    }
+
+    public Map<String, Object> getNotNullOutput() {
+        return output == null ? new HashMap<>() : this.output;
     }
 }
