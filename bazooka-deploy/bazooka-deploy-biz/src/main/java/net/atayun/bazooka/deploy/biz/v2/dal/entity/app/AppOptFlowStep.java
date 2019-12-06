@@ -78,6 +78,9 @@ public class AppOptFlowStep extends JdbcMysqlEntity<Long> {
     }
 
     public Map<String, Object> getNotNullOutput() {
-        return output == null ? new HashMap<>() : this.output;
+        if (this.output == null) {
+            this.output = new HashMap<>();
+        }
+        return this.output;
     }
 }
