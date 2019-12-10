@@ -2,21 +2,11 @@
 
 开源社区欢迎您的参与！如果有任何反馈，您可以通过邮件或者QQ等方式联系我们
 
-<table>
-<tr>
-<td>
-<image src="docs/img/atacloud_logo.jpg" width="40px">
-</td>
-<td>
+<image src="docs/img/atacloud_logo.jpg" width="200px">
+  
 <h1>阿塔云 Bazooka - 自动化开发运维平台</h1>
-</td>
-</tr>
-</table>
-
-<image src="docs/img/atacloud_logo.jpg" width="200px"><h1>阿塔云 Bazooka - 自动化开发运维平台</h1>
 
 ![愿景](docs/img/Bazooka_goal.png)
-
 
 Bazooka自动化开发运维平台，在[Docker](https://www.docker.com/)，[Mesos](http://mesos.apache.org/)，[Kubernetes](https://kubernetes.io/)，[Jenkins](https://jenkins.io)，[Gitlab](https://about.gitlab.com/)等开源技术的基础上，以应用和计算资源为中心，实现本地和云端的各类计算资源的一致性，帮助企业应对敏捷开发、自动化构建部署、微服务治理、多租户管理、容器和镜像仓库管理、容器监控和日志等业务场景。
 
