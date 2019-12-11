@@ -51,6 +51,7 @@ public class MarathonServiceImpl implements MarathonService {
         AppOpt appOpt = appOptService.selectByAppDeployUuidAndVersionForPlatform(marathonCallbackParam.getMarathonDeploymentId(), marathonCallbackParam.getMarathonDeploymentVersion());
 
         if (appOpt == null || (appOpt.getOpt() != AppOptEnum.MARATHON_BUILD_DEPLOY &&
+                appOpt.getOpt() != AppOptEnum.IMAGE_DEPLOY &&
                 appOpt.getOpt() != AppOptEnum.START &&
                 appOpt.getOpt() != AppOptEnum.STOP &&
                 appOpt.getOpt() != AppOptEnum.RESTART &&
