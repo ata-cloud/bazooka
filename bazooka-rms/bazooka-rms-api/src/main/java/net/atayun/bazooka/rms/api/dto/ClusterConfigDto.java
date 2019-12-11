@@ -17,7 +17,9 @@ package net.atayun.bazooka.rms.api.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +32,8 @@ import java.util.List;
  */
 @Data
 @ApiModel
+@NoArgsConstructor
+@AllArgsConstructor
 public class ClusterConfigDto {
 
     @ApiModelProperty("DC/OS地址")
@@ -37,6 +41,9 @@ public class ClusterConfigDto {
 
     @ApiModelProperty("镜像库地址")
     private String dockerHubUrl;
+
+    @ApiModelProperty("镜像库凭据ID")
+    private Long dockerHubCredentialId;
 
     @ApiModelProperty("mlb地址列表")
     private List<String> mlbUrls = new ArrayList<>();

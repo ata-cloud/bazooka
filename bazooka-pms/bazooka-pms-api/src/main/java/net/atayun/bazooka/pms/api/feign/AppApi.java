@@ -15,12 +15,12 @@
  */
 package net.atayun.bazooka.pms.api.feign;
 
-import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
+import com.youyu.common.api.Result;
+import net.atayun.bazooka.base.enums.AppOptEnum;
 import net.atayun.bazooka.pms.api.dto.AppDeployConfigDto;
 import net.atayun.bazooka.pms.api.dto.AppInfoDto;
 import net.atayun.bazooka.pms.api.dto.AppInfoWithCredential;
 import net.atayun.bazooka.pms.api.dto.PmsAppDeployStatusDto;
-import com.youyu.common.api.Result;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -79,5 +79,5 @@ public interface AppApi {
      * @return
      */
     @PostMapping("/deploy-status/update{appId:\\d+}/{envId:\\d+}")
-    Result<PmsAppDeployStatusDto> updateAppDeployStatus(@PathVariable Long appId, @PathVariable Long envId, @RequestParam boolean isDeploying, @RequestParam(required = false) AppOperationEnum appOperationEnum);
+    Result<PmsAppDeployStatusDto> updateAppDeployStatus(@PathVariable Long appId, @PathVariable Long envId, @RequestParam boolean isDeploying, @RequestParam(required = false) AppOptEnum appOperationEnum);
 }

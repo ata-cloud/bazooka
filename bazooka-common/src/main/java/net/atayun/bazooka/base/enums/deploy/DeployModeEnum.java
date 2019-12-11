@@ -31,10 +31,19 @@ public enum DeployModeEnum {
     /**
      * 镜像发布
      */
-    DOCKER_IMAGE;
+    DOCKER_IMAGE,
+
+    NODE_BUILD,
+
+    MARATHON_BUILD,
+
+    KUBERNETES_BUILD;
 
     //下列常量需与枚举实例保持一致
 
     public static final String MODE_BUILD = "BUILD";
     public static final String MODE_DOCKER_IMAGE = "DOCKER_IMAGE";
+    public static final String MODE_NODE_BUILD = "NODE_BUILD";
+    public static final String MODE_MARATHON_BUILD = "MARATHON_BUILD";
+    public static final String MODE_KUBERNETES_BUILD = "KUBERNETES_BUILD";
 }

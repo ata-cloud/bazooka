@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { Card, Form, Input, Row, Col, Checkbox, Icon, Select, Divider, InputNumber } from 'antd';
 import styles from '@/pages/index.less';
+import { connect } from 'dva';
 const FormItem = Form.Item;
 const { Option } = Select;
 const formItemLayout = {
@@ -317,6 +318,7 @@ class ExtraSet extends React.Component {
     )
   }
   render() {
+    const { currentEnvO } = this.props;
     return (
       <Fragment>
         <div className={`${styles.marginT} ${styles.marginB}`}>
@@ -328,11 +330,14 @@ class ExtraSet extends React.Component {
             this.renderEnv()
           }
           {this.renderMountVolume()}
-          {this.renderHealth()}
+          { currentEnvO.clusterType !== '2' && this.renderHealth()}
         </div>
 
       </Fragment>
     );
   }
 }
-export default ExtraSet;
+export default connect(({ service }) => ({
+  currentEnvO: service.currentEnvO
+}))(ExtraSet);
+

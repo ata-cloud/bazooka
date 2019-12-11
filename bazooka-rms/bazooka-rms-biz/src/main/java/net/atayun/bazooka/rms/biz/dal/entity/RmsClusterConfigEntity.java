@@ -63,6 +63,12 @@ public class RmsClusterConfigEntity extends JdbcMysqlEntity<Long> {
     private String version;
 
     /**
+     * 凭据ID
+     */
+    @Column(name = "credential_id")
+    private Long credentialId;
+
+    /**
      * 获取类型名称
      *
      * @param type

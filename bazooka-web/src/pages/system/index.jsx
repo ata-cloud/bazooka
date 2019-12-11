@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import { Card, Table, Divider, message, Row, Col, Badge } from 'antd';
 import { isAdmin, toHref } from '@/utils/utils';
 import router from 'umi/router';
-import { CLUSTER_STATUS } from '@/common/constant';
+import { CLUSTER_STATUS, GIT_DOMAIN_O } from '@/common/constant';
 import GITMODAL from '../service/addService/gitCredentialModal';
 import { system } from '@/services/system';
 import styles from '@/pages/index.less';
@@ -53,18 +53,18 @@ class System extends React.Component {
   }
   //修改凭据
   onAddGitCredentials = async (params) => {
-    const { currentItem } = this.state;
-    let currentParams = { credentialKey: params.credentialKey, credentialValue: params.credentialValue };
-    if (params.credentialValue == '******') {
-      currentParams = { credentialKey: params.credentialKey }
-    }
+    // const { currentItem } = this.state;
+    // let currentParams = { credentialKey: params.credentialKey, credentialValue: params.credentialValue };
+    // if (params.credentialValue == '******') {
+    //   currentParams = { credentialKey: params.credentialKey }
+    // }
 
-    let res = await system.credentialsUpdate({ id: currentItem.id, ...currentParams });
-    if (res && res.code == '1') {
-      message.success('修改成功');
+    // let res = await system.credentialsUpdate({ id: currentItem.id, ...currentParams });
+    // if (res && res.code == '1') {
+    //   message.success('修改成功');
       this.onGitCancel();
       this.onFetchCredentialsList()
-    }
+    // }
   }
   onToHref = (item) => {
     let href = toHref(item.url);
@@ -84,7 +84,7 @@ class System extends React.Component {
         title: '类型',
         dataIndex: 'domain',
         render: (text, record) => (
-          <span>{text === "GIT_SERVER" ? '代码仓库凭据' : '镜像库凭据'}</span>
+          <span>{GIT_DOMAIN_O[text]}</span>
         )
       },
       {
@@ -154,27 +154,27 @@ class System extends React.Component {
         <Row type="flex" align="middle">
           <Col md={7} sm={24}>
             <div className={styles.flexCenter}>
-              <p className={styles.textBlack}>公司：</p>
+              <p className={`${styles.textBlack} ${styles.stystemInfoTitle}`}>项目：</p>
               <p>上海彩亿信息技术有限公司</p>
             </div>
 
           </Col>
           <Col md={7} sm={24}>
             <div className={styles.flexCenter}>
-              <p className={styles.textBlack}>ATA cloud版本：</p>
+              <p className={`${styles.textBlack} ${styles.stystemInfoTitle}`}>版本：</p>
               <p>0.2.1</p>
             </div>
           </Col>
           <Col md={7} sm={0}></Col>
           <Col md={7} sm={24}>
             <div className={styles.flexCenter}>
-              <p className={styles.textBlack}>安装方案：</p>
+              <p className={`${styles.textBlack} ${styles.stystemInfoTitle}`}>安装方案：</p>
               <p>本地集群安装</p>
             </div>
           </Col>
           <Col md={7} sm={24}>
             <div className={styles.flexCenter}>
-              <p className={styles.textBlack}>安装时间：</p>
+              <p className={`${styles.textBlack} ${styles.stystemInfoTitle}`}>发布时间：</p>
               <p>2019-06-10</p>
             </div>
           </Col>
@@ -216,7 +216,7 @@ class System extends React.Component {
   render() {
     const { showGitModal, currentItem } = this.state;
     return (
-      <PageHeaderWrapper>
+      <PageHeaderWrapper content="系统基础信息、组件状态和凭据管理">
         {this.renderSystemInfo()}
         {this.renderComponent()}
         {this.renderCredentialsList()}

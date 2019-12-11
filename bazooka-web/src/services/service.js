@@ -98,11 +98,11 @@ const service = {
   },
   //构建发布--所有操作记录
   appHistoryMarathon: async function (params = {}) {
-    return requestPost(`/deploy/app/operate/history/marathon`, params);
+    return requestPost(`/deploy/app/operate/history/platform`, params);
   },
   //操作详情
   appHistoryMarathonLog: async function (params = {}) {
-    return requestGet(`/deploy/app/operate/history/marathon/detail/${params.eventId}`, params);
+    return requestGet(`/deploy/app/operate/history/platform/detail/${params.eventId}`, params);
   },
   //根据发布配置选择代码分支
   appGetBranch: async function (params = {}) {

@@ -66,4 +66,9 @@ public class EnvDto extends BaseDto<Long> {
 
     @ApiModelProperty("已使用磁盘")
     private BigDecimal diskUsed = ZERO;
+
+    /**
+     * 集群类型 0:MESOS 1:KUBERNETES 2:SINGLENODE
+     */
+    private String clusterType;
 }

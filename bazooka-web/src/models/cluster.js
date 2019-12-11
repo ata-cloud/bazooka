@@ -2,7 +2,8 @@ import { cluster } from '@/services/cluster';
 const ClusterModel = {
   namespace: 'cluster',
   state: {
-    clusterList: {}
+    clusterList: {},
+    clusterNodeAll: []
   },
   effects: {
     *clusterList({ payload }, { call, put }) {
@@ -12,12 +13,25 @@ const ClusterModel = {
         payload: response,
       });
     },
+    *clusterNodeAll({ payload }, { call, put }) {
+      const response = yield call(cluster.getClusterNodeAll, payload);
+      yield put({
+        type: 'getClusterNodeAll',
+        payload: response,
+      });
+    },
   },
   reducers: {
     getClusterPage(state, { payload = {} }) {
       return {
         ...state,
         clusterList: payload.data || {},
+      };
+    },
+    getClusterNodeAll(state, { payload = {} }) {
+      return {
+        ...state,
+        clusterNodeAll: payload.data || [],
       };
     },
     clearData(state, { payload = {} }) {

@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { Card, Select, Row, Col, Icon, Steps, Button, Table, Empty, Modal, Divider, message } from 'antd';
-import { SERVICE_LOG_RESULT_O } from "@/common/constant";
+import { SERVICE_LOG_RESULT_O, DEPLOY_WITH_BUILD } from "@/common/constant";
 import { connect } from 'dva';
 import ReactJson from 'react-json-view'
 import styles from '@/pages/index.less';
@@ -49,7 +49,7 @@ class ServiceBuild extends React.Component {
     const { buildObj } = this.state;
     const { data, appRunStatus } = this.props;
     if (prevState.buildObj && prevState.buildObj.config !== buildObj.config) {
-      if (buildObj.deployMode == "BUILD") {
+      if (buildObj.deployMode && buildObj.deployMode.indexOf("BUILD") > -1) {
         this.onFetchBranch();
         return
       }
@@ -83,12 +83,12 @@ class ServiceBuild extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { appDeployFlow, appDeployStatus, appDeployFlowInfo, appOperate } = nextProps;
     const { currentHistory } = this.state;
-    if (appOperate.event == "DEPLOY" && this.props.appOperate !== appOperate) {
+    if (appOperate.event && appOperate.event.indexOf("DEPLOY") > -1 && this.props.appOperate !== appOperate) {
       this.onFetchAppDeployFlow(appOperate.eventId)
     }
     if (this.props.appDeployStatus !== appDeployStatus && !appDeployStatus.deploying) {
       this.onFetchAppHistoryMarathon();
-      if (appDeployStatus.deployType == 'DEPLOY') {
+      if (appDeployStatus.deployType && appDeployStatus.deployType.indexOf("DEPLOY") > -1) {
         let eventId = appOperate.eventId || appDeployFlowInfo.eventId;
         if (eventId) {
           this.onFetchAppDeployFlow(eventId)
@@ -100,7 +100,7 @@ class ServiceBuild extends React.Component {
         })
       }
     }
-    if (this.props.appDeployStatus !== appDeployStatus && appDeployStatus.deployType == 'DEPLOY' && appDeployStatus.deploying) {
+    if (this.props.appDeployStatus !== appDeployStatus && appDeployStatus.deployType && appDeployStatus.deployType.indexOf('DEPLOY') > -1 && appDeployStatus.deploying) {
       let eventId = appOperate.eventId && appDeployFlowInfo.eventId;
       if (eventId) {
         this.onFetchAppDeployFlow(eventId);
@@ -264,8 +264,9 @@ class ServiceBuild extends React.Component {
   //开始发布
   onBeginDeploy = async () => {
     const { buildObj } = this.state;
-    const { data } = this.props;
-    this.onSetDeployTypes('DEPLOY');
+    const { data, currentEnvO } = this.props;
+    let deployType = DEPLOY_WITH_BUILD[buildObj.deployMode] ? DEPLOY_WITH_BUILD[buildObj.deployMode].deployType : "DEPLOY";
+    this.onSetDeployTypes(deployType);
     let params = {
       branch: buildObj.branch,
       deployConfigId: buildObj.config,
@@ -274,7 +275,7 @@ class ServiceBuild extends React.Component {
     this.setState({
       currentBranch: {}
     })
-    this.onAppOperate('DEPLOY', params)
+    this.onAppOperate(deployType, params)
   }
   onAppOperate = (event, detail = {}) => {
     const { data, dispatch } = this.props;
@@ -359,7 +360,7 @@ class ServiceBuild extends React.Component {
           </Row>
         }
         {
-          buildObj.deployMode && buildObj.deployMode == 'BUILD' &&
+          buildObj.deployMode && buildObj.deployMode.indexOf('BUILD') > -1 &&
           <Row type="flex" align="middle" className={styles.marginT}>
             <Col className={`${styles.width100} ${styles.textR}`}>
               <label>选择代码分支: </label>
@@ -596,6 +597,7 @@ class ServiceBuild extends React.Component {
 }
 
 export default connect(({ service, loading }) => ({
+  currentEnvO: service.currentEnvO,
   appDeployConfigListAll: service.appDeployConfigListAll,
   appHistoryMarathon: service.appHistoryMarathon,
   appGetBranch: service.appGetBranch,

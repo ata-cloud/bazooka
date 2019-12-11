@@ -15,9 +15,18 @@
  */
 package net.atayun.bazooka.pms.biz.controller;
 
+import com.youyu.common.api.Result;
+import com.youyu.common.enums.BaseResultCode;
+import com.youyu.common.enums.IsDeleted;
+import com.youyu.common.exception.BizException;
+import com.youyu.common.helper.YyRequestInfoHelper;
+import com.youyu.common.utils.YyAssert;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import net.atayun.bazooka.base.annotation.PmsAuth;
 import net.atayun.bazooka.base.config.GitLabProperties;
-import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
+import net.atayun.bazooka.base.enums.AppOptEnum;
 import net.atayun.bazooka.base.git.GitServiceHelp;
 import net.atayun.bazooka.pms.api.dto.*;
 import net.atayun.bazooka.pms.api.enums.AppKindEnum;
@@ -36,25 +45,16 @@ import net.atayun.bazooka.pms.biz.dal.entity.PmsCredentialsEntity;
 import net.atayun.bazooka.pms.biz.service.*;
 import net.atayun.bazooka.rms.api.RmsDockerImageApi;
 import net.atayun.bazooka.rms.api.api.EnvApi;
-import net.atayun.bazooka.rms.api.dto.*;
 import net.atayun.bazooka.rms.api.dto.EnvDto;
+import net.atayun.bazooka.rms.api.dto.*;
 import net.atayun.bazooka.rms.api.param.EnvAppReq;
 import net.atayun.bazooka.rms.api.param.EnvMlbPortUsedReq;
 import net.atayun.bazooka.rms.api.param.EnvMlbPortUsedRsp;
-import com.youyu.common.api.Result;
-import com.youyu.common.enums.BaseResultCode;
-import com.youyu.common.enums.IsDeleted;
-import com.youyu.common.exception.BizException;
-import com.youyu.common.helper.YyRequestInfoHelper;
-import com.youyu.common.utils.YyAssert;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
-import net.atayun.bazooka.pms.biz.service.*;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Branch;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -104,15 +104,46 @@ public class AppController implements AppApi {
     @Autowired
     private GitServiceHelp gitServiceHelp;
 
+    @Autowired
+    @Lazy
+    private ProjectController projectController;
+
     //region 服务信息
 
     @ApiOperation(value = "查询用户服务列表")
     @GetMapping("/list")
-    public Result<List<AppInfoDto>> getAppInfoListByUser(@RequestParam(required = false) Long projectId, @RequestParam(required = false) String keyword) {
+    public Result<List<AppInfoWithEnv>> getAppInfoListByUser(@RequestParam(required = false) Long projectId, @RequestParam(required = false) String keyword) {
         Long currentUserId = YyRequestInfoHelper.getCurrentUserId();
         List<AppInfoDto> appInfoListByUser = this.appService.getAppInfoListByUser(currentUserId, projectId, keyword);
 
-        return Result.ok(appInfoListByUser);
+        if (appInfoListByUser == null || appInfoListByUser.size() <= 0) {
+            return Result.ok();
+        }
+
+        List<net.atayun.bazooka.pms.api.dto.EnvDto> pmsEnvList = new ArrayList<>();
+
+        List<AppInfoWithEnv> appInfoWithEnvs = new ArrayList<>();
+
+        for (int i = 0; i < appInfoListByUser.size(); i++) {
+            if (i == 0) {
+                pmsEnvList = projectController.queryEnvPortList(appInfoListByUser.get(i).getProjectId()).ifNotSuccessThrowException().getData();
+            }
+            if (i > 0 && !appInfoListByUser.get(i).getProjectId().equals(appInfoListByUser.get(i - 1).getProjectId())) {
+                pmsEnvList.clear();
+                pmsEnvList = projectController.queryEnvPortList(appInfoListByUser.get(i).getProjectId()).ifNotSuccessThrowException().getData();
+            }
+
+            List<AppEnvInfoVo> appEnvInfoVoList = new ArrayList<>();
+            for (net.atayun.bazooka.pms.api.dto.EnvDto envDto : pmsEnvList) {
+                AppEnvInfoVo appEnvInfoVo = getAppRuntimeInfo(appInfoListByUser.get(i).getId(), envDto.getEnvId()).getData();
+                appEnvInfoVoList.add(appEnvInfoVo);
+            }
+            AppInfoWithEnv appInfoWithEnv = new AppInfoWithEnv(appInfoListByUser.get(i), appEnvInfoVoList);
+            appInfoWithEnv.setId(appInfoListByUser.get(i).getId());
+            appInfoWithEnvs.add(appInfoWithEnv);
+        }
+
+        return Result.ok(appInfoWithEnvs);
     }
 
     @PmsAuth
@@ -268,7 +299,7 @@ public class AppController implements AppApi {
      */
     @Override
     @PostMapping("/deploy-status/update{appId:\\d+}/{envId:\\d+}")
-    public Result<PmsAppDeployStatusDto> updateAppDeployStatus(@PathVariable Long appId, @PathVariable Long envId, @RequestParam boolean isDeploying, @RequestParam(required = false) AppOperationEnum appOperationEnum) {
+    public Result<PmsAppDeployStatusDto> updateAppDeployStatus(@PathVariable Long appId, @PathVariable Long envId, @RequestParam boolean isDeploying, @RequestParam(required = false) AppOptEnum appOperationEnum) {
         PmsAppDeployStatusDto appDeployStatusDto = this.appDeployStatusService.selectOne(new PmsAppDeployStatusEntity(appId, envId));
         if (ObjectUtils.isEmpty(appDeployStatusDto)) {
             this.appDeployStatusService.insertSelective(new PmsAppDeployStatusEntity(appId, envId, isDeploying, appOperationEnum));
@@ -288,8 +319,8 @@ public class AppController implements AppApi {
     @ApiOperation(value = "查询服务所有的发布配置")
     @PmsAuth
     @GetMapping("/deploy-config/list/{appId:\\d+}")
-    public Result<List<AppDeployConfigDto>> getAppDeployConfigList(@PathVariable Long appId, @RequestParam(required = false) Long envId) {
-        List<AppDeployConfigEntity> deployConfigEntityList = this.appDeployConfigService.selectEntity(new AppDeployConfigEntity(appId, envId, IsDeleted.NOT_DELETED));
+    public Result<List<AppDeployConfigDto>> getAppDeployConfigList(@PathVariable Long appId, @RequestParam(required = false) Long envId, @RequestParam(required = false) String clusterType) {
+        List<AppDeployConfigEntity> deployConfigEntityList = this.appDeployConfigService.selectEntity(new AppDeployConfigEntity(appId, envId, IsDeleted.NOT_DELETED, clusterType));
         if (ObjectUtils.isEmpty(deployConfigEntityList)) {
             return Result.ok();
         } else {
@@ -438,7 +469,8 @@ public class AppController implements AppApi {
     public Result<AppEnvInfoVo> getAppRuntimeInfo(@PathVariable Long appId, @PathVariable Long envId) {
         AppInfoDto appInfoDto = this.getAppInfoDtoIncludeProjectInfo(appId);
         EnvDto envDto = this.envApi.get(envId).ifNotSuccessThrowException().getData();
-        ClusterAppServiceInfoDto clusterAppServiceInfoDto = this.envApi.getClusterAppServiceInfo(new EnvAppReq(envId, appInfoDto.getDcosServiceId())).ifNotSuccessThrowException().getData();
+        ClusterAppServiceInfoDto clusterAppServiceInfoDto = this.envApi.getClusterAppServiceInfo(new EnvAppReq(envId,
+                appInfoDto.getDcosServiceId(), appId)).ifNotSuccessThrowException().getData();
 
         return Result.ok(new AppEnvInfoVo(
                 appId,
@@ -464,7 +496,7 @@ public class AppController implements AppApi {
         AppInfoDto appInfoDto = this.appInfoService.selectByPrimaryKey(appId);
         YyAssert.paramCheck(ObjectUtils.isEmpty(appInfoDto), "服务ID不存在！");
 
-        Result<List<ClusterAppServiceHostDto>> clusterAppServiceHosts = this.envApi.getClusterAppServiceHosts(new EnvAppReq(envId, appInfoDto.getDcosServiceId()));
+        Result<List<ClusterAppServiceHostDto>> clusterAppServiceHosts = this.envApi.getClusterAppServiceHosts(new EnvAppReq(envId, appInfoDto.getDcosServiceId(), appId));
 
         return clusterAppServiceHosts;
     }
@@ -476,7 +508,7 @@ public class AppController implements AppApi {
         AppInfoDto appInfoDto = this.appInfoService.selectByPrimaryKey(appId);
         YyAssert.paramCheck(ObjectUtils.isEmpty(appInfoDto), "服务ID不存在！");
 
-        Result<List<ClusterDockerDto>> listResult = this.envApi.getClusterDockers(new EnvAppReq(envId, appInfoDto.getDcosServiceId()));
+        Result<List<ClusterDockerDto>> listResult = this.envApi.getClusterDockers(new EnvAppReq(envId, appInfoDto.getDcosServiceId(), appId));
         return listResult;
     }
 
@@ -486,7 +518,7 @@ public class AppController implements AppApi {
     public Result<RmsDockerImageDto> getAppCurrentImageInfo(@PathVariable Long appId, @PathVariable Long envId) {
         AppInfoDto appInfoDto = this.appInfoService.selectOne(new AppInfoEntity(appId, IsDeleted.NOT_DELETED));
         YyAssert.paramCheck(ObjectUtils.isEmpty(appInfoDto), "服务ID不存在或已删除！");
-        String imageFullName = this.envApi.getClusterAppImage(new EnvAppReq(envId, appInfoDto.getDcosServiceId())).ifNotSuccessThrowException().getData();
+        String imageFullName = this.envApi.getClusterAppImage(new EnvAppReq(envId, appInfoDto.getDcosServiceId(), appId)).ifNotSuccessThrowException().getData();
         if (StringUtils.hasText(imageFullName)) {
             String registry = imageFullName.substring(0, imageFullName.indexOf("/"));
             String imageName = imageFullName.substring(imageFullName.indexOf("/") + 1, imageFullName.lastIndexOf(":"));

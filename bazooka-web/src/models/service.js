@@ -29,7 +29,8 @@ const ServiceModel = {
     appDeployFlow: {},
     envWithPro: [],
     appOperate: {},
-    appDeployFlowInfo: {}
+    appDeployFlowInfo: {},
+    currentEnvO: {}
   },
   effects: {
     *appList({ payload }, { call, put }) {
@@ -317,15 +318,16 @@ const ServiceModel = {
       if (payload.data) {
         let data = payload.data;
         if (data.deploying) {
-          deployTypesCopy = {
-            "START": 0,
-            "RESTART": 0,
-            "SCALE": 0,
-            "STOP": 0,
-            "DEPLOY": 0,
-            "ROLLBACK": 0,
-            [data.deployType]: 2
-          }
+          let deployType = data.deployType.indexOf('DEPLOY') > -1 ? "DEPLOY": data.deployType;
+            deployTypesCopy = {
+              "START": 0,
+              "RESTART": 0,
+              "SCALE": 0,
+              "STOP": 0,
+              "DEPLOY": 0,
+              "ROLLBACK": 0,
+              [deployType]: 2
+            }
         }
       }
       return {
@@ -356,6 +358,12 @@ const ServiceModel = {
       return {
         ...state,
         appOperate: payload.data || {}
+      };
+    },
+    setCurrentEnvO(state, { payload = {} }) {
+      return {
+        ...state,
+        currentEnvO: payload || {}
       };
     },
     clearData(state, { payload = {} }) {

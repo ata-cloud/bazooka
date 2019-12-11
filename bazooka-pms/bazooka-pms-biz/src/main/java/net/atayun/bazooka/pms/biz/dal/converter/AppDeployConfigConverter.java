@@ -15,14 +15,14 @@
  */
 package net.atayun.bazooka.pms.biz.dal.converter;
 
+import com.google.gson.reflect.TypeToken;
+import com.youyu.common.enums.IsDeleted;
 import net.atayun.bazooka.base.utils.JsonUtil;
 import net.atayun.bazooka.pms.api.dto.AppDeployConfigDto;
 import net.atayun.bazooka.pms.api.param.HealthCheck;
 import net.atayun.bazooka.pms.api.param.PortMapping;
 import net.atayun.bazooka.pms.api.param.VolumeMount;
 import net.atayun.bazooka.pms.biz.dal.entity.AppDeployConfigEntity;
-import com.google.gson.reflect.TypeToken;
-import com.youyu.common.enums.IsDeleted;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
@@ -48,6 +48,7 @@ public class AppDeployConfigConverter {
                 source.getId(),
                 source.getAppId(),
                 source.getEnvId(),
+                source.getClusterType(),
                 source.getConfigName(),
                 source.getConfigDescription(),
                 source.getDeployMode(),
@@ -64,7 +65,8 @@ public class AppDeployConfigConverter {
                 ObjectUtils.isEmpty(source.getEnvironmentVariable()) ? null : JsonUtil.toJson(source.getEnvironmentVariable()),
                 ObjectUtils.isEmpty(source.getVolumes()) ? null : JsonUtil.toJson(source.getVolumes()),
                 ObjectUtils.isEmpty(source.getHealthChecks()) ? null : JsonUtil.toJson(source.getHealthChecks()),
-                IsDeleted.NOT_DELETED
+                IsDeleted.NOT_DELETED,
+                ObjectUtils.isEmpty(source.getClusterNodes()) ? null : JsonUtil.toJson(source.getClusterNodes())
         );
     }
 
@@ -81,6 +83,7 @@ public class AppDeployConfigConverter {
                 source.getId(),
                 source.getAppId(),
                 source.getEnvId(),
+                source.getClusterType(),
                 null,
                 source.getConfigName(),
                 source.getConfigDescription(),
@@ -94,6 +97,9 @@ public class AppDeployConfigConverter {
                 source.getDisk(),
                 source.getInstance(),
                 source.getStartCommand(),
+                StringUtils.hasText(source.getClusterNodes()) ? JsonUtil.fromJson(source.getClusterNodes(),
+                        new TypeToken<List<Long>>() {
+                        }.getType()) : null,
                 StringUtils.hasText(source.getPortMappings()) ? JsonUtil.fromJson(source.getPortMappings(),
                         new TypeToken<List<PortMapping>>() {
                         }.getType()) : null,

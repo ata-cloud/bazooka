@@ -3,7 +3,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Modal, Form, Input, Radio, Button, Select, message, Slider, InputNumber } from 'antd';
 import { connect } from 'dva';
 import { cluster } from '@/services/cluster';
-import { ENV_STATUS_ARR } from '@/common/constant';
+import { ENV_STATUS_ARR, CLUSTER_TYPE_O } from '@/common/constant';
 import styles from '../index.less';
 import { MformG } from '@/utils/utils';
 const FormItem = Form.Item;
@@ -24,6 +24,7 @@ class EnvEditModal extends React.Component {
     super(props);
     this.state = {
       clusterId: '',
+      clusterType: '',
       availableResource: {}
     };
   }
@@ -33,12 +34,13 @@ class EnvEditModal extends React.Component {
       this.onFetchClusterList();
     }
     this.setState({
-      clusterId: currentItem.clusterId
+      clusterId: currentItem.clusterId,
+      clusterType: currentItem.clusterType ? currentItem.clusterType : ''
     })
   }
   componentDidUpdate(prevProps, pervState) {
-    const { clusterId } = this.state;
-    if (clusterId && clusterId !== pervState.clusterId) {
+    const { clusterId, clusterType } = this.state;
+    if (clusterId && clusterId !== pervState.clusterId && clusterType !== '2') {
       this.onFetchAvailableResource();
     }
   }
@@ -46,7 +48,7 @@ class EnvEditModal extends React.Component {
     const { dispatch } = this.props;
     dispatch({
       type: 'cluster/clusterList',
-      payload: {}
+      payload: {pageSize: 100}
     })
   }
   //获取可分配资源
@@ -70,33 +72,44 @@ class EnvEditModal extends React.Component {
     })
 
   }
-  onClusterChange = (value) => {
+  onClusterChange = (value, option) => {
     this.setState({
-      clusterId: value
+      clusterId: value,
+      clusterType: option.props.label
     })
   }
   onSubmit = (e) => {
     const { onOk } = this.props;
+    const { clusterType } = this.state;
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        let params = {
-          ...values,
-          disk: values.disk * 1024,
-          memory: values.memory * 1024
-        }
-        console.log('params-->', params)
-        if (params.cpus && params.cpus < 0) {
-          message.error('CPU不能小于0');
-          return
-        }
-        if (params.memory && params.memory < 0) {
-          message.error('内存不能小于0');
-          return
-        }
-        if (params.disk && params.disk < 0) {
-          message.error('磁盘不能小于0');
-          return
+        let params = {}
+        if (clusterType !== '2') {
+          params = {
+            ...values,
+            disk: values.disk * 1024,
+            memory: values.memory * 1024
+          }
+          if (params.cpus && params.cpus < 0) {
+            message.error('CPU不能小于0');
+            return
+          }
+          if (params.memory && params.memory < 0) {
+            message.error('内存不能小于0');
+            return
+          }
+          if (params.disk && params.disk < 0) {
+            message.error('磁盘不能小于0');
+            return
+          }
+        }else {
+          params = {
+            ...values,
+            cpus: 0,
+            disk: 0,
+            memory: 0
+          }
         }
         onOk(params)
       }
@@ -104,7 +117,7 @@ class EnvEditModal extends React.Component {
   };
   renderForm() {
     const { getFieldDecorator, getFieldValue } = this.props.form;
-    const { clusterId, availableResource } = this.state;
+    const { clusterId, availableResource, clusterType } = this.state;
     const { clusterList, currentItem } = this.props;
     return (
       <Form {...formItemLayout} onSubmit={this.onSubmit}>
@@ -157,27 +170,27 @@ class EnvEditModal extends React.Component {
             }
           </Fragment>
         }
-        <FormItem label="集群">
+        <FormItem label="资源">
           {getFieldDecorator('clusterId', {
             initialValue: currentItem.clusterId,
             rules: [
               {
                 required: true,
-                message: '请选择集群'
+                message: '请选择资源'
               }
             ]
           })(
-            <Select placeholder="请选择集群" showSearch onChange={this.onClusterChange} disabled={currentItem.projectNum > 0 ? true : false}>
+            <Select placeholder="请选择资源" showSearch onChange={this.onClusterChange} disabled={currentItem.projectNum > 0 ? true : false}>
               {
                 clusterList && clusterList.rows && clusterList.rows.map((item, i) => (
-                  <Option value={item.clusterId} key={item.clusterId}>{item.name}</Option>
+                  <Option value={item.clusterId} key={item.clusterId} label={item.type}>{item.name}（{CLUSTER_TYPE_O[item.type]}）</Option>
                 ))
               }
             </Select>
           )}
         </FormItem>
         {
-          getFieldValue('clusterId') && <div className={styles.paddingL}>
+          clusterType !== '2' && getFieldValue('clusterId') && <div className={styles.paddingL}>
             <p>
               <span>环境资源（集群可分配资源：</span>
               <span>{((currentItem.cpus || 0) + (availableResource.cpu || 0)).toFixed(1)} CPU / </span>

@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Card, Row, Col, Descriptions, Icon, Table, Badge, Modal, Button, Typography } from 'antd';
+import { Card, Row, Col, Descriptions, Icon, Table, Badge, Modal, Button, Typography, Progress } from 'antd';
 import styles from '../index.less'
 import {
   G2,
@@ -165,7 +165,7 @@ class ClusterDetail extends React.Component {
               content="percent"
               formatter={(val, item) => {
                 let name = item.point.name ? item.point.name : '未使用';
-                return name + ": " + val;
+                return val;
               }}
             />
           </Geom>
@@ -177,71 +177,6 @@ class ClusterDetail extends React.Component {
     const { detail } = this.state;
     return (
       <Card title="集群基础信息" className={styles.marginB}>
-        {/* <Descriptions>
-          <Descriptions.Item label="命名">{detail.name}</Descriptions.Item>
-          <Descriptions.Item label="类型">{detail.type && CLUSTER_TYPE_O[detail.type] ? CLUSTER_TYPE_O[detail.type] : ''}</Descriptions.Item>
-          <Descriptions.Item label="集群master">
-            {
-              detail.marathons && detail.marathons.map((item, index) => (
-                <Fragment key={index}>
-                  {
-                    item.status && CLUSTER_STATUS[item.status] &&
-                    <Badge status={CLUSTER_STATUS[item.status].type} />
-                  }
-                  <a onClick={() => this.onHref(item.url)}>{item.url}</a>
-                  {
-                    index !== detail.marathons.length - 1 && <span> | </span>
-                  }
-                </Fragment>
-              ))
-            }
-          </Descriptions.Item>
-          <Descriptions.Item label="状态">
-            {
-              detail.status && CLUSTER_STATUS[detail.status] &&
-              <Fragment>
-                <Icon type={CLUSTER_STATUS[detail.status].icon} style={{ fontSize: 25, color: CLUSTER_STATUS[detail.status].colorValue }} />
-              </Fragment>
-            }
-          </Descriptions.Item>
-          <Descriptions.Item label="DC/OS版本">{detail.version}</Descriptions.Item>
-          <Descriptions.Item label="集群LB详情">
-            {
-              detail.mlbs && detail.mlbs.map((item, index) => (
-                <div key={index}>
-                  {
-                    item.status && CLUSTER_STATUS[item.status] &&
-                    <Badge status={CLUSTER_STATUS[item.status].type} />
-                  }
-                  <a onClick={() => this.onHref(item.url + ':9090/haproxy?stats')}>{item.url + ':9090/haproxy?stats'}</a>
-                </div>
-              ))
-            }
-          </Descriptions.Item>
-        </Descriptions>
-        */}
-        {/* <Row>
-          <Col span={8}></Col>
-          <Col span={8}></Col>
-          <Col span={8}>
-            <div className={styles.flexCenter}>
-              <div style={{ color: '#333' }}>镜像库：</div>
-              <div>
-                {
-                  detail.dockerHubs && detail.dockerHubs.map((item, index) => (
-                    <div key={index}>
-                      {
-                        item.status && CLUSTER_STATUS[item.status] &&
-                        <Badge status={CLUSTER_STATUS[item.status].type} />
-                      }
-                      <a onClick={() => this.onHref(item.url)}>{item.url}</a>
-                    </div>
-                  ))
-                }
-              </div>
-            </div>
-          </Col>
-        </Row> */}
         <Row type="flex" align="top">
           <Col md={6}>
             <div className={styles.flex}>
@@ -255,67 +190,72 @@ class ClusterDetail extends React.Component {
               <p>{detail.type && CLUSTER_TYPE_O[detail.type] ? CLUSTER_TYPE_O[detail.type] : ''}</p>
             </div>
           </Col>
-          <Col md={12}>
+          {
+            detail.type !== '2' &&
+            <Fragment>
+              <Col md={12}>
+                <div className={styles.flex}>
+                  <p className={`${styles.textBlack} ${styles.textBlackRight}`}>集群master：</p>
+                  <p>
+                    {
+                      detail.marathons && detail.marathons.map((item, index) => (
+                        <Fragment key={index}>
+                          {
+                            item.status && CLUSTER_STATUS[item.status] &&
+                            <Badge status={CLUSTER_STATUS[item.status].type} />
+                          }
+                          <a onClick={() => this.onHref(item.url)}>{item.url}</a>
+                          {
+                            index !== detail.marathons.length - 1 && <span> | </span>
+                          }
+                        </Fragment>
+                      ))
+                    }
+                  </p>
+                </div>
+              </Col>
+              <Col md={6}>
+                <div className={styles.flex}>
+                  <p className={styles.textBlack}>状态：</p>
+                  <p>
+                    {
+                      detail.status && CLUSTER_STATUS[detail.status] &&
+                      <Fragment>
+                        <Icon type={CLUSTER_STATUS[detail.status].icon} style={{ fontSize: 25, color: CLUSTER_STATUS[detail.status].colorValue }} />
+                      </Fragment>
+                    }
+                  </p>
+                </div>
+              </Col>
+              <Col md={6}>
+                <div className={styles.flex}>
+                  <p className={styles.textBlack}>DC/OS版本：</p>
+                  <p>{detail.version}</p>
+                </div>
+              </Col>
+              <Col md={12}>
+                <div className={styles.flex}>
+                  <p className={`${styles.textBlack} ${styles.textBlackRight}`}>集群LB详情：</p>
+                  <div>
+                    {
+                      detail.mlbs && detail.mlbs.map((item, index) => (
+                        <p key={index}>
+                          {
+                            item.status && CLUSTER_STATUS[item.status] &&
+                            <Badge status={CLUSTER_STATUS[item.status].type} />
+                          }
+                          <a onClick={() => this.onHref(item.url + ':9090/haproxy?stats')}>{item.url + ':9090/haproxy?stats'}</a>
+                        </p>
+                      ))
+                    }
+                  </div>
+                </div>
+              </Col>
+            </Fragment>
+          }
+          <Col md={12} push={detail.type !== '2' ? 12 : null}>
             <div className={styles.flex}>
-              <p className={styles.textBlack}>集群master：</p>
-              <p>
-                {
-                  detail.marathons && detail.marathons.map((item, index) => (
-                    <Fragment key={index}>
-                      {
-                        item.status && CLUSTER_STATUS[item.status] &&
-                        <Badge status={CLUSTER_STATUS[item.status].type} />
-                      }
-                      <a onClick={() => this.onHref(item.url)}>{item.url}</a>
-                      {
-                        index !== detail.marathons.length - 1 && <span> | </span>
-                      }
-                    </Fragment>
-                  ))
-                }
-              </p>
-            </div>
-          </Col>
-          <Col md={6}>
-            <div className={styles.flex}>
-              <p className={styles.textBlack}>状态：</p>
-              <p>
-                {
-                  detail.status && CLUSTER_STATUS[detail.status] &&
-                  <Fragment>
-                    <Icon type={CLUSTER_STATUS[detail.status].icon} style={{ fontSize: 25, color: CLUSTER_STATUS[detail.status].colorValue }} />
-                  </Fragment>
-                }
-              </p>
-            </div>
-          </Col>
-          <Col md={6}>
-            <div className={styles.flex}>
-              <p className={styles.textBlack}>DC/OS版本：</p>
-              <p>{detail.version}</p>
-            </div>
-          </Col>
-          <Col md={12}>
-            <div className={styles.flex}>
-              <p className={styles.textBlack}>集群LB详情：</p>
-              <div>
-                {
-                  detail.mlbs && detail.mlbs.map((item, index) => (
-                    <p key={index}>
-                      {
-                        item.status && CLUSTER_STATUS[item.status] &&
-                        <Badge status={CLUSTER_STATUS[item.status].type} />
-                      }
-                      <a onClick={() => this.onHref(item.url + ':9090/haproxy?stats')}>{item.url + ':9090/haproxy?stats'}</a>
-                    </p>
-                  ))
-                }
-              </div>
-            </div>
-          </Col>
-          <Col md={12} push={12}>
-            <div className={styles.flex}>
-              <p className={styles.textBlack}>镜像库：</p>
+              <p className={`${styles.textBlack} ${styles.textBlackRight}`}>镜像库：</p>
               <div>
                 {
                   detail.dockerHubs && detail.dockerHubs.map((item, index) => (
@@ -343,17 +283,34 @@ class ClusterDetail extends React.Component {
     let envResources = detail.envResources || [];
     return (
       <Card title="使用情况" className={styles.marginB}>
-        <Row>
-          <Col md={8} sm={24}>
-            {this.renderChart(envResources, dvCpu, 'cpus', 'CPU', 'cpu', 'Core')}
-          </Col>
-          <Col md={8} sm={24}>
-            {this.renderChart(envResources, dvMemory, 'memory', '内存', 'memory', 'GiB')}
-          </Col>
-          <Col md={8} sm={24}>
+        {
+          detail.type !== '2' ?
+            <Row>
+              <Col md={8} sm={24}>
+                {this.renderChart(envResources, dvCpu, 'cpus', 'CPU', 'cpu', 'Core')}
+              </Col>
+              <Col md={8} sm={24}>
+                {this.renderChart(envResources, dvMemory, 'memory', '内存', 'memory', 'GiB')}
+              </Col>
+              <Col md={8} sm={24}>
+                {this.renderChart(envResources, dvDist, 'disk', '磁盘', 'disk', 'GiB')}
+              </Col>
+            </Row>
+            :
+            <Row>
+              <Col md={12} sm={24}>
+                {this.renderChart(envResources, dvCpu, 'cpus', 'CPU', 'cpu', 'Core')}
+              </Col>
+              <Col md={12} sm={24}>
+                {this.renderChart(envResources, dvMemory, 'memory', '内存', 'memory', 'GiB')}
+              </Col>
+              {/* <Col md={8} sm={24}>
             {this.renderChart(envResources, dvDist, 'disk', '磁盘', 'disk', 'GiB')}
-          </Col>
-        </Row>
+          </Col> */}
+            </Row>
+
+        }
+
       </Card>
     )
   }
@@ -379,19 +336,32 @@ class ClusterDetail extends React.Component {
     )
   }
   renderNode() {
-    const { nodeList, nodeListLoading, showAddNode } = this.state;
+    const { nodeList, nodeListLoading, showAddNode, detail } = this.state;
     const columns = [
       {
         title: 'IP',
         dataIndex: 'ip'
       },
       {
-        title: '节点类型',
-        dataIndex: 'nodeType'
+        title: '类型',
+        dataIndex: 'nodeType',
+        className: detail.type === '2' ? styles.hidden : null,
+        render: (nodeType) => (
+          <Fragment>
+            {
+              nodeType && nodeType.indexOf("public") > -1 ?
+                <span style={{ color: '#aa6704' }}>public</span> :
+                <span>private</span>
+            }
+          </Fragment>
+
+
+        )
       },
       {
-        title: '健康状态',
+        title: '健康',
         dataIndex: 'status',
+        className: detail.type === '2' ? styles.hidden : null,
         render: (text, record) => (
           <span>
             <Badge status={text === '0' ? 'success' : text === "-1" ? 'default' : 'error'} />
@@ -406,21 +376,48 @@ class ClusterDetail extends React.Component {
         title: 'CPU',
         dataIndex: 'cpu',
         render: (text, record) => (
-          <span>{`${record.usedCpu}/${text} (${Math.round(record.usedCpu / text * 100)}%)`}</span>
+          <div>
+            <div className={styles.nodeProcess}>
+              <Progress percent={Math.round(record.usedCpu / text * 100)} size="small" showInfo={false} strokeColor="#7d58ff" />
+            </div>
+            {
+              detail.type === '2' ?
+                <span>{`-% / (-/${text})`}</span>
+                :
+                <span>{`${record.usedCpu || 0}/${text} (${Math.round(record.usedCpu / text * 100) || 0}%)`}</span>
+            }
+
+          </div>
         )
       },
       {
-        title: '内存',
+        title: '内存(GiB)',
         dataIndex: 'memory',
         render: (text, record) => (
-          <span>{`${MformG(record.usedMemory)}/${MformG(text)} GiB (${Math.round(record.usedMemory / text * 100)}%)`}</span>
+          <div>
+            <div className={styles.nodeProcess}>
+              <Progress percent={Math.round(record.usedMemory / text * 100)} size="small" showInfo={false} strokeColor="#ff007d" />
+            </div>
+            {
+              detail.type === '2' ?
+                <span>{`-% / (-/${MformG(text)})`}</span> :
+                <span>{`${MformG(record.usedMemory)}/${MformG(text)} (${Math.round(record.usedMemory / text * 100) || 0}%)`}</span>
+            }
+
+          </div>
         )
       },
       {
-        title: '磁盘',
+        title: '磁盘(GiB)',
         dataIndex: 'disk',
+        className: detail.type === '2' ? styles.hidden : null,
         render: (text, record) => (
-          <span>{`${MformG(record.usedDisk)}/${MformG(text)} GiB (${Math.round(record.usedDisk / text * 100)}%)`}</span>
+          <div>
+            <div className={styles.nodeProcess}>
+              <Progress percent={Math.round(record.usedDisk / text * 100)} size="small" showInfo={false} strokeColor="#157ff2" />
+            </div>
+            <span>{`${MformG(record.usedDisk)}/${MformG(text)} (${Math.round(record.usedDisk / text * 100)}%)`}</span>
+          </div>
         )
       },
       // {

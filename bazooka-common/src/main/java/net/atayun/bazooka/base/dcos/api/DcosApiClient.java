@@ -1,9 +1,6 @@
 package net.atayun.bazooka.base.dcos.api;
 
-import feign.Feign;
-import feign.RequestInterceptor;
-import feign.RequestTemplate;
-import feign.Response;
+import feign.*;
 import feign.codec.ErrorDecoder;
 import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
@@ -28,6 +25,11 @@ public class DcosApiClient {
         });
     }
 
+    public static DcosApi getInstance(String endpoint, int connectTimeoutMillis, int readTimeoutMillis) {
+        return buildInstance(endpoint, new Request.Options(connectTimeoutMillis, readTimeoutMillis), b -> {
+        });
+    }
+
     public static DcosApi getInstance(String endpoint, final DCOSAuthCredentials authCredentials) {
         // Need to use a non-authenticated DCOSClient instance to perform the authorization and token refresh to avoid
         // the complexity of synchronizing around checking whether a token needs to be refreshed.
@@ -36,10 +38,15 @@ public class DcosApiClient {
     }
 
     private static DcosApi buildInstance(String endpoint, Consumer<Feign.Builder> customize) {
+        return buildInstance(endpoint, new Request.Options(), customize);
+    }
+
+    private static DcosApi buildInstance(String endpoint, Request.Options options, Consumer<Feign.Builder> customize) {
         GsonDecoder decoder = new GsonDecoder(ModelUtils.GSON);
         GsonEncoder encoder = new GsonEncoder(ModelUtils.GSON);
 
         Feign.Builder builder = Feign.builder()
+                .options(options)
                 .encoder(encoder)
                 .decoder(decoder)
                 .errorDecoder(new DcosApiErrorDecoder());

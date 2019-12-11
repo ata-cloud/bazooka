@@ -1,0 +1,76 @@
+.itemWarp {
+  justify-content: space-between;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+.itemWarp .listItemProject {
+  padding: 2px 10px;
+  border-radius: 4px;
+}
+.listItemAppName {
+  color: #333;
+  font-size: 20px;
+  text-align: center;
+}
+.listItemEnvBox {
+  position: relative;
+  min-height: 80px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  overflow: hidden;
+  width: 100%;
+}
+.listItemEnvBox .listItemEnv {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  left: 0;
+}
+.listItemEnvBox .envItem {
+  flex: 1;
+  min-width: 33.5%;
+  text-align: center;
+  overflow: hidden;
+}
+.listItemEnvBox .envItem:not(:last-child) {
+  border-right: 1px solid #bbbbbb;
+}
+.listItemEnvBox .leftArrow {
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  transform: translate(0, -50%);
+}
+.listItemEnvBox .rightArrow {
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  transform: translate(0, -50%);
+}
+.listItemEnvBox .envItemNameWrap {
+  max-width: 90%;
+  overflow: hidden;
+  white-space: nowrap;
+  margin: 0 auto;
+}
+.listItemEnvBox .envItemName {
+  margin-bottom: 10px;
+}
+.itemDesc {
+  height: 40px;
+  color: #999;
+  margin: 10px 0 15px 0;
+}
+.itemDesc .itemDescSpan {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  /* autoprefixer: off */
+  -webkit-box-orient: vertical;
+  /* autoprefixer: on */
+  word-break: break-all;
+}

@@ -15,17 +15,17 @@
  */
 package net.atayun.bazooka.pms.api.dto;
 
-import net.atayun.bazooka.base.enums.deploy.AppOperationEnum;
 import com.youyu.common.dto.BaseDto;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiModel;
 import lombok.NoArgsConstructor;
+import net.atayun.bazooka.base.enums.AppOptEnum;
 
 
 /**
- *  代码生成器
+ * 代码生成器
  *
  * @author 技术平台
  * @date 2019-07-25
@@ -34,7 +34,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel
-public class PmsAppDeployStatusDto extends BaseDto<Long>{
+public class PmsAppDeployStatusDto extends BaseDto<Long> {
 
     @ApiModelProperty(value = "应用ID")
     private Long appId;
@@ -46,7 +46,7 @@ public class PmsAppDeployStatusDto extends BaseDto<Long>{
     private Boolean deploying;
 
     @ApiModelProperty(value = "部署类型")
-    private AppOperationEnum deployType;
+    private AppOptEnum deployType;
 
 }
 

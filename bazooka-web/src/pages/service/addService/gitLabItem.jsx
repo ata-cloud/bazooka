@@ -33,12 +33,12 @@ class GitLabItem extends React.Component {
     )
   }
   renderForm() {
-    const { onCancel, form, projectId } = this.props;
+    const { onCancel, form, projectId, loading } = this.props;
     const { getFieldDecorator } = form;
     return (
       <Form onSubmit={this.onSubmit}>
         <Row type="flex" align="top" gutter={120}>
-          <Commom onCancel={onCancel} onSave={this.onSubmit} formItem={form} projectId={projectId}>        
+          <Commom onCancel={onCancel} onSave={this.onSubmit} formItem={form} projectId={projectId} loading={loading}>        
           </Commom>
         </Row>
       </Form>

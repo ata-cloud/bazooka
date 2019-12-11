@@ -21,7 +21,7 @@ class BuildSet extends React.Component {
   }
   componentDidMount() {
     const { deployMode, currentItem } = this.props;
-    if (deployMode == 'BUILD') {
+    if (deployMode.indexOf('BUILD') > -1) {
       this.setState({
         steps: [0, 1, 2, 3]
       })
@@ -84,13 +84,13 @@ class BuildSet extends React.Component {
         let gitBranchs = branch == '2' ? {
           gitBranchAllow: gitBranch,
           gitBranchDeny: undefined
-        } : branch=='3' ? {
-            gitBranchAllow: undefined,
-            gitBranchDeny: gitBranch
-          }: {
-            gitBranchAllow: undefined,
-            gitBranchDeny: undefined
-          }
+        } : branch == '3' ? {
+          gitBranchAllow: undefined,
+          gitBranchDeny: gitBranch
+        } : {
+              gitBranchAllow: undefined,
+              gitBranchDeny: undefined
+            }
         this.setState({
           data: {
             ...data,
@@ -120,7 +120,7 @@ class BuildSet extends React.Component {
   }
   onSave = async () => {
     const { data } = this.state;
-    const { info, deployMode, onCancel, onSavaSuccess, currentItem } = this.props;
+    const { info, deployMode, onCancel, onSavaSuccess, currentItem, currentEnvO } = this.props;
     let params = {}, environmentVariable = {}, volumes = [];
     if (data.environmentVariable && data.environmentVariable.length) {
       data.environmentVariable.map((item) => {
@@ -135,6 +135,8 @@ class BuildSet extends React.Component {
       appId: info.appId,
       envId: info.envId,
       deployMode: deployMode,
+      instance: currentEnvO.clusterType !== '2' ? data.instance : data.clusterNodes.length,
+      clusterType: currentEnvO.clusterType
     }
     if (currentItem.type && currentItem.type == 'edit') {
       let res = await service.appDeployConfigUpdate({ ...params, configId: currentItem.id });
@@ -163,7 +165,7 @@ class BuildSet extends React.Component {
   render() {
     const { visible, form, onCancel, deployMode, info, currentItem } = this.props;
     const { step, data, i } = this.state;
-    let deployModeName = deployMode === 'BUILD' ? '构建发布' : '镜像发布';
+    let deployModeName = deployMode.indexOf('BUILD') > -1 ? '构建发布' : '镜像发布';
     return (
       <Modal
         title={currentItem.type == 'edit' ? `修改发布配置 - ${deployModeName}` : `新建发布配置 - ${deployModeName}`}
@@ -188,15 +190,15 @@ class BuildSet extends React.Component {
           <Steps current={i} style={{ padding: '0 100px' }} size="small" >
             <Step title="基本信息" />
             {
-              deployMode == 'BUILD' && <Step title="编译构建" />
+              deployMode.indexOf('BUILD') > -1 && <Step title="编译构建" />
             }
             <Step title="容器运行" />
             <Step title="额外设置" />
           </Steps>
           <Form onSubmit={this.onSubmit}>
             {step === 0 && <BaseInfo formParent={form} data={data} deployMode={deployMode} currentItem={currentItem} />}
-            {step === 1 && deployMode == 'BUILD' && <Compile formParent={form} data={data} />}
-            {step === 2 && <Container formParent={form} data={data} info={info} />}
+            {step === 1 && deployMode.indexOf('BUILD') > -1 && <Compile formParent={form} data={data} />}
+            {step === 2 && <Container formParent={form} data={data} info={info} currentItem={currentItem}/>}
             {step === 3 && <ExtarSet formParent={form} data={data} />}
           </Form>
         </div>
@@ -204,6 +206,7 @@ class BuildSet extends React.Component {
     );
   }
 }
-export default Form.create()(connect(({ }) => ({
+export default Form.create()(connect(({ service }) => ({
+  currentEnvO: service.currentEnvO,
 }))(BuildSet));
 

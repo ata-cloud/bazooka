@@ -109,9 +109,13 @@ class EditModal extends React.Component {
 
               }, {
                 validator(rule, value, callback) {
-                  if (value.length > 100) {
-                    callback('最多100个字符')
-                  } else {
+                  try {
+                    if (value.length > 100) {
+                      callback('最多100个字符')
+                    } else {
+                      callback()
+                    }
+                  } catch (err) {
                     callback()
                   }
                 }

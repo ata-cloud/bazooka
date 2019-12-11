@@ -71,4 +71,7 @@ public class EnvVo {
 
     @ApiModelProperty("环境下项目数")
     private Integer projectNum;
+
+    @ApiModelProperty("集群类型")
+    private String clusterType;
 }

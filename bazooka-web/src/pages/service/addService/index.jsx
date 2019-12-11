@@ -88,7 +88,8 @@ class AddService extends React.Component {
     super(props);
     this.state = {
       showType: '',
-      projectId: undefined
+      projectId: undefined,
+      loading: false
     };
   }
   componentDidMount() {
@@ -107,7 +108,7 @@ class AddService extends React.Component {
   }
   onAdd = (item) => {
     if (item.isDev) {
-      message.info('规划中...');
+      // message.info('规划中...');
       return
     }
     this.setState({
@@ -121,14 +122,20 @@ class AddService extends React.Component {
     })
   }
   onSave = (params) => {
+    this.setState({
+      loading: true
+    })
     this.onFetchAppCreate(params)
   }
   onFetchAppCreate = async (params) => {
     let res = await service.appCreate(params);
+    this.setState({
+      loading: false
+    })
     if (res && res.code == '1') {
       message.success('添加成功');
       this.setState({
-        showType: ''
+        showType: '',
       })
       router.goBack();
     }
@@ -204,14 +211,14 @@ class AddService extends React.Component {
     )
   }
   renderAddItem() {
-    const { showType, projectId } = this.state;
+    const { showType, projectId, loading } = this.state;
     return (
       <Fragment>
         {
-          showType === 'GitLab' && <GitLab onCancel={this.onCancel} onSave={this.onSave} projectId={projectId} />
+          showType === 'GitLab' && <GitLab onCancel={this.onCancel} onSave={this.onSave} projectId={projectId} loading={loading} />
         }
         {
-          showType === 'Git' && <Git onCancel={this.onCancel} onSave={this.onSave} projectId={projectId} />
+          showType === 'Git' && <Git onCancel={this.onCancel} onSave={this.onSave} projectId={projectId} loading={loading} />
         }
       </Fragment>
     )

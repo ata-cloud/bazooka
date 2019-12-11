@@ -35,7 +35,8 @@ import tk.mybatis.spring.annotation.MapperScan;
 @MapperScan(basePackages = {"net.atayun.bazooka.pms.biz.**.dao",
         "net.atayun.bazooka.rms.biz.**.dao",
         "net.atayun.bazooka.upms.biz.**.dao",
-        "net.atayun.bazooka.deploy.biz.dal.dao"
+        "net.atayun.bazooka.deploy.biz.dal.dao",
+        "net.atayun.bazooka.deploy.biz.v2.dal.dao"
 })
 public class BazookaGatewayApplication {
 

@@ -114,4 +114,9 @@ public class RmsEnvController implements EnvApi {
         envService.delete(envId);
         return ok();
     }
+
+    @GetMapping("/getClusterByEnvId")
+    public Result getClusterByEnvId(@RequestParam("envId") Long envId){
+        return ok();
+    }
 }

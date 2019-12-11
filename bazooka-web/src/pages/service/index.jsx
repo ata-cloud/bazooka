@@ -150,13 +150,6 @@ class Service extends React.Component {
   renderTitle() {
     const { projectListAdmin } = this.props;
     return (
-      // <Row type="flex" justify="space-between" align="middle">
-      //   <Col>一个服务对应一个完整的生命周期，拥有代码管理、编译、打包、容器镜像、测试、发布、部署、运维、监控等完整的功能</Col>
-      //   <Col className={styles.flexCenter}>
-      //     <Search placeholder="搜索服务" onSearch={this.onSearch} />
-      //     <Button type="primary" className={styles.marginL} onClick={this.onAdd}>+ 新建服务</Button>
-      //   </Col>
-      // </Row>
       <div>
         <p className={styles.marginB}>一个服务对应一个完整的生命周期，拥有代码管理、编译、打包、容器镜像、测试、发布、部署、运维、监控等完整的功能</p>
         <Row type="flex" justify="space-between" align="middle">
@@ -206,7 +199,7 @@ class Service extends React.Component {
               rules: [
                 {
                   message: "最多输入100个字符",
-                  validator(rule, value, callback) {
+                  validator: async (rule, value, callback) => {
                     if (value.length > 100) {
                       callback('最多输入100个字符')
                     } else {

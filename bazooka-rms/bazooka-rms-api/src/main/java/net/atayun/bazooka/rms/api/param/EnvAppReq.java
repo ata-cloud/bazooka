@@ -40,4 +40,6 @@ public class EnvAppReq {
     @ApiModelProperty("服务编号")
     @NotBlank(message = "服务编号不能为空")
     private String appId;
+
+    private Long appIdLongValue;
 }

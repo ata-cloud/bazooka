@@ -1,3 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  net.atayun.bazooka.deploy.biz.config.PropertiesConfiguration,\
-  net.atayun.bazooka.deploy.biz.config.DeployBeanConfiguration
+  net.atayun.bazooka.deploy.biz.v2.config.PropertiesConfiguration,\
+  net.atayun.bazooka.deploy.biz.v2.config.DeployBeanConfiguration,\
+  net.atayun.bazooka.deploy.biz.v2.config.DeployThreadPoolConfiguration

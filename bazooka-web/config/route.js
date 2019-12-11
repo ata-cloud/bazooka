@@ -102,6 +102,11 @@ const routes = [
             component: './cluster/index',
           },
           {
+            path: '/cluster/add',
+            name: 'clusterAdd',
+            component: './cluster/addCluster/index',
+          },
+          {
             path: '/cluster/detail',
             name: 'clusterDetail',
             component: './cluster/detail',

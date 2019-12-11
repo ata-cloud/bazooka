@@ -69,8 +69,8 @@ public class JenkinsServerHelper {
     }
 
     public void buildJob(String jobName, Map<String, String> param) {
-        JobWithDetails job = getJobWithDetails(jobName);
         try {
+            JobWithDetails job = getJobWithDetails(jobName);
             if (CollectionUtils.isEmpty(param)) {
                 job.build(jenkinsClientProperties.getCrumbFlag());
             } else {
@@ -82,10 +82,10 @@ public class JenkinsServerHelper {
     }
 
     public String getJenkinsLog(String jobName, Integer buildNumber) {
-        JobWithDetails job = getJobWithDetails(jobName);
-        Build build = job.getBuildByNumber(buildNumber);
         String consoleOutputText;
         try {
+            JobWithDetails job = getJobWithDetails(jobName);
+            Build build = job.getBuildByNumber(buildNumber);
             consoleOutputText = build.details().getConsoleOutputText();
         } catch (IOException e) {
             throw new BizException(OpsCommonExceptionCode.JENKINS_BUILD_DETAIL_ERROR, e);

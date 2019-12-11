@@ -62,17 +62,16 @@ public class RmsClusterConfigServiceImpl extends AbstractService<Long, RmsCluste
             return null;
         }
 
-        ClusterConfigDto clusterConfigDto = new ClusterConfigDto();
-
         Optional<RmsClusterConfigEntity> marathonOptional = rmsClusterConfigEntities.stream().filter(r -> eq(r.getType(), MARATHON.getCode()) && eq(r.getStatus(), NORMAL.getCode())).findFirst();
-        clusterConfigDto.setDcosEndpoint(marathonOptional.isPresent() ? marathonOptional.get().getUrl() : null);
+        String dcosEndpoint = marathonOptional.isPresent() ? marathonOptional.get().getUrl() : null;
 
         List<String> mlbUrls = rmsClusterConfigEntities.stream().filter(r -> eq(r.getType(), MLB.getCode())).map(r -> r.getUrl()).collect(toList());
-        clusterConfigDto.setMlbUrls(mlbUrls);
 
         Optional<RmsClusterConfigEntity> dockerHubOptional = rmsClusterConfigEntities.stream().filter(r -> eq(r.getType(), DOCKER_HUB.getCode())).findFirst();
-        clusterConfigDto.setDockerHubUrl(dockerHubOptional.isPresent() ? dockerHubOptional.get().getUrl() : null);
-        return clusterConfigDto;
+        String dockerHubUrl = dockerHubOptional.isPresent() ? dockerHubOptional.get().getUrl() : null;
+        Long dockerHubCredentialId = dockerHubOptional.isPresent() ? dockerHubOptional.get().getCredentialId() : null;
+
+        return new ClusterConfigDto(dcosEndpoint, dockerHubUrl, dockerHubCredentialId, mlbUrls);
     }
 }
 

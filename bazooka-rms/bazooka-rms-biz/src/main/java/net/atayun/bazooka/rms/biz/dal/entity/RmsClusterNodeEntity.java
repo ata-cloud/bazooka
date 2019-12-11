@@ -76,6 +76,12 @@ public class RmsClusterNodeEntity extends JdbcMysqlEntity<Long> {
     private Integer containerQuantity;
 
     /**
+     * ssh端口号
+     */
+    @Column(name = "ssh_port")
+    private String sshPort;
+
+    /**
      * 总cpu信息
      */
     @Column(name = "cpu")
@@ -110,6 +116,12 @@ public class RmsClusterNodeEntity extends JdbcMysqlEntity<Long> {
      */
     @Column(name = "used_disk")
     private BigDecimal usedDisk;
+
+    /**
+     * 凭据ID
+     */
+    @Column(name = "credential_id")
+    private Long credentialId;
 
     public RmsClusterNodeEntity() {
     }

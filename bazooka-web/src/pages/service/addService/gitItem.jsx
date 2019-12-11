@@ -52,17 +52,17 @@ class GitItem extends React.Component {
   }
   onAddGitCredentials = async (params) => {
     const { setFieldsValue } = this.props.form;
-    let res = await system.credentialsAdd({ ...params, credentialType: 'USERNAME_WITH_PASSWORD' });
-    if (res && res.code == '1') {
-      message.success('添加成功');
+    // let res = await system.credentialsAdd({ ...params, credentialType: 'USERNAME_WITH_PASSWORD' });
+    // if (res && res.code == '1') {
+    //   message.success('添加成功');
       this.setState({
         showGitModal: false
       })
       this.onFetchCredentialsList();
       setFieldsValue({
-        gitCredentialId: res.data.id
+        gitCredentialId: params.id
       })
-    }
+    // }
   }
   renderTitle() {
     return (
@@ -76,12 +76,12 @@ class GitItem extends React.Component {
     )
   }
   renderForm() {
-    const { onCancel, form, credentialsList, projectId } = this.props;
+    const { onCancel, form, credentialsList, projectId, loading } = this.props;
     const { getFieldDecorator } = form;
     return (
       <Form onSubmit={this.onSubmit}>
         <Row type="flex" align="top" gutter={120}>
-          <Commom onCancel={onCancel} onSave={this.onSubmit} formItem={form} projectId={projectId}>
+          <Commom onCancel={onCancel} onSave={this.onSubmit} formItem={form} projectId={projectId} loading={loading}>
             <Col md={12} sm={24}>
               <FormItem label="代码仓库地址" extra={
                 <Fragment>

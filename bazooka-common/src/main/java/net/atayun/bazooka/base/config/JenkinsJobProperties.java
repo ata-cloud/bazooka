@@ -29,22 +29,9 @@ import java.util.List;
 @Setter
 @ConfigurationProperties(prefix = "ata.bazooka.base.jenkins.job")
 public class JenkinsJobProperties {
-
-
-    /**
-     * 构建Job
-     */
-    private List<String> jenkinsBuildJobs;
-
-    /**
-     * 推送镜像Job
-     */
-    private List<String> jenkinsPushDockerImageJobs;
-
-    private String buildScriptCallbackPath;
-
+    private List<String> pullCodeJobs;
+    private List<String> packageProjectJobs;
+    private List<String> buildImageJobs;
+    private List<String> pushImageJobs;
     private String buildCallbackPath;
-
-    private String pushImageCallbackPath;
-
 }

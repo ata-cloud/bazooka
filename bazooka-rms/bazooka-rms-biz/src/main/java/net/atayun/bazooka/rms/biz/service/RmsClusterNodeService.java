@@ -42,6 +42,13 @@ public interface RmsClusterNodeService extends IService<RmsClusterNodeDto, RmsCl
     List<RmsClusterNodeEntity> refreshClusterNodeInfo(RmsClusterConfigEntity rmsClusterConfigEntity);
 
     /**
+     * @create: zhangyingbin 2019/11/19 0019 下午 2:29
+     * @Modifier:
+     * @Description: 查询集群所有节点列表信息
+     */
+    List<ClusterNodeRspDto> getAllClusterNodes(Long clusterId);
+
+    /**
      * 查询集群节点列表信息
      *
      * @param clusterNodeReqDto

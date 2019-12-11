@@ -80,10 +80,10 @@ class Project extends React.Component {
       showAdd: false
     })
   }
-  //新建服务
+  //新建项目
   onSubmit = (e) => {
     const { searchObj } = this.state;
-    e.preventDefault();
+    e && e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         let envList = [], devUserIds = [];
@@ -203,7 +203,7 @@ class Project extends React.Component {
           <FormItem label="项目名">
             {getFieldDecorator('projectName', {
               rules: [
-                { required: true, message: "请输入项目名", message: "请输入20位以内中文数字字母中横线的组合", pattern: /^[A-Za-z0-9-\u4E00-\u9FA5]{1,20}$/ }
+                { required: true, message: "请输入20位以内中文数字字母中横线的组合", pattern: /^[A-Za-z0-9-\u4E00-\u9FA5]{1,20}$/ }
               ]
             })(<Input placeholder="请输入项目名" />)}
           </FormItem>
@@ -216,14 +216,19 @@ class Project extends React.Component {
           </FormItem>
           <FormItem label="描述">
             {getFieldDecorator('description', {
-              rules:[
+              rules: [
                 {
-                  validator(rule, value, callback){
-                    if(value.length > 500) {
-                      callback('最多500个字符')
-                    }else {
+                  validator(rule, value, callback) {
+                    try {
+                      if (value.length > 10) {
+                        callback('最多500个字符')
+                      } else {
+                        callback()
+                      }
+                    } catch (err) {
                       callback()
                     }
+
                   }
                 }
               ]
@@ -288,42 +293,65 @@ class Project extends React.Component {
           {
             list.length ? list.map((item, i) => (
               <Col key={i} md={8} sm={12}>
-                <Card className={`${styles.marginB} ${styles.listItem}`} hoverable>
-                  <div onClick={() => this.onRouteTo('/project/detail', item)}>
-                    <div className={styles.flexCenter}>
-                      <div className={styles.itemFirst} style={{ backgroundColor: COLOR_SHOW[item.projectId % 5] }}>{item.projectName.charAt(0).toUpperCase()}</div>
+                <Card className={`${styles.marginB} ${styles.listItem}`} hoverable style={{ backgroundColor: COLOR_SHOW[item.projectId % 5] }}>
+                  <div className={styles.pushpinIcon} onClick={() => { this.onTop(item) }} title={item.orderId > 0 ? '取消置顶' : '置顶'}>
+                    <Icon type="pushpin" theme={item.orderId > 0 ? "filled" : "outlined"} style={{ fontSize: 18 }} />
+                  </div>
+                  <Row onClick={() => this.onRouteTo('/project/detail', item)}>
+                    <div className={styles.flex}>
+                      <strong className={styles.textFont16}>{item.projectName}</strong>
+                      {/* <div className={styles.itemFirst} style={{ backgroundColor: COLOR_SHOW[item.projectId % 5] }}>{item.projectName.charAt(0).toUpperCase()}</div>
                       <strong className={styles.textFont16}>{item.projectName}</strong>
                       {
                         item.orderId > 0 &&
                         <div className={styles.marginL10}>
                           <Tag color="blue">置顶</Tag>
                         </div>
-                      }
+                      } */}
                     </div>
-                    <Row type="flex" className={styles.marginT}>
-                      <Col className={styles.textC} span={8}>
-                        <p className={styles.textFont16}>服务</p>
-                        <p>{item.appCount}</p>
-                      </Col>
-                      <Col className={styles.textC} span={8}>
-                        <p className={styles.textFont16} >用户</p>
-                        <p>{item.userCount}</p>
-                      </Col>
-                      <Col className={styles.textC} span={8}>
-                        <p className={styles.textFont16}>环境</p>
-                        <p>{item.envCount}</p>
-                      </Col>
-                    </Row>
                     <div className={styles.itemDesc}>
                       <span className={styles.itemDescSpan}>{item.description}</span>
                     </div>
-                  </div>
-
-                  <div className={styles.moreOprea}>
+                    <div className={`${styles.flex} ${styles.itemDetailPro}`}>
+                      <div className={`${styles.flex1} ${styles.itemDetailProItem}`}>
+                        <p className={styles.textFont16}>服务</p>
+                        <p>{item.appCount}</p>
+                      </div>
+                      <div className={`${styles.flex1} ${styles.itemDetailProItem}`}>
+                        <p className={styles.textFont16} >用户</p>
+                        <p>{item.userCount}</p>
+                      </div>
+                      <div className={`${styles.flex1} ${styles.itemDetailProItem}`}>
+                        <p className={styles.textFont16}>环境</p>
+                        <p>{item.envCount}</p>
+                      </div>
+                    </div>
+                    {/* <Row type="flex" className={styles.itemDetailPro}>
+                      <Col className={`${styles.textC}`} span={8} className={styles.itemDetailProItem}>
+                        <div >
+                          <p className={styles.textFont16}>服务</p>
+                          <p>{item.appCount}</p>
+                        </div>
+                      </Col>
+                      <Col className={styles.textC} span={8} className={styles.itemDetailProItem}>
+                        <div>
+                          <p className={styles.textFont16} >用户</p>
+                          <p>{item.userCount}</p>
+                        </div>
+                      </Col>
+                      <Col className={styles.textC} span={8} className={styles.itemDetailProItem}>
+                        <div>
+                          <p className={styles.textFont16}>环境</p>
+                          <p>{item.envCount}</p>
+                        </div>
+                      </Col>
+                    </Row> */}
+                  </Row>
+                  {/* <div className={styles.moreOprea}>
                     <Dropdown overlay={this.renderMoreOpera(item, i)} placement="bottomCenter">
                       <Icon type="ellipsis" style={{ fontSize: 25 }} />
                     </Dropdown>
-                  </div>
+                  </div> */}
                 </Card>
               </Col>
             )) :

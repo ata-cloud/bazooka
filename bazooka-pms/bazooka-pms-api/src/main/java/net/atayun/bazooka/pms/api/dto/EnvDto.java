@@ -16,13 +16,18 @@
 package net.atayun.bazooka.pms.api.dto;
 
 import io.swagger.annotations.ApiModel;
-import lombok.Data;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.*;
 
 /**
  * @author rache
  * @date 2019-07-12
  */
-@Data
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel(value = "PmsEnv")
 public class EnvDto {
     /**
@@ -41,5 +46,15 @@ public class EnvDto {
      * 结束端口
      */
     private Integer portEnd;
+
+    /**
+     * 集群id
+     */
+    private Long clusterId;
+
+    /**
+     * 集群类型 0:MESOS 1:KUBERNETES 2:SINGLENODE
+     */
+    private String clusterType;
 
 }

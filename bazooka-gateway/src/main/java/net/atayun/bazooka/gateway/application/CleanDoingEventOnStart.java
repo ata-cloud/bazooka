@@ -15,17 +15,15 @@
  */
 package net.atayun.bazooka.gateway.application;
 
-import net.atayun.bazooka.base.bean.StrategyNumBean;
-import net.atayun.bazooka.deploy.biz.dal.entity.app.AppOperationEventEntity;
-import net.atayun.bazooka.deploy.biz.dal.entity.flow.DeployFlowEntity;
-import net.atayun.bazooka.deploy.biz.enums.status.AppOperationEventStatusEnum;
-import net.atayun.bazooka.deploy.biz.enums.status.BasicStatusEnum;
-import net.atayun.bazooka.deploy.biz.service.app.AppOperationEventService;
-import net.atayun.bazooka.deploy.biz.service.deploy.DeployService;
-import net.atayun.bazooka.deploy.biz.service.deploy.strategy.AbstractDeployFlowWorkStrategy;
-import net.atayun.bazooka.deploy.biz.service.flow.DeployFlowService;
-import net.atayun.bazooka.pms.api.feign.AppApi;
 import lombok.extern.slf4j.Slf4j;
+import net.atayun.bazooka.base.bean.StrategyNumBean;
+import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOpt;
+import net.atayun.bazooka.deploy.biz.v2.dal.entity.app.AppOptFlowStep;
+import net.atayun.bazooka.deploy.biz.v2.enums.AppOptStatusEnum;
+import net.atayun.bazooka.deploy.biz.v2.service.app.AppOptService;
+import net.atayun.bazooka.deploy.biz.v2.service.app.AppStatusOpt;
+import net.atayun.bazooka.deploy.biz.v2.service.app.FlowStepService;
+import net.atayun.bazooka.deploy.biz.v2.service.app.step.Step;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -51,38 +49,28 @@ public class CleanDoingEventOnStart implements ApplicationListener<ApplicationRe
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         log.info("scan doing event...");
-        AppOperationEventService appOperationEventService = getBean(AppOperationEventService.class);
-        List<AppOperationEventEntity> entities = appOperationEventService.selectByStatus(AppOperationEventStatusEnum.PROCESS);
-        if (CollectionUtils.isEmpty(entities)) {
+        AppOptService appOptService = getBean(AppOptService.class);
+        List<AppOpt> appOpts = appOptService.selectByStatus(AppOptStatusEnum.PROCESS);
+        if (CollectionUtils.isEmpty(appOpts)) {
             log.info("all event finished...");
             return;
         }
         log.info("clean doing event...");
-        AppApi appApi = getBean(AppApi.class);
-        DeployService deployService = getBean(DeployService.class);
-        DeployFlowService deployFlowService = getBean(DeployFlowService.class);
-        entities.forEach(entity -> {
-
-            List<DeployFlowEntity> deployFlowEntities = deployFlowService.selectByDeployId(entity.getId());
-            if (!CollectionUtils.isEmpty(deployFlowEntities)) {
-                deployFlowEntities.stream()
-                        .filter(deployFlowEntity -> deployFlowEntity.getFlowStatus() == BasicStatusEnum.PROCESS)
-                        .min(Comparator.comparingInt(DeployFlowEntity::getFlowNumber))
-                        .ifPresent(deployFlowEntity -> {
-                            AbstractDeployFlowWorkStrategy deployFlowWorkStrategy = StrategyNumBean.getBeanInstance(AbstractDeployFlowWorkStrategy.class,
-                                    deployFlowEntity.getFlowType().name());
-                            deployFlowWorkStrategy.cancel(deployFlowEntity);
+        FlowStepService flowStepService = getBean(FlowStepService.class);
+        appOpts.forEach(appOpt -> {
+            List<AppOptFlowStep> appOptFlowSteps = flowStepService.selectByOptId(appOpt.getId());
+            if (!CollectionUtils.isEmpty(appOptFlowSteps)) {
+                appOptFlowSteps.stream()
+                        .filter(AppOptFlowStep::isProcess)
+                        .min(Comparator.comparingInt(AppOptFlowStep::getStepSeq))
+                        .ifPresent(appOptFlowStep -> {
+                            Step step = StrategyNumBean.getBeanInstance(Step.class, appOptFlowStep.getStep().name());
+                            step.cancel(appOpt, appOptFlowStep);
                         });
             }
-
-            deployService.updateStatusByEventId(entity.getId(), BasicStatusEnum.FAILURE);
-
-            AppOperationEventEntity patch = new AppOperationEventEntity();
-            patch.setId(entity.getId());
-            patch.setStatus(AppOperationEventStatusEnum.FAILURE);
-            appOperationEventService.updateStatus(patch);
-
-            appApi.updateAppDeployStatus(entity.getAppId(), entity.getEnvId(), false, entity.getEvent());
+            appOpt.failure();
+            appOptService.updateStatus(appOpt);
+            AppStatusOpt.updateAppStatus(appOpt, Boolean.FALSE);
         });
     }
 }

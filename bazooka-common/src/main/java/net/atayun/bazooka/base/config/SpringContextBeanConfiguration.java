@@ -15,6 +15,7 @@
  */
 package net.atayun.bazooka.base.config;
 
+import net.atayun.bazooka.base.bean.SpringApplicationEventPublisher;
 import net.atayun.bazooka.base.bean.SpringContextBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -36,5 +37,10 @@ public class SpringContextBeanConfiguration {
     public SpringContextBean springContextBean() {
         SpringContextBean springContextBean = new SpringContextBean();
         return springContextBean;
+    }
+
+    @Bean
+    public SpringApplicationEventPublisher springApplicationEventPublisher() {
+        return new SpringApplicationEventPublisher();
     }
 }

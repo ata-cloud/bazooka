@@ -15,7 +15,13 @@
  */
 package net.atayun.bazooka.pms.biz.service.impl;
 
-import net.atayun.bazooka.deploy.api.AppOperationEventApi;
+import com.youyu.common.enums.BaseResultCode;
+import com.youyu.common.enums.IsDeleted;
+import com.youyu.common.exception.BizException;
+import com.youyu.common.mapper.support.ExampleEnhancer;
+import com.youyu.common.utils.YyAssert;
+import lombok.extern.slf4j.Slf4j;
+import net.atayun.bazooka.deploy.api.AppActionApi;
 import net.atayun.bazooka.deploy.api.dto.AppRunningEventDto;
 import net.atayun.bazooka.pms.api.dto.AppDeployConfigDto;
 import net.atayun.bazooka.pms.api.dto.AppInfoDto;
@@ -31,17 +37,13 @@ import net.atayun.bazooka.pms.biz.dal.entity.PmsProjectEnvRelationEntity;
 import net.atayun.bazooka.pms.biz.dal.entity.PmsUserProjectRelationEntity;
 import net.atayun.bazooka.pms.biz.service.*;
 import net.atayun.bazooka.rms.api.api.EnvApi;
+import net.atayun.bazooka.rms.api.api.RmsClusterNodeApi;
 import net.atayun.bazooka.rms.api.dto.ClusterAppServiceInfoDto;
+import net.atayun.bazooka.rms.api.dto.EnvDto;
+import net.atayun.bazooka.rms.api.dto.rsp.ClusterNodeRspDto;
 import net.atayun.bazooka.rms.api.param.EnvAppReq;
 import net.atayun.bazooka.upms.api.dto.rsp.UserDetailRspDTO;
 import net.atayun.bazooka.upms.api.feign.UserApi;
-import com.youyu.common.enums.BaseResultCode;
-import com.youyu.common.enums.IsDeleted;
-import com.youyu.common.exception.BizException;
-import com.youyu.common.mapper.support.ExampleEnhancer;
-import com.youyu.common.utils.YyAssert;
-import lombok.extern.slf4j.Slf4j;
-import net.atayun.bazooka.pms.biz.service.*;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Namespace;
@@ -86,11 +88,13 @@ public class AppServiceImpl implements AppService {
     @Autowired
     private AppDeployConfigService appDeployConfigService;
     @Autowired
-    private AppOperationEventApi appOperationEventApi;
+    private AppActionApi appOperationEventApi;
     @Autowired
     private PmsCredentialsService credentialsService;
     @Autowired
     private EnvApi envApi;
+    @Autowired
+    private RmsClusterNodeApi clusterNodeApi;
 
     private final static Comparator<Object> CHINA_COMPARE = Collator.getInstance(java.util.Locale.CHINA);
 
@@ -328,7 +332,7 @@ public class AppServiceImpl implements AppService {
         if (!ObjectUtils.isEmpty(pmsProjectEnvRelationEntities)) {
             pmsProjectEnvRelationEntities.stream()
                     .forEach(projectEnv -> {
-                        ClusterAppServiceInfoDto appServiceInfoDto = this.envApi.getClusterAppServiceInfo(new EnvAppReq(projectEnv.getEnvId(), appInfoDto.getDcosServiceId())).ifNotSuccessThrowException().getData();
+                        ClusterAppServiceInfoDto appServiceInfoDto = this.envApi.getClusterAppServiceInfo(new EnvAppReq(projectEnv.getEnvId(), appInfoDto.getDcosServiceId(), appId)).ifNotSuccessThrowException().getData();
                         //状态 0:未发布 1:已关闭 2:启动中 3:运行中
                         String appStatus = appServiceInfoDto.getStatus();
                         YyAssert.paramCheck("2".equals(appStatus), "服务正在启动中，不能删除！");
@@ -372,9 +376,6 @@ public class AppServiceImpl implements AppService {
         //参数验证
         this.deployConfigCheck(deployConfigDto);
 
-        //验证环境是否存在
-        this.envApi.get(deployConfigDto.getEnvId()).ifNotSuccessThrowException();
-
         int count = this.appDeployConfigService.selectCount(new AppDeployConfigEntity(deployConfigDto.getAppId(), deployConfigDto.getEnvId(), deployConfigDto.getConfigName(), IsDeleted.NOT_DELETED));
         YyAssert.paramCheck(count > 0, "同一服务环境下配置名称不可重复！");
 
@@ -401,9 +402,6 @@ public class AppServiceImpl implements AppService {
     @Override
     public AppDeployConfigEntity updateDeployConfig(AppDeployConfigDto deployConfigDto) {
         this.deployConfigCheck(deployConfigDto);
-
-        //验证环境是否存在
-        this.envApi.get(deployConfigDto.getEnvId()).ifNotSuccessThrowException();
 
         Example checkConfigName = new Example(AppDeployConfigEntity.class);
         checkConfigName.createCriteria()
@@ -433,12 +431,14 @@ public class AppServiceImpl implements AppService {
         return deployConfigEntity;
     }
 
+
     /**
-     * 验证参数、端口、
+     * 验证参数、端口、环境、集群、节点
      *
      * @param deployConfigDto
      */
     private void deployConfigCheck(AppDeployConfigDto deployConfigDto) {
+        log.info("验证发布配置参数：端口、环境、集群、节点");
 
         //验证参数：编译命令禁止 rm、shutdown、reboot；
         if (StringUtils.hasText(deployConfigDto.getCompileCommand())) {
@@ -458,6 +458,31 @@ public class AppServiceImpl implements AppService {
         YyAssert.paramCheck(containerPosts.size() > containerPosts.stream().distinct().count(), "容器端口不能重复！");
         List<Integer> servicePorts = portMappings.stream().filter(portMapping -> portMapping.getServicePort() != null).map(PortMapping::getServicePort).collect(Collectors.toList());
         YyAssert.paramCheck(servicePorts.size() > servicePorts.stream().distinct().count(), "服务端口不能重复！");
-    }
 
+        //验证环境是否存在
+        EnvDto envDto = this.envApi.get(deployConfigDto.getEnvId()).ifNotSuccessThrowException().getData();
+        log.info("envDto:{}", envDto);
+
+        YyAssert.paramCheck(!envDto.getClusterType().equals(deployConfigDto.getClusterType()), "集群类型不符！");
+
+        //bazooka 单节点发布，必须选择节点、节点必须在集群的范围
+        YyAssert.paramCheck("2".equals(deployConfigDto.getClusterType()) && ObjectUtils.isEmpty(deployConfigDto.getClusterNodes()), "Bazooka单节点集群发布必须选择发布节点信息！");
+
+        boolean instanceNotEqNode = "2".equals(deployConfigDto.getClusterType()) && deployConfigDto.getInstance() != deployConfigDto.getClusterNodes().size();
+        if (instanceNotEqNode) {
+            throw new BizException(BaseResultCode.REQUEST_PARAMS_WRONG, "实例个数(" + deployConfigDto.getInstance() + ")与所选节点数(" + deployConfigDto.getClusterNodes().size() + ")不符！");
+        }
+
+        if ("2".equals(deployConfigDto.getClusterType()) && !ObjectUtils.isEmpty(deployConfigDto.getClusterNodes())) {
+
+            List<ClusterNodeRspDto> clusterNodeDtoList = clusterNodeApi.getAllClusterNodes(envDto.getClusterId()).ifNotSuccessThrowException().getData();
+            YyAssert.paramCheck(ObjectUtils.isEmpty(clusterNodeDtoList), "环境下没有可用节点！");
+
+            List<Long> nodeIdList = clusterNodeDtoList.stream().map(node -> node.getId()).collect(Collectors.toList());
+            deployConfigDto.getClusterNodes().forEach(nodeId -> {
+                YyAssert.paramCheck(!nodeIdList.contains(nodeId), "所选节点信息[id:" + nodeId + "]不存在！");
+            });
+        }
+
+    }
 }

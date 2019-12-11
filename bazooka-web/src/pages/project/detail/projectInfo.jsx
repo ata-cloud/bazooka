@@ -339,7 +339,7 @@ class ProjectInfo extends React.Component {
                     initialValue: proInfo.description,
                     rules: [
                       {
-                        validator(rule, value, callback) {
+                        validator: async (rule, value, callback) => {
                           if (value.length > 500) {
                             callback('最多500个字符')
                           } else {
@@ -363,11 +363,13 @@ class ProjectInfo extends React.Component {
                     ]
                   })(
                     <Checkbox.Group style={{ width: '100%', lineHeight: 'unset' }}>
-                      <Row type="flex" align="middle">
+                      <Row type="flex">
                         {
                           envList.map((item, i) => (
-                            <Col span={11} key={item.id}>
-                              <Checkbox value={item.id} disabled={selectedEnvIds.indexOf(item.id) > -1 ? true : false}>{item.name}</Checkbox>
+                            <Col span={12} key={item.id} title={item.name}>
+                              <Checkbox value={item.id} disabled={selectedEnvIds.indexOf(item.id) > -1 ? true : false} className={styles.textOverflow} style={{width: '98%'}} >
+                                {item.name}
+                              </Checkbox>
                             </Col>
                           ))
                         }

@@ -15,9 +15,9 @@
  */
 package net.atayun.bazooka.base.jenkins;
 
+import com.youyu.common.exception.BizException;
 import net.atayun.bazooka.base.config.JenkinsJobProperties;
 import net.atayun.bazooka.base.dcos.DcosPropertiesHelper;
-import com.youyu.common.exception.BizException;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,31 +43,32 @@ public class JenkinsJobPropertiesHelper {
         this.jenkinsJobProperties = jenkinsJobProperties;
     }
 
-    public String randomBuildJobName() {
-        List<String> jenkinsBuildJobs = jenkinsJobProperties.getJenkinsBuildJobs();
-        if (CollectionUtils.isEmpty(jenkinsBuildJobs)) {
-            throw new BizException("", "未配置任何构建Job");
-        }
-        return jenkinsBuildJobs.get(RandomUtils.nextInt(0, jenkinsBuildJobs.size()));
+    public String randomPullCode() {
+        return randomJob(jenkinsJobProperties.getPullCodeJobs());
+    }
+
+    public String randomPackageProject() {
+        return randomJob(jenkinsJobProperties.getPackageProjectJobs());
+    }
+
+    public String randomBuildDockerImage() {
+        return randomJob(jenkinsJobProperties.getBuildImageJobs());
     }
 
     public String randomPushDockerImageJobName() {
-        List<String> jenkinsPushDockerImageJobs = jenkinsJobProperties.getJenkinsPushDockerImageJobs();
-        if (CollectionUtils.isEmpty(jenkinsPushDockerImageJobs)) {
-            throw new BizException("", "未配置任何推送镜像Job");
-        }
-        return jenkinsPushDockerImageJobs.get(RandomUtils.nextInt(0, jenkinsPushDockerImageJobs.size()));
+        return randomJob(jenkinsJobProperties.getPushImageJobs());
     }
 
-    public String buildScriptCallbackUri() {
-        return dcosPropertiesHelper.dcosPublicAgentIp() + ":" + serverPort + jenkinsJobProperties.getBuildScriptCallbackPath();
+    private String randomJob(List<String> jobs) {
+        if (CollectionUtils.isEmpty(jobs)) {
+            throw new BizException("", "未配置任何Job");
+        }
+        return jobs.get(RandomUtils.nextInt(0, jobs.size()));
     }
 
     public String buildCallbackUri() {
         return dcosPropertiesHelper.dcosPublicAgentIp() + ":" + serverPort + jenkinsJobProperties.getBuildCallbackPath();
+//        return "http://10.0.52.50:" + serverPort + jenkinsJobProperties.getBuildCallbackPath();
     }
 
-    public String pushImageCallbackUri() {
-        return dcosPropertiesHelper.dcosPublicAgentIp() + ":" + serverPort + jenkinsJobProperties.getPushImageCallbackPath();
-    }
 }

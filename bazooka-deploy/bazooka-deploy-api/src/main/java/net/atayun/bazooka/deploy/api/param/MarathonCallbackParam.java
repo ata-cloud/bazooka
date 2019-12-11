@@ -15,11 +15,11 @@
  */
 package net.atayun.bazooka.deploy.api.param;
 
-import net.atayun.bazooka.base.enums.status.FinishStatusEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import net.atayun.bazooka.base.enums.status.FinishStatusEnum;
 
 /**
  * @author Ping
