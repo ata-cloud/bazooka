@@ -18,7 +18,7 @@ public interface RmsContainerService {
 
     ResourceSumDto sumResourceByClusterId(Long clusterId);
 
-    int sumContainerByClusterId(Long clusterId);
+    int sumRunningContainerByClusterId(Long clusterId);
 
     List<EnvResourceDto> sumResourceByClusterIdGroupByEnv(Long clusterId);
 

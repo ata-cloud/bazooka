@@ -21,6 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static net.atayun.bazooka.rms.biz.constansts.CommonConstant.TASK_KILLED;
+import static net.atayun.bazooka.rms.biz.constansts.CommonConstant.TASK_RUNNING;
 
 /**
  * @author Ping
@@ -49,9 +50,10 @@ public class RmsContainerServiceImpl implements RmsContainerService {
     }
 
     @Override
-    public int sumContainerByClusterId(Long clusterId) {
+    public int sumRunningContainerByClusterId(Long clusterId) {
         RmsContainer rmsContainer = new RmsContainer();
         rmsContainer.setClusterId(clusterId);
+        rmsContainer.setContainerStatus(TASK_RUNNING);
         return rmsContainerMapper.selectCount(rmsContainer);
     }
 

@@ -112,7 +112,7 @@ public class RmsClusterNodeServiceImpl extends AbstractService<Long, RmsClusterN
         queryRmsClusterNodeEntity.setClusterId(clusterNodeReqDto.getClusterId());
         List<RmsClusterNodeEntity> rmsClusterNodeEntities = rmsClusterNodeMapper.selectInPage(queryRmsClusterNodeEntity, pageData);
         RmsClusterEntity rmsClusterEntity = rmsClusterMapper.selectByPrimaryKey(clusterNodeReqDto.getClusterId());
-        if (Objects.equals(CommonConstant.NODE_CLUSTER_TYPE, rmsClusterEntity.getClusterId())) {
+        if (Objects.equals(CommonConstant.NODE_CLUSTER_TYPE, rmsClusterEntity.getType())) {
             List<ClusterNodeRspDto> data = new ArrayList<>();
             for (RmsClusterNodeEntity rmsClusterNodeEntity : rmsClusterNodeEntities) {
                 ContainerAndResourceSumEntity containerAndResourceSumEntity = rmsContainerService.sumContainerAndResourceByNode(rmsClusterNodeEntity.getId());
@@ -121,6 +121,7 @@ public class RmsClusterNodeServiceImpl extends AbstractService<Long, RmsClusterN
                 clusterNodeRspDto.setUsedCpu(containerAndResourceSumEntity.getCpu());
                 clusterNodeRspDto.setUsedMemory(containerAndResourceSumEntity.getMemory());
                 clusterNodeRspDto.setUsedDisk(containerAndResourceSumEntity.getDisk());
+                data.add(clusterNodeRspDto);
             }
             pageData.setRows(data);
         } else {

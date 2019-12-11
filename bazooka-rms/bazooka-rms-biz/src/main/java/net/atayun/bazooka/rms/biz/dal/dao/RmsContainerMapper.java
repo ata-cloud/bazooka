@@ -26,7 +26,7 @@ public interface RmsContainerMapper extends YyMapper<RmsContainer> {
             "sum(cpu) cpu, " +
             "sum(memory) memory, " +
             "sum(disk) disk " +
-            "from rms_container where cluster_id = #{clusterId} and container_status = '3' group by cluster_id;")
+            "from rms_container where cluster_id = #{clusterId} and container_status = 'TASK_RUNNING' group by cluster_id;")
     ResourceSumEntity selectResourceByClusterId(@Param("clusterId") Long clusterId);
 
     /**
@@ -44,7 +44,7 @@ public interface RmsContainerMapper extends YyMapper<RmsContainer> {
             "sum(rc.disk) disk " +
             "from rms_container rc " +
             "inner join rms_env re on rc.env_id = re.id and rc.cluster_id = re.cluster_id " +
-            "where rc.cluster_id = #{clusterId} and rc.container_status = '3' " +
+            "where rc.cluster_id = #{clusterId} and rc.container_status = 'TASK_RUNNING' " +
             "group by rc.env_id, re.name, re.code;")
     List<ResourceSumEnvGroupEntity> sumResourceByClusterIdGroupByEnv(@Param("clusterId") Long clusterId);
 
@@ -59,7 +59,7 @@ public interface RmsContainerMapper extends YyMapper<RmsContainer> {
             "sum(cpu) cpu, " +
             "sum(memory) memory, " +
             "sum(disk) disk " +
-            "from rms_container where node_id = #{nodeId} and container_status = '3' group by node_id;")
+            "from rms_container where node_id = #{nodeId} and container_status = 'TASK_RUNNING' group by node_id;")
     ContainerAndResourceSumEntity sumContainerAndResourceByNode(@Param("nodeId") Long nodeId);
 
     /**

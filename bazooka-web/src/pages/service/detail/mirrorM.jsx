@@ -216,7 +216,7 @@ class Mirror extends React.Component {
     )
   }
   render() {
-    const { visible, onClose, list, loading, appRunCurrentImage } = this.props;
+    const { visible, onClose, list, loading, appRunCurrentImage, currentEnvO } = this.props;
     const { showPushModal, deleteLoading, currentItem } = this.state;
     const columns = [
       {
@@ -241,6 +241,7 @@ class Mirror extends React.Component {
       {
         title: '操作',
         dataIndex: 'opera',
+        className: currentEnvO.clusterType === '2' ? styles.hidden : '',
         render: (text, record) => (
           <div>
             {
@@ -327,5 +328,6 @@ export default Form.create()(connect(({ service, loading }) => ({
   appRunStatus: service.appRunStatus,
   appDeployStatus: service.appDeployStatus,
   appOperate: service.appOperate,
+  currentEnvO: service.currentEnvO,
   loading: loading.effects["service/dockerList"]
 }))(Mirror));
