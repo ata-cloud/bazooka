@@ -9,3 +9,19 @@ ALTER TABLE `ata_ops`.`pms_app_deploy_config`
 -- 补充数据，发布配置的集群类型
 UPDATE pms_app_deploy_config t
 SET t.cluster_type = ( SELECT c.type FROM rms_env e LEFT JOIN rms_cluster c ON e.cluster_id = c.id WHERE e.id = t.env_id );
+
+-- 添加集群名称唯一索引
+ALTER TABLE `rms_cluster`
+ADD UNIQUE INDEX `name_only_one` (`name`) USING BTREE ;
+
+-- 添加节点端口号
+ALTER TABLE `rms_cluster_node`
+ADD COLUMN `ssh_port`  varchar(10) CHARACTER SET utf8 NOT NULL DEFAULT '22' COMMENT '端口号' AFTER `create_time`;
+
+-- 添加节点凭据id
+ALTER TABLE `rms_cluster_node`
+ADD COLUMN `credential_id`  int NULL COMMENT '凭据id' AFTER `used_disk`;
+
+-- 添加集群配置凭据id
+ALTER TABLE `rms_cluster_config`
+ADD COLUMN `credential_id`  int NULL COMMENT '凭据id' AFTER `version`;
