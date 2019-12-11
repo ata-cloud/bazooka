@@ -9,3 +9,6 @@ ALTER TABLE pms_app_deploy_config
 -- 补充数据，发布配置的集群类型
 UPDATE pms_app_deploy_config t
 SET t.cluster_type = ( SELECT c.type FROM rms_env e LEFT JOIN rms_cluster c ON e.cluster_id = c.id WHERE e.id = t.env_id );
+
+-- 拓展image_tag长度
+alter table rms_docker_image modify image_tag varchar(128) not null comment '镜像tag';
