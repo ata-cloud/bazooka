@@ -7,7 +7,6 @@ import mesosphere.marathon.client.model.v2.Deployment;
 import net.atayun.bazooka.base.bean.StrategyNumBean;
 import net.atayun.bazooka.base.constant.CommonConstants;
 import net.atayun.bazooka.base.constant.FlowStepConstants;
-import net.atayun.bazooka.base.enums.AppOptEnum;
 import net.atayun.bazooka.base.enums.status.FinishStatusEnum;
 import net.atayun.bazooka.deploy.api.param.MarathonCallbackParam;
 import net.atayun.bazooka.deploy.api.param.MarathonTaskFailureCallbackParam;
@@ -50,14 +49,7 @@ public class MarathonServiceImpl implements MarathonService {
     public void marathonCallback(MarathonCallbackParam marathonCallbackParam) {
         AppOpt appOpt = appOptService.selectByAppDeployUuidAndVersionForPlatform(marathonCallbackParam.getMarathonDeploymentId(), marathonCallbackParam.getMarathonDeploymentVersion());
 
-        if (appOpt == null || (appOpt.getOpt() != AppOptEnum.MARATHON_BUILD_DEPLOY &&
-                appOpt.getOpt() != AppOptEnum.IMAGE_DEPLOY &&
-                appOpt.getOpt() != AppOptEnum.START &&
-                appOpt.getOpt() != AppOptEnum.STOP &&
-                appOpt.getOpt() != AppOptEnum.RESTART &&
-                appOpt.getOpt() != AppOptEnum.ROLLBACK &&
-                appOpt.getOpt() != AppOptEnum.SCALE)
-        ) {
+        if (appOpt == null) {
             return;
         }
 
@@ -97,7 +89,7 @@ public class MarathonServiceImpl implements MarathonService {
         String marathonServiceId = marathonTaskFailureCallbackParam.getMarathonServiceId();
         AppOpt appOpt = appOptService.selectByServiceIdAndVersionForPlatform(marathonServiceId,
                 marathonTaskFailureCallbackParam.getMarathonDeploymentVersion());
-        if (appOpt == null || appOpt.getOpt() != AppOptEnum.MARATHON_BUILD_DEPLOY) {
+        if (appOpt == null) {
             return;
         }
         if (appOpt.isProcess()) {
