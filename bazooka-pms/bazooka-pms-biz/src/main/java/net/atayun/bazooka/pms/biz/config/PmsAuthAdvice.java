@@ -34,6 +34,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -49,7 +50,7 @@ import java.util.Map;
  */
 @Slf4j
 @Aspect
-//@Component
+@Component
 public class PmsAuthAdvice {
     @Autowired
     private AppInfoService appInfoService;
