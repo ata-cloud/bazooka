@@ -2,7 +2,7 @@
 
 开源社区欢迎您的参与！如果有任何反馈，您可以通过邮件或者QQ等方式联系我们
 
-<image src="docs/img/atacloud_logo.jpg" width="200px">
+<image src="docs/img/bazooka_logo_600x124.jpg" width="600px">
   
 <h1>阿塔云 Bazooka - 自动化开发运维平台</h1>
 
