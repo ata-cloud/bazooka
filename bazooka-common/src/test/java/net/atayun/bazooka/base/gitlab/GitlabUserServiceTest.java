@@ -31,8 +31,9 @@ import java.util.*;
 @Slf4j
 public class GitlabUserServiceTest {
 
-    String url = "http://192.168.1.148:7000";
-    String token="6jsgsNVg5V7bBcu3uvf3";
+    String url = "http://gitlab.gs.9188.com";
+    //String token="6jsgsNVg5V7bBcu3uvf3";
+    String token="LrtomBLmykAyuqxxXWMx";
     String userNmae="root";
     String pwd="atacloud";
     int groupId=6;
@@ -108,11 +109,11 @@ public class GitlabUserServiceTest {
         try {
             GitLabApi api=new GitLabApi(GitLabApi.ApiVersion.V4,url,token);
             User user=new User();
-            user.setName("liujianming");
-            user.setUsername("liujianming");
-            user.setEmail("f2002@163.com");
+            user.setName("赵越铭");
+            user.setUsername("zhaoyueming");
+            user.setEmail("zhaoyueming@yofish.com");
             user.setSkipConfirmation(true);
-            User createUserResult= api.getUserApi().createUser(user,"Ataops123@",false);
+            User createUserResult= api.getUserApi().createUser(user,"A123456@",false);
             System.out.println(createUserResult.toString());
         } catch (Exception e)
         {
@@ -123,7 +124,7 @@ public class GitlabUserServiceTest {
     public void deleteUserTest() {
         try {
             GitLabApi api=new GitLabApi(GitLabApi.ApiVersion.V4,url,token);
-            api.getUserApi().deleteUser(332);
+            api.getUserApi().deleteUser(345);
             //System.out.println(createUserResult.toString());
         } catch (Exception e)
         {
